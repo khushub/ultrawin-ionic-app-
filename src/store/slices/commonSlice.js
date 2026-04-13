@@ -1,0 +1,74 @@
+import { createSlice } from "@reduxjs/toolkit";
+import { CONFIG_PERMISSIONS } from "../../constants/ConfigPermissions";
+
+const initialState = {
+    allowedConfig: CONFIG_PERMISSIONS.sports + CONFIG_PERMISSIONS.casino,
+    commissionEnabled: false,
+    domainConfig: {
+        demoUser: false,
+        signup: false,
+        whatsapp: false,
+        payments: false,
+        bonus: false,
+        affiliate: false,
+        depositWagering: false,
+        suppportContacts: null,
+        apkUrl: null,
+        b2cEnabled: false,
+        ruleScope: 'HOUSE',
+    },
+    alert: {
+        type: '',
+        message: '',
+    },
+    languages: [],
+    langSelected: null,
+    langData: null,
+    maintenanceTimer: '',
+};
+
+
+const commonSlice = createSlice({
+    name: 'common',
+    initialState,
+    reducers: {
+        setAllowedConfig: (state, action) => {
+            state.allowedConfig = action.payload;
+        },
+        enableCommission: (state, action) => {
+            state.commissionEnabled = action.payload;
+        },
+        setDomainConfig: (state, action) => {
+            state.domainConfig = action.payload;
+        },
+        setAlertMsg: (state, action) => {
+            state.alert.type = action.payload.type || '';
+            state.alert.message = action.payload.message || '';
+        },
+        setLanguages: (state, action) => {
+            state.languages = action.payload
+        },
+        setLangSelected: (state, action) => {
+            state.langSelected = action.payload
+        },
+        setLangData: (state, action) => {
+            state.langData = action.payload
+        },
+        setMaintenanceTimer: (state, action)=>{
+            state.maintenanceTimer = action.payload
+        }
+    }
+});
+
+
+export const {
+    setAllowedConfig,
+    enableCommission,
+    setDomainConfig,
+    setAlertMsg,
+    setLanguages,
+    setLangSelected,
+    setLangData,
+    setMaintenanceTimer
+} = commonSlice.actions;
+export default commonSlice.reducer;
