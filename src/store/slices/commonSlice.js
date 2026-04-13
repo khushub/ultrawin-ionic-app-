@@ -1,5 +1,17 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk  } from "@reduxjs/toolkit";
 import { CONFIG_PERMISSIONS } from "../../constants/ConfigPermissions";
+
+export const isSiteUnderMaintenance = createAsyncThunk(
+  "common/isSiteUnderMaintenance",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await CATALOG_API.get(`/catalog/site-under-maintenance`);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
 
 const initialState = {
     allowedConfig: CONFIG_PERMISSIONS.sports + CONFIG_PERMISSIONS.casino,
