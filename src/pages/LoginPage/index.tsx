@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+
 import LoginForm from '../../components/LoginForm/LoginForm';
 import "./index.scss";
 import { useHistory } from "react-router";
@@ -23,6 +24,7 @@ const LoginPage: React.FC = () => {
 
             <div className="login-card">
                 <LoginForm modalCloseHandler={modalCloseHandler} />
+                
             </div>
         </div>
     );

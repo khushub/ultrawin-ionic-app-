@@ -44,6 +44,7 @@ import { getLang, getUpdatedSelectedLang, getSelectedLang, getLangCode, defaultL
 import { CONFIG } from './config/config';
 import { postAPIAuth, postAPI, getAPI } from './services/apiInstance';
 import SignUp from './pages/SignUp';
+import Maintenance from './pages/Maintenance/Maintenance';
 const langModules = import.meta.glob<Record<string, any>>("./assets/lang_json/*.json");
 const LoginPage = lazy(() => import('./pages/LoginPage'));
 const AcceptTerms = lazy(() => import('./pages/AcceptTerms'));
@@ -288,6 +289,7 @@ const App: React.FC = (props:any) => {
                 <Route path="/login"><LoginPage /></Route>
                 <Route path="/register"><SignUp /></Route>
                 <Route path="/forgot-password"><ForgotPwdForm /></Route>
+                <Route path="/maintenance"><Maintenance /></Route>
                 
                 <Route exact path="/">
                   <Redirect to="/home" />
