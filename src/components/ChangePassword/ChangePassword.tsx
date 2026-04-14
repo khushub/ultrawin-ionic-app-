@@ -9,6 +9,8 @@ import { logout } from '../../store/slices/authSlice';
 // import SVLS_API from '../../svls-api';
 import './ChangePassword.scss';
 import CustomButton from '../../common/CustomButton/CustomButton';
+import { storageManager } from '../../util/storageManager';
+import { postAPIAuth } from '../../services/apiInstance';
 
 
 type ChangePwdProps = {
@@ -79,32 +81,34 @@ const ChangePwdForm: React.FC<ChangePwdProps> = (props) => {
         },
     });
 
-    const updateNewPassword = async (data: ChangePasswordRequest) => {
-        try {
-            setProgress(true);
+const updateNewPassword = async (data) => {
+  try {
+    setProgress(true);
 
-            const userName = sessionStorage.getItem('username');
-            // const response: any = await SVLS_API.put(
-            //     `/account/v2/users/${userName}/password:change`,
-            //     data,
-            //     {
-            //     headers: {
-            //         Authorization: sessionStorage.getItem('jwt_token'),
-            //         'Content-Type': 'application/json',
-            //     },
-            //     }
-            // );
-
-            // if (response.status === 204) {
-            //     setSuccessMsg(langData?.['password_change_success_txt']);
-            //     logout();
-            // }
-        } catch (err) {
-            setErrorMsg(err?.response?.data?.message);
-        } finally {
-            setProgress(false);
-        }
+    const payload = {
+      password: data.newPassword, 
     };
+
+    console.log("Sending Change Password:", payload);
+
+    const response = await postAPIAuth('/changePasswordAPI', payload);
+
+    console.log("Change Password Response:", response);
+
+    if (response?.data?.success) {
+      setSuccessMsg("Password changed successfully");
+      logout();
+    } else {
+      setErrorMsg(response?.data?.message);
+    }
+
+  } catch (err) {
+    console.log("Error:", err);
+    setErrorMsg(err?.response?.data?.message || "Something went wrong");
+  } finally {
+    setProgress(false);
+  }
+};
 
     const removeAllFields = () => {
         formik.setFieldValue('newPwd', '');

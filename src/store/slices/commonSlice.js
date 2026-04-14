@@ -37,6 +37,8 @@ const initialState = {
     langSelected: null,
     langData: null,
     maintenanceTimer: '',
+    trendingGames: [],
+    demoUserWhatsappDetails: null,
 };
 
 
@@ -68,7 +70,13 @@ const commonSlice = createSlice({
         },
         setMaintenanceTimer: (state, action)=>{
             state.maintenanceTimer = action.payload
-        }
+        },
+        setTrendingGames: (state, action) => {
+    state.trendingGames = action.payload;
+},
+setDemoUserWhatsappDetails: (state, action) => {
+    state.demoUserWhatsappDetails = action.payload;
+},
     }
 });
 
@@ -81,6 +89,8 @@ export const {
     setLanguages,
     setLangSelected,
     setLangData,
-    setMaintenanceTimer
+    setMaintenanceTimer,
+     setTrendingGames ,
+     setDemoUserWhatsappDetails
 } = commonSlice.actions;
 export default commonSlice.reducer;

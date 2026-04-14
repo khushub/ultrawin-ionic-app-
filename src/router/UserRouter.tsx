@@ -33,7 +33,7 @@ import './UserRouter.scss';
 import { isMobile } from 'react-device-detect';
 import { useWindowSize } from '../hooks/useWindowSize';
 import { StyledAlertBox } from '../components/Alert/AlertBox';
-import Box from '@material-ui/core/Box';
+import Box from '@mui/material/Box';
 import HomePage from '../pages/HomePage/Home';
 import Promotions from '../pages/Promotions/Promotions';
 import ApkDesktopBanner from '../assets/images/banners/apk_popup_desktop.webp';
@@ -50,7 +50,7 @@ import { getAccessTokenWithRefreshToken, logout } from '../store/auth/authAction
 import PremiumCasino from '../pages/Casino/CasinoNew/PremiumCasino';
 import { pageViewEvent } from '../util/facebookPixelEvent';
 import PromoPopup from '../assets/images/banners/login_popup.webp';
-import Modal from '../components/Modal/Modal';
+import Modal from '../components/Modal/index';
 import CasinoV2 from '../pages/Casino/CasinoV2/CasinoV2';
 import {
   isSiteUnderMaintenance,

@@ -45,6 +45,9 @@ import { CONFIG } from './config/config';
 import { postAPIAuth, postAPI, getAPI } from './services/apiInstance';
 import SignUp from './pages/SignUp';
 import Maintenance from './pages/Maintenance/Maintenance';
+import Promotions from './pages/Promotions/Promotions';
+import { Casino } from '@mui/icons-material';
+import CasinoV2 from './pages/Casino/CasinoV2/CasinoV2';
 const langModules = import.meta.glob<Record<string, any>>("./assets/lang_json/*.json");
 const LoginPage = lazy(() => import('./pages/LoginPage'));
 const AcceptTerms = lazy(() => import('./pages/AcceptTerms'));
@@ -290,6 +293,10 @@ const App: React.FC = (props:any) => {
                 <Route path="/register"><SignUp /></Route>
                 <Route path="/forgot-password"><ForgotPwdForm /></Route>
                 <Route path="/maintenance"><Maintenance /></Route>
+                {/* <Route path="/"><HomePage /></Route> */}
+
+                {/* <Route path="/casino"><CasinoV2 /></Route> */}
+                <Route path="/promotions"><Promotions /></Route>
                 
                 <Route exact path="/">
                   <Redirect to="/home" />

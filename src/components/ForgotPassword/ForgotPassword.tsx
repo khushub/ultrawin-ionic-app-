@@ -29,8 +29,8 @@ import SocialMediaNew from "../SocialMediaNew/SocialMediaNew";
 // import CopyIcon from "../../assets/images/MyProfileIcons/copy_icon.svg";
 import { StyledAlertBox } from "../Alert/AlertBox";
 import { CONFIG } from "../../config/config";
-import { requestEnd, requestStart } from "../../store/slices/authSlice";
-import { postAPI } from "../../services/apiInstance";
+import { loginSuccess, requestEnd, requestStart } from "../../store/slices/authSlice";
+import { postAPI, postAPIAuth } from "../../services/apiInstance";
 
 type ForgotPwdForm = {
     closeHandler: () => void;
@@ -148,15 +148,10 @@ const resetPassword = async (phone, otp, request) => {
     setLoading(true);
     dispatch(requestStart());
 
-    
     const onlyDigits = phone.replace(/\D/g, '');
-    const countryCode = "91";
-    const actualPhone = onlyDigits.startsWith(countryCode)
-      ? onlyDigits.slice(countryCode.length)
-      : onlyDigits;
+    const actualPhone = onlyDigits.slice(-10);
 
-    
-     const data = {
+    const data = {
       phone: actualPhone,
       orderId: order,
       otp: otp,
@@ -164,10 +159,8 @@ const resetPassword = async (phone, otp, request) => {
       countryCode: "91",
     };
 
-    // 🔥 STEP 1: OTP VERIFY (same as loginWithOtp)
+    // ✅ STEP 1: OTP VERIFY
     const verifyRes = await postAPI('/loginWithOtpAPI', data);
-
-    console.log("OTP Verify Response:", verifyRes);
 
     const token = verifyRes?.data?.output?.verifytoken;
 
@@ -176,15 +169,21 @@ const resetPassword = async (phone, otp, request) => {
       return;
     }
 
-    
-    localStorage.setItem("token", token);
+    // ✅ STEP 2: SAVE TOKEN (Redux + localStorage)
+    dispatch(
+      loginSuccess({
+        user: verifyRes?.data?.output?.details,
+        token: token,
+      })
+    );
 
-   
-    const updateRes = await postAPI('/updatePasswordAPI', {
-      newPassword: request.resetPassword,
-    });
+    // ✅ STEP 3: PASSWORD UPDATE (AUTH API)
+   const updateRes = await postAPIAuth('/changePasswordAPI', {
+  password: request.resetPassword,
+  token: token,
+});
 
-    console.log("Update Password Response:", updateRes);
+console.log("Update Password Response:", updateRes);
 
     if (updateRes?.data?.success) {
       dispatch(
