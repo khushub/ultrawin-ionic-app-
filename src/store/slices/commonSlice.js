@@ -77,6 +77,7 @@ const commonSlice = createSlice({
 setDemoUserWhatsappDetails: (state, action) => {
     state.demoUserWhatsappDetails = action.payload;
 },
+
     }
 });
 

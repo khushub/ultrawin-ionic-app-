@@ -17,7 +17,7 @@ import { connect } from 'react-redux';
 import SitesInfo from './SiteInfo';
 import GamesCarousel from './GamesCarousel';
 import { AxiosResponse } from 'axios';
-import SVLS_API from '../../svls-api';
+// import SVLS_API from '../../svls-api';
 import { setTrendingGames } from '../../store/slices/commonSlice';
 // import { CasinoGameDTO } from '../../models/IndianCasinoState';
 
@@ -26,17 +26,17 @@ import { useHistory } from 'react-router';
 import CheckBonusTab from './CheckBonusTab';
 import BottomTab from './BottomTab';
 // import { DomainConfig } from '../../models/DomainConfig';
-import {
-  fetchFavEvents,
-  setCompetition,
-  setExchEvent,
-} from '../../store/exchangeSports/exchangeSportsActions';
+// import {
+//   fetchFavEvents,
+//   setCompetition,
+//   setExchEvent,
+// } from '../../store/exchangeSports/exchangeSportsActions';
 import CricketBattle from '../../assets/images/banners/cricket_battle.webp';
 // import { EventDTO } from '../../models/common/EventDTO';
-import { FavoriteEventDTO } from '../../models/common/FavoriteEventDTO';
-const SportsCarousel = lazy(() => import('./SportsCarousel'));
+// import { FavoriteEventDTO } from '../../models/common/FavoriteEventDTO';
+// const SportsCarousel = lazy(() => import('./SportsCarousel'));
 const TopMatches = lazy(() => import('./TopMatches'));
-const TrendingSports = lazy(() => import('./TrendingSports'));
+// const TrendingSports = lazy(() => import('./TrendingSports'));
 
 type StoreProps = {
   allowedConfig: number;
@@ -80,43 +80,43 @@ const HomePage: React.FC<StoreProps> = (props) => {
   };
 
   const getGames = async () => {
-    let response = await SVLS_API.get(
-      '/catalog/v2/categories/indian-casino/games/',
-      {
-        params: {
-          tag: 'live_casino_games,recommended_games,new_launch,slot',
-          trending: true,
-        },
-      }
-    );
+//     let response = await SVLS_API.get(
+//       '/catalog/v2/categories/indian-casino/games/',
+//       {
+//         params: {
+//           tag: 'live_casino_games,recommended_games,new_launch,slot',
+//           trending: true,
+//         },
+//       }
+//     );
 
-    let macGames = response.data.filter(
-      (game) => game.tag == 'recommended_games'
-    );
-  let trendingGamesData = response.data.filter(
-  (game) => game.tag === 'new_launch'
-);
+//     let macGames = response.data.filter(
+//       (game) => game.tag == 'recommended_games'
+//     );
+//   let trendingGamesData = response.data.filter(
+//   (game) => game.tag === 'new_launch'
+// );
     
-    let evolutionGames = response.data.filter(
-      (game) => game.tag == 'live_casino_games'
-    );
-    let slotGames = response.data.filter((game) => game.tag == 'slot');
+//     let evolutionGames = response.data.filter(
+//       (game) => game.tag == 'live_casino_games'
+//     );
+//     let slotGames = response.data.filter((game) => game.tag == 'slot');
 
-    setMacGames(macGames);
-    setTrendingGames(trendingGames);
-    setTrendingGames(trendingGamesData);
-    setEvolutionGames(evolutionGames);
-    setSlotGames(slotGames);
+//     setMacGames(macGames);
+//     setTrendingGames(trendingGames);
+//     setTrendingGames(trendingGamesData);
+//     setEvolutionGames(evolutionGames);
+//     setSlotGames(slotGames);
   };
 
-  const fetchFavoruiteEvents = async () => {
-    const response = await fetchFavEvents();
-    setFavouriteEvents(response as any[]);
-  };
+        // const fetchFavoruiteEvents = async () => {
+        //   const response = await fetchFavEvents();
+        //   setFavouriteEvents(response as any[]);
+        // };
 
   useEffect(() => {
     getGames();
-    fetchFavoruiteEvents();
+    // fetchFavoruiteEvents();
   }, []);
 
   return (
@@ -280,8 +280,8 @@ const mapStateToProps = (state: any) => {
 const mapDispatchToProps = (dispatch: Function) => {
   return {
     setTrendingGames: (value) => dispatch(setTrendingGames(value)),
-    setCompetition: (competition: any) => dispatch(setCompetition(competition)),
-    setExchEvent: (event: any) => dispatch(setExchEvent(event)),
+    // setCompetition: (competition: any) => dispatch(setCompetition(competition)),
+    // setExchEvent: (event: any) => dispatch(setExchEvent(event)),
   };
 };
 
