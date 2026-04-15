@@ -4,8 +4,8 @@ import './BottomTab.scss';
 import { BRAND_DOMAIN, BRAND_NAME } from '../../constants/Branding';
 import WhatsApp from '../../assets/images/footer/whatsapp.svg';
 import Secure from '../../assets/images/footer/secure.png';
-import GamCare from '../../assets/images/footer/Gamcare.png';
-import plus18 from '../../assets/images/footer/18plus.png';
+// import GamCare from '../../assets/images/footer/Gamcare.png';
+// import plus18 from '../../assets/images/footer/18plus.png';
 
 import { connect } from 'react-redux';
 // import { RootState } from '../../models/RootState';
@@ -104,8 +104,8 @@ const BottomTab = ({
           </span>
         </div>
         <div className="copyright-imgs">
-          <img src={GamCare} className="copyright-img" alt="GamCare" />
-          <img src={plus18} className="copyright-img" alt="18+" />
+          {/* <img src={GamCare} className="copyright-img" alt="GamCare" /> */}
+          {/* <img src={plus18} className="copyright-img" alt="18+" /> */}
         </div>
       </div>
     </div>

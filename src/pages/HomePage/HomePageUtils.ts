@@ -17,8 +17,8 @@ import Popok from '../../assets/images/provider_img/popok.webp';
 import King from '../../assets/images/provider_img/kingmaker.webp';
 import RG from '../../assets/images/provider_img/royal-gaming.webp';
 
-/* 🔥 SPORT ICON IMPORTS */
-import cricket from '../../assets/images/home_page/sport_icons/cricket.webp';
+
+import cricket from '../../assets/images/home_page/sport_icons/cricket (1).webp';
 import football from '../../assets/images/home_page/sport_icons/football.webp';
 import tennis from '../../assets/images/home_page/sport_icons/tennis.webp';
 import kabaddi from '../../assets/images/home_page/sport_icons/kabaddi.webp';
@@ -54,7 +54,7 @@ export const HomeProvidersIcons = [
   { icon: BetGames, subProviderName: 'BetGames_TV' },
   { icon: MacExcite, subProviderName: 'MAC EXCITE' },
   { icon: Popok, subProviderName: 'POPOK' },
-  { icon: King, subProviderName: 'KINGMAKER' },
+  // { icon: King, subProviderName: 'KINGMAKER' },
 ];
 
 /* ---------------- MOBILE ---------------- */

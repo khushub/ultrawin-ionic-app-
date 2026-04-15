@@ -1,11 +1,12 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
 import { Redirect, Route, BrowserRouter, Switch } from 'react-router-dom';
 import { Dialog, DialogContent } from '@mui/material';
-import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
+import { IonApp, IonContent, IonRouterOutlet, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { connect } from 'react-redux';
 import { useIdleTimer } from 'react-idle-timer';
 import Home from './pages/Home';
+import HomePage from './pages/HomePage/Home';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -48,6 +49,8 @@ import Maintenance from './pages/Maintenance/Maintenance';
 import Promotions from './pages/Promotions/Promotions';
 import { Casino } from '@mui/icons-material';
 import CasinoV2 from './pages/Casino/CasinoV2/CasinoV2';
+import MyWallet from './pages/MyWallet/MyWallet';
+import ExchangeSportsHome from './pages/ExchSportsBook/ExchangeSportsHome';
 const langModules = import.meta.glob<Record<string, any>>("./assets/lang_json/*.json");
 const LoginPage = lazy(() => import('./pages/LoginPage'));
 const AcceptTerms = lazy(() => import('./pages/AcceptTerms'));
@@ -282,18 +285,21 @@ const App: React.FC = (props:any) => {
       <IonReactRouter>
         <IonRouterOutlet>
           <Suspense fallback={<LoadingPage />}>
-            <BrowserRouter>
+            
               <Switch>
                 <Route exact path="/home">
-                  <Home />
+  <IonContent fullscreen scrollY={true}>
+                    <HomePage />
+                  </IonContent>
                 </Route>
                 <Route path="/terms-and-conditions"><AcceptTerms /></Route>
                 <Route path="/reset-password"><ResetPassword /></Route>
                 <Route path="/login"><LoginPage /></Route>
                 <Route path="/register"><SignUp /></Route>
                 <Route path="/forgot-password"><ForgotPwdForm /></Route>
-                <Route path="/maintenance"><Maintenance /></Route>
                 {/* <Route path="/"><HomePage /></Route> */}
+                <Route path="/MyWallet"><MyWallet /></Route>
+                <Route path="/ExchSportsHome"><ExchangeSportsHome /></Route>
 
                 {/* <Route path="/casino"><CasinoV2 /></Route> */}
                 <Route path="/promotions"><Promotions /></Route>
@@ -302,7 +308,7 @@ const App: React.FC = (props:any) => {
                   <Redirect to="/home" />
                 </Route>    
               </Switch>
-            </BrowserRouter>
+            
           </Suspense>
         </IonRouterOutlet>
       </IonReactRouter>
