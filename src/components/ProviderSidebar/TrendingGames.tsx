@@ -88,8 +88,50 @@ const TrendingGames: React.FC<TrendingProps> = (props) => {
     // let trendingGames = response?.data?.filter(
     //   (game) => game?.tag == 'new_launch'
     // );
+  const rulesData = [
+    {
+      gameId: '1',
+      gameName: 'Cricket Rules',
+      gameCode: 'CRICKET',
+      providerName: 'Rules',
+      subProviderName: 'Rules',
+      superProviderName: 'Rules',
+      urlThumb:
+        'https://via.placeholder.com/250x140.png?text=Cricket+Rules',
+    },
+    {
+      gameId: '2',
+      gameName: 'Football Rules',
+      gameCode: 'FOOTBALL',
+      providerName: 'Rules',
+      subProviderName: 'Rules',
+      superProviderName: 'Rules',
+      urlThumb:
+        'https://via.placeholder.com/250x140.png?text=Football+Rules',
+    },
+    {
+      gameId: '3',
+      gameName: 'Casino Rules',
+      gameCode: 'CASINO',
+      providerName: 'Rules',
+      subProviderName: 'Rules',
+      superProviderName: 'Rules',
+      urlThumb:
+        'https://via.placeholder.com/250x140.png?text=Casino+Rules',
+    },
+    {
+      gameId: '4',
+      gameName: 'Live Betting Rules',
+      gameCode: 'LIVE',
+      providerName: 'Rules',
+      subProviderName: 'Rules',
+      superProviderName: 'Rules',
+      urlThumb:
+        'https://via.placeholder.com/250x140.png?text=Live+Betting',
+    },
+  ];
 
-    setTrendingGames(trendingGames);
+    setTrendingGames(rulesData);
   };
 
   useEffect(() => {
