@@ -39,23 +39,27 @@ import Promotions from '../pages/Promotions/Promotions';
 import ApkDesktopBanner from '../assets/images/banners/apk_popup_desktop.webp';
 import ApkMobileBanner from '../assets/images/banners/apk_popup_mobile.webp';
 
-import {
-  checkPNStompClientSubscriptions,
-  disConnectToPushNotificationWS,
-  connectToPushNotification,
-  subscribeWsForNotifications,
-  subscribeWsForNotificationsPerAdmin,
-} from '../webSocket/pnWebsocket';
-import { getAccessTokenWithRefreshToken, logout } from '../store/auth/authActions';
-import PremiumCasino from '../pages/Casino/CasinoNew/PremiumCasino';
-import { pageViewEvent } from '../util/facebookPixelEvent';
-import PromoPopup from '../assets/images/banners/login_popup.webp';
-import Modal from '../components/Modal/index';
-import CasinoV2 from '../pages/Casino/CasinoV2/CasinoV2';
-import {
-  isSiteUnderMaintenance,
-  setMaintenanceTimer,
-} from '../store/common/commonActions';
+// import {
+//   checkPNStompClientSubscriptions,
+//   disConnectToPushNotificationWS,
+//   connectToPushNotification,
+//   subscribeWsForNotifications,
+//   subscribeWsForNotificationsPerAdmin,
+// } from '../webSocket/pnWebsocket';
+
+// import { getAccessTokenWithRefreshToken, logout } from '../store/auth/authActions';
+// ✅ ADD THIS
+import { logout } from '../store/slices/authSlice';
+
+// import PremiumCasino from '../pages/Casino/CasinoNew/PremiumCasino';
+// import { pageViewEvent } from '../util/facebookPixelEvent';
+// import PromoPopup from '../assets/images/banners/login_popup.webp';
+// import Modal from '../components/Modal/index';
+// import CasinoV2 from '../pages/Casino/CasinoV2/CasinoV2';
+// import {
+//   isSiteUnderMaintenance,
+//   setMaintenanceTimer,
+// } from '../store/common/commonActions';
 import {
   BannerObjData,
   BannerResData,
@@ -65,105 +69,105 @@ import { AxiosResponse } from 'axios';
 import { isIOS } from 'react-device-detect';
 import { enableCommission, setAllowedConfig, setDomainConfig } from '../store/slices/commonSlice';
 
-const MarketTermsCondi = lazy(
-  () => import('../components/MarketTermsCondi/MarketTermsCondi')
-);
-const CasinoNew = lazy(() => import('../pages/Casino/CasinoNew/CasinoNew'));
-const DashboardView = lazy(
-  () => import('../pages/DashboardView/DashboardView')
-);
-const Affiliate = lazy(() => import('../pages/Affiliate/Affiliate'));
-const SportsProviderIframe = lazy(
-  () => import('../pages/SportsProvider/SportsProviderIframe')
-);
-const AccountStatement = lazy(
-  () => import('../pages/AccountStatement/AccountStatement')
-);
-const AccountStatementEventLevelView = lazy(
-  () => import('../pages/AccountStatement/AccountStatementEventLevel')
-);
-const CasinoIframeNew = lazy(
-  () => import('../pages/Casino/CasinoIframeNew/CasinoIframeNew')
-);
-const Deposit = lazy(() => import('../pages/Payment/Deposit'));
-const Withdrawal = lazy(() => import('../pages/Payment/Withdrawal'));
-const UserPLStatement = lazy(
-  () => import('../pages/UserPLStatement/UserPLStatement')
-);
-const MyBets = lazy(() => import('../components/MyBets/MyBetsView'));
+// const MarketTermsCondi = lazy(
+//   () => import('../components/MarketTermsCondi/MarketTermsCondi')
+// );
+// const CasinoNew = lazy(() => import('../pages/Casino/CasinoNew/CasinoNew'));
+// const DashboardView = lazy(
+//   () => import('../pages/DashboardView/DashboardView')
+// );
+// const Affiliate = lazy(() => import('../pages/Affiliate/Affiliate'));
+// const SportsProviderIframe = lazy(
+//   () => import('../pages/SportsProvider/SportsProviderIframe')
+// );
+// const AccountStatement = lazy(
+//   () => import('../pages/AccountStatement/AccountStatement')
+// );
+// const AccountStatementEventLevelView = lazy(
+//   () => import('../pages/AccountStatement/AccountStatementEventLevel')
+// );
+// const CasinoIframeNew = lazy(
+//   () => import('../pages/Casino/CasinoIframeNew/CasinoIframeNew')
+// );
+// const Deposit = lazy(() => import('../pages/Payment/Deposit'));
+// const Withdrawal = lazy(() => import('../pages/Payment/Withdrawal'));
+// const UserPLStatement = lazy(
+//   () => import('../pages/UserPLStatement/UserPLStatement')
+// );
+// const MyBets = lazy(() => import('../components/MyBets/MyBetsView'));
 
-const AdminNotification = lazy(
-  () => import('../components/AdminNotifications/AdminNotification')
-);
-const ButtonVariables = lazy(
-  () => import('../components/ButtonVariables/ButtonVariables')
-);
+// const AdminNotification = lazy(
+//   () => import('../components/AdminNotifications/AdminNotification')
+// );
+// const ButtonVariables = lazy(
+//   () => import('../components/ButtonVariables/ButtonVariables')
+// );
 const ChangePassword = lazy(
   () => import('../components/ChangePassword/ChangePassword')
 );
-const MobileHeader = lazy(
-  () => import('../components/Header/MobileHeader/MobileHeader')
-);
-const MyProfile = lazy(() => import('../components/MyProfile/MyProfile'));
-const ResponsibleGaming = lazy(
-  () => import('../components/ResponsibleGaming/ResponsibleGaming')
-);
-const IndianCasinoPage = lazy(
-  () => import('../pages/Casino/IndianCasino/indianCasinoPage')
-);
+// const MobileHeader = lazy(
+//   () => import('../components/Header/MobileHeader/MobileHeader')
+// );
+// const MyProfile = lazy(() => import('../components/MyProfile/MyProfile'));
+// const ResponsibleGaming = lazy(
+//   () => import('../components/ResponsibleGaming/ResponsibleGaming')
+// );
+// const IndianCasinoPage = lazy(
+//   () => import('../pages/Casino/IndianCasino/indianCasinoPage')
+// );
 const ExchangeSportsBook = lazy(
-  () => import('../pages/ExchSportsBook/ExchangeSportsBook')
+  () => import('../pages/ExchSportsBook/ExchangeSportsHome')
 );
-const ResetPassword = lazy(
-  () => import('../pages/ResetPassword/ResetPassword')
-);
-const ResponsibleGambling = lazy(
-  () => import('../pages/ResponsibleGambling/ResponsibleGambling')
-);
-const RulesAndRegulations = lazy(
-  () => import('../pages/RulesAndRegulations/RulesAndRegulations')
-);
-const Sitemap = lazy(() => import('../pages/Sitemap/Sitemap'));
+// const ResetPassword = lazy(
+//   () => import('../pages/ResetPassword/ResetPassword')
+// );
+// const ResponsibleGambling = lazy(
+//   () => import('../pages/ResponsibleGambling/ResponsibleGambling')
+// );
+// const RulesAndRegulations = lazy(
+//   () => import('../pages/RulesAndRegulations/RulesAndRegulations')
+// );
+// const Sitemap = lazy(() => import('../pages/Sitemap/Sitemap'));
 
-const TransactionRequest = lazy(
-  () => import('../pages/TransactionRequest/TransactionRequest')
-);
-const UpLineReport = lazy(
-  () => import('../pages/UserCommission/CommissionReport/UpLineReport')
-);
-const UserCommissionBySportView = lazy(
-  () => import('../pages/UserCommission/UserCommissionBySportView')
-);
-const UserCommissionReport = lazy(
-  () => import('../pages/UserCommission/UserCommissionReport')
-);
-const VirtualSports = lazy(
-  () => import('../pages/VirtualSports/VirtualSports')
-);
-const SideHeader = lazy(() => import('../components/SideHeader/SideHeader'));
-const BonusStatement = lazy(
-  () => import('../pages/BonusStatement/BonusStatement')
-);
-const TurnOverStatement = lazy(
-  () => import('../pages/TurnOverHistory/TurnOverStatement')
-);
-const DepositTurnoverReport = lazy(
-  () => import('../pages/DepositTurnoverReport/DepositTurnoverReport')
-);
+// const TransactionRequest = lazy(
+//   () => import('../pages/TransactionRequest/TransactionRequest')
+// );
+// const UpLineReport = lazy(
+//   () => import('../pages/UserCommission/CommissionReport/UpLineReport')
+// );
+// const UserCommissionBySportView = lazy(
+//   () => import('../pages/UserCommission/UserCommissionBySportView')
+// );
+// const UserCommissionReport = lazy(
+//   () => import('../pages/UserCommission/UserCommissionReport')
+// );
+// const VirtualSports = lazy(
+//   () => import('../pages/VirtualSports/VirtualSports')
+// );
+// const SideHeader = lazy(() => import('../components/SideHeader/SideHeader'));
+// const BonusStatement = lazy(
+//   () => import('../pages/BonusStatement/BonusStatement')
+// );
+// const TurnOverStatement = lazy(
+//   () => import('../pages/TurnOverHistory/TurnOverStatement')
+// );
+// const DepositTurnoverReport = lazy(
+//   () => import('../pages/DepositTurnoverReport/DepositTurnoverReport')
+// );
 const MyWallet = lazy(() => import('../pages/MyWallet/MyWallet'));
-const GameRules = lazy(() => import('../pages/GameRules/GameRules'));
-const Ledger = lazy(
-  () => import('../../src/pages/AccountStatement/AccountStatementICLevel')
-);
-const SubHeader = lazy(() => import('../views/SubHeader/SubHeader'));
+// const GameRules = lazy(() => import('../pages/GameRules/GameRules'));
+// const Ledger = lazy(
+//   () => import('../../src/pages/AccountStatement/AccountStatementICLevel')
+// );
+// const SubHeader = lazy(() => import('../views/SubHeader/SubHeader'));
 
-const MlobbyIframeNew = lazy(
-  () => import('../pages/Casino/MlobbyIframeNew/MlobbyIframeNew')
-);
+// const MlobbyIframeNew = lazy(
+//   () => import('../pages/Casino/MlobbyIframeNew/MlobbyIframeNew')
+// );
 
-const CricketBattleWidget = lazy(
-  () => import('../pages/CricketBattle/CricketBattleWidget')
-);
+// const CricketBattleWidget = lazy(
+//   () => import('../pages/CricketBattle/CricketBattleWidget')
+// );
 
 type StateProps = {
   role: string;
@@ -387,13 +391,9 @@ const UserRouter: React.FC<StateProps> = (props) => {
   };
 
   const dispatch = useDispatch();
-  useEffect(() => {
-    getAllowedConfig();
-    // getDomainConfig();
-    if (!loggedIn) {
-      dispatch(getAccessTokenWithRefreshToken());
-    }
-  }, [loggedIn]);
+ useEffect(() => {
+  getAllowedConfig();
+}, [loggedIn]);
 
   useEffect(() => {
     if (loggedIn) {
@@ -401,43 +401,43 @@ const UserRouter: React.FC<StateProps> = (props) => {
     }
   }, [loggedIn, balanceChanged]);
 
-  useEffect(() => {
-    if (loggedIn) {
-      let refreshInterval = setInterval(() => {
-        checkPNStompClientSubscriptions();
-      }, 10000);
-      return () => {
-        clearInterval(refreshInterval);
-      };
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (loggedIn) {
+  //     let refreshInterval = setInterval(() => {
+  //       checkPNStompClientSubscriptions();
+  //     }, 10000);
+  //     return () => {
+  //       clearInterval(refreshInterval);
+  //     };
+  //   }
+  // }, []);
 
   // Websocket handler
-  useEffect(() => {
-    if (loggedIn) {
-      if (pushNotifWSConnection) {
-        disConnectToPushNotificationWS();
-      }
-      connectToPushNotification();
-    }
+  // useEffect(() => {
+  //   if (loggedIn) {
+  //     if (pushNotifWSConnection) {
+  //       disConnectToPushNotificationWS();
+  //     }
+  //     connectToPushNotification();
+  //   }
 
-    return () => {
-      if (pushNotifWSConnection) {
-        disConnectToPushNotificationWS();
-      }
-    };
-  }, [loggedIn]);
+  //   return () => {
+  //     if (pushNotifWSConnection) {
+  //       disConnectToPushNotificationWS();
+  //     }
+  //   };
+  // }, [loggedIn]);
 
-  useEffect(() => {
-    if (
-      loggedIn &&
-      !window.location.pathname.includes('multi-markets') &&
-      pushNotifWSConnection
-    ) {
-      subscribeWsForNotifications(false, houseId);
-      subscribeWsForNotificationsPerAdmin(false, houseId, parentId, accountId);
-    }
-  }, [pushNotifWSConnection, loggedIn]);
+  // useEffect(() => {
+  //   if (
+  //     loggedIn &&
+  //     !window.location.pathname.includes('multi-markets') &&
+  //     pushNotifWSConnection
+  //   ) {
+  //     subscribeWsForNotifications(false, houseId);
+  //     subscribeWsForNotificationsPerAdmin(false, houseId, parentId, accountId);
+  //   }
+  // }, [pushNotifWSConnection, loggedIn]);
 
   useEffect(() => {
     if (
@@ -451,10 +451,10 @@ const UserRouter: React.FC<StateProps> = (props) => {
     }
   }, [loggedIn, pathName]);
 
-  useEffect(() => {
-    pageViewEvent();
-    document?.getElementsByClassName('router-ctn')?.[0]?.scrollIntoView();
-  }, [pathName]);
+  // useEffect(() => {
+  //   pageViewEvent();
+  //   document?.getElementsByClassName('router-ctn')?.[0]?.scrollIntoView();
+  // }, [pathName]);
 
   useEffect(() => {
     if (loggedIn) {
@@ -508,24 +508,24 @@ const UserRouter: React.FC<StateProps> = (props) => {
               <div className="router-ctn">
                 <Switch>
                   <Route path="/home" component={HomePage} exact={true} />
-                  <Route path="/casino" component={CasinoV2} exact={true} />
+                  {/* <Route path="/casino" component={CasinoV2} exact={true} /> */}
                   {/* This below route is to show casino page with only our own providers(MAC88, MONK88, Fun games) */}
-                  <Route
+                  {/* <Route
                     path="/premium-casino"
                     component={CasinoV2}
                     exact={true}
-                  />
-                  <Route
+                  /> */}
+                  {/* <Route
                     path="/virtual_sports"
                     component={VirtualSports}
                     exact={true}
-                  />
+                  /> */}
 
-                  <Route
+                  {/* <Route
                     path="/indian_casino"
                     component={IndianCasinoPage}
                     exact={true}
-                  />
+                  /> */}
 
                   <Route
                     path="/promotions"
@@ -533,128 +533,128 @@ const UserRouter: React.FC<StateProps> = (props) => {
                     exact={true}
                   />
 
-                  <Route
+                  {/* <Route
                     path="/cb"
                     component={CricketBattleWidget}
                     exact={true}
-                  />
+                  /> */}
 
-                  <Route
+                  {/* <Route
                     path="/premium_sports"
                     component={SportsProviderIframe}
                     exact={true}
-                  />
+                  /> */}
 
-                  <Route path="/dc" component={CasinoNew} exact={true} />
-                  <Route
+                  {/* <Route path="/dc" component={CasinoNew} exact={true} /> */}
+                  {/* <Route
                     path="/resetPassword"
                     component={ResetPassword}
                     exact={true}
-                  />
+                  /> */}
                   <Route
                     path="/change-password"
                     component={ChangePassword}
                     exact={true}
                   />
-                  <Route
+                  {/* <Route
                     path="/dc/gamev1.1/:gamePath"
                     component={CasinoIframeNew}
                     exact={true}
-                  />
+                  /> */}
 
-                  <Route
+                  {/* <Route
                     path="/ic_account_statement"
                     component={Ledger}
                     exact={true}
-                  />
+                  /> */}
 
-                  <Route
+                  {/* <Route
                     path="/bonus_statement"
                     component={BonusStatement}
                     exact={true}
-                  ></Route>
+                  ></Route> */}
 
-                  <Route
+                  {/* <Route
                     path="/bonus/turnover_history"
                     component={TurnOverStatement}
                     exact={true}
-                  ></Route>
+                  ></Route> */}
 
-                  <Route
+                  {/* <Route
                     path="/deposit-turnover"
                     component={DepositTurnoverReport}
                     exact={true}
-                  ></Route>
+                  ></Route> */}
 
                   <Route
                     path="/exchange_sports"
                     render={() => <ExchangeSportsBook />}
                   ></Route>
-                  <Route
+                  {/* <Route
                     path="/dashboard"
                     render={() => <DashboardView />}
-                  ></Route>
-                  <Route
+                  ></Route> */}
+                  {/* <Route
                     path="/account_statement"
                     component={AccountStatement}
                     exact={true}
-                  ></Route>
-                  <Route
+                  ></Route> */}
+                  {/* <Route
                     path="/market_account_statement"
                     component={AccountStatementEventLevelView}
                     exact={true}
-                  ></Route>
-                  <Route
+                  ></Route> */}
+                  {/* <Route
                     path="/my_bets"
                     component={MyBets}
                     exact={true}
-                  ></Route>
+                  ></Route> */}
                   <Route
                     path="/my_wallet"
                     component={MyWallet}
                     exact={true}
                   ></Route>
 
-                  <Route
+                  {/* <Route
                     path="/affiliate_program"
                     component={Affiliate}
                     exact={true}
-                  ></Route>
+                  ></Route> */}
 
-                  <Route
+                  {/* <Route
                     path="/pl_statement"
                     component={UserPLStatement}
                     exact={true}
-                  ></Route>
-                  <Route
+                  ></Route> */}
+                  {/* <Route
                     path="/commission_report"
                     component={UserCommissionReport}
                     exact={true}
-                  ></Route>
+                  ></Route> */}
 
-                  <Route
+                  {/* <Route
                     path="/commission_report/:eventId"
                     component={UserCommissionBySportView}
                     exact={true}
-                  ></Route>
-
+                  ></Route> */}
+{/* 
                   <Route
                     path="/profile"
                     component={MyProfile}
                     exact={true}
-                  ></Route>
+                  ></Route> */}
 
-                  <Route
+                  {/* <Route
                     path="/profile/:tab"
                     component={MyProfile}
                     exact={true}
-                  ></Route>
+                  ></Route> */}
                   <Route
                     exact
                     path="/"
                     render={() => <Redirect to="/home" />}
                   />
-                  <Route path="/rules" render={() => <RulesAndRegulations />} />
+                  {/* <Route path="/rules" render={() => <RulesAndRegulations />} />
                   <Route path="/game-rules" render={() => <GameRules />} />
                   <Route
                     path="/responsible-gambling"
@@ -668,8 +668,8 @@ const UserRouter: React.FC<StateProps> = (props) => {
                         eventTypeID="Responsible Gaming"
                       />
                     )}
-                  />
-                  <Route
+                  /> */}
+                  {/* <Route
                     path="/about-us"
                     render={() => (
                       <ResponsibleGaming
@@ -677,8 +677,8 @@ const UserRouter: React.FC<StateProps> = (props) => {
                         eventTypeID="About Us"
                       />
                     )}
-                  />
-                  <Route
+                  /> */}
+                  {/* <Route
                     path="/terms-conditions"
                     render={() => (
                       <ResponsibleGaming
@@ -686,8 +686,8 @@ const UserRouter: React.FC<StateProps> = (props) => {
                         eventTypeID="Terms and conditions"
                       />
                     )}
-                  />
-                  <Route
+                  /> */}
+                  {/* <Route
                     path="/fairplay_policy"
                     render={() => (
                       <ResponsibleGaming
@@ -695,8 +695,8 @@ const UserRouter: React.FC<StateProps> = (props) => {
                         eventTypeID="fairplay_policy"
                       />
                     )}
-                  />
-                  <Route
+                  /> */}
+                  {/* <Route
                     path="/fairplay-terms-conditions"
                     render={() => (
                       <ResponsibleGaming
@@ -704,28 +704,28 @@ const UserRouter: React.FC<StateProps> = (props) => {
                         eventTypeID="fairplay_terms"
                       />
                     )}
-                  />
-                  <Route
+                  /> */}
+                  {/* <Route
                     path="/set-button-variables"
                     render={() => <ButtonVariables />}
-                  />
-                  <Route path="/sitemap" component={Sitemap} exact={true} />
+                  /> */}
+                  {/* <Route path="/sitemap" component={Sitemap} exact={true} /> */}
                   <>
-                    <Route
+                    {/* <Route
                       path="/transaction/withdraw"
                       component={Withdrawal}
                       exact={true}
-                    ></Route>
-                    <Route
+                    ></Route> */}
+                    {/* <Route
                       path="/transaction/deposit"
                       component={Deposit}
                       exact={true}
-                    ></Route>
-                    <Route
+                    ></Route> */}
+                    {/* <Route
                       path="/my_transactions"
                       component={TransactionRequest}
                       exact={true}
-                    ></Route>
+                    ></Route> */}
                   </>
                 </Switch>
                 {pathName !== '/premium_sports' && pathName !== '/profile' && (
@@ -763,7 +763,7 @@ const UserRouter: React.FC<StateProps> = (props) => {
                 </DialogTitle>
 
                 <DialogContent className="stl-dialog-content">
-                  <AdminNotification />
+                  {/* <AdminNotification /> */}
                 </DialogContent>
               </Dialog>
               <Dialog
@@ -790,20 +790,20 @@ const UserRouter: React.FC<StateProps> = (props) => {
                 </DialogTitle>
 
                 <DialogContent className="stl-dialog-content">
-                  {<MarketTermsCondi />}
+                  {/* {<MarketTermsCondi />} */}
                 </DialogContent>
               </Dialog>
             </IonContent>
 
             {windowSize.width < 720 && !pathName?.includes('/dc/gamev1.1/') && (
               <div className="mob-header">
-                <MobileHeader />
+                {/* <MobileHeader /> */}
               </div>
             )}
 
             {isMobile || isIOS ? (
               <div className="mob-view">
-                <MlobbyIframeNew />
+                {/* <MlobbyIframeNew /> */}
               </div>
             ) : null}
 
@@ -820,7 +820,7 @@ const UserRouter: React.FC<StateProps> = (props) => {
               )
             } */}
 
-            {showPopup && popupBanner && popupMobileBanner && (
+            {/* {showPopup && popupBanner && popupMobileBanner && (
               <Modal
                 open={showPopup}
                 closeHandler={closePopup}
@@ -838,9 +838,9 @@ const UserRouter: React.FC<StateProps> = (props) => {
                   }
                 />
               </Modal>
-            )}
+            )} */}
 
-            {!loggedIn && isApkAvailable && showApkPopup && (
+            {/* {!loggedIn && isApkAvailable && showApkPopup && (
               <Modal
                 open={showApkPopup}
                 closeHandler={closeApkPopup}
@@ -854,7 +854,7 @@ const UserRouter: React.FC<StateProps> = (props) => {
                   onClick={downloadApp}
                 />
               </Modal>
-            )}
+            )} */}
           </div>
         </IonApp>
       )}
@@ -882,8 +882,8 @@ const mapStateToProps = (state: any) => {
     commissionEnabled: state.common.commissionEnabled,
     balanceChanged: state.common.balanceChanged,
     notificationUpdated: state.common.notificationUpdated,
-    houseId: getHouseIdFromToken(),
-    parentId: getParentIdFromToken(),
+    // houseId: getHouseIdFromToken(),
+    // parentId: getParentIdFromToken(),
     accountId: sessionStorage.getItem('aid'),
     pushNotifWSConnection: state.exchangeSports.pushNotifWSConnection,
     langData: state.common.langData,
@@ -893,7 +893,7 @@ const mapStateToProps = (state: any) => {
 
 const mapDispatchToProps = (dispatch: Function) => {
   return {
-    fetchBalance: () => dispatch(fetchBalance()),
+    // fetchBalance: () => dispatch(fetchBalance()),
     setAllowedConfig: (allowedConfig: number) => dispatch(setAllowedConfig(allowedConfig)),
     setDomainConfig: (config: any) => dispatch(setDomainConfig(config)),
     setEnableCommission: (commission: boolean) => dispatch(enableCommission(commission)),

@@ -15,7 +15,6 @@ import '@ionic/react/css/core.css';
 import '@ionic/react/css/normalize.css';
 import '@ionic/react/css/structure.css';
 import '@ionic/react/css/typography.css';
-
 /* Optional CSS utils that can be commented out */
 import '@ionic/react/css/padding.css';
 import '@ionic/react/css/float-elements.css';
@@ -51,12 +50,13 @@ import { Casino } from '@mui/icons-material';
 import CasinoV2 from './pages/Casino/CasinoV2/CasinoV2';
 import MyWallet from './pages/MyWallet/MyWallet';
 import ExchangeSportsHome from './pages/ExchSportsBook/ExchangeSportsHome';
+import UserRouter from './router/UserRouter';
 const langModules = import.meta.glob<Record<string, any>>("./assets/lang_json/*.json");
 const LoginPage = lazy(() => import('./pages/LoginPage'));
 const AcceptTerms = lazy(() => import('./pages/AcceptTerms'));
 const ResetPassword = lazy(() => import('./pages/ResetPasswordPage'));
 const ForgotPwdForm = lazy(() => import('./components/ForgotPassword/ForgotPassword'));
-// const MainPage = lazy(() => import('./router/UserRouter'));
+const MainPage = lazy(() => import('./router/UserRouter'));
 
 declare global {
   interface Window {
@@ -297,15 +297,10 @@ const App: React.FC = (props:any) => {
                 <Route path="/login"><LoginPage /></Route>
                 <Route path="/register"><SignUp /></Route>
                 <Route path="/forgot-password"><ForgotPwdForm /></Route>
-                {/* <Route path="/"><HomePage /></Route> */}
-                <Route path="/MyWallet"><MyWallet /></Route>
-                <Route path="/ExchSportsHome"><ExchangeSportsHome /></Route>
-
-                {/* <Route path="/casino"><CasinoV2 /></Route> */}
-                <Route path="/promotions"><Promotions /></Route>
                 
-                <Route exact path="/">
-                  <Redirect to="/home" />
+                
+                   <Route exact path="/" component={UserRouter}>
+
                 </Route>    
               </Switch>
             
