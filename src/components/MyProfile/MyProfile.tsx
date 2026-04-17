@@ -194,6 +194,7 @@ const MyProfile: React.FC<{ langData: any }> = (props) => {
     //       show: true,
     //     });
     //   }
+    
       fetchData();
     } catch (err) {
       setErr(err?.response?.data?.message);
