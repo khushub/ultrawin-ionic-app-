@@ -115,6 +115,7 @@
         margin-top: 8px;
         .add-stake-input {
           display: flex;
+          
         }
       }
 
@@ -129,6 +130,8 @@
         outline: none;
         padding: 20px 12px;
         width: 50%;
+        color: black;
+        background-color: #fff;
 
         @media screen and (max-width: 370px) {
           width: 100%;
@@ -167,6 +170,7 @@
         background-color: white;
         border-radius: 40px;
         width: 50%;
+        
 
         @media screen and (max-width: 370px) {
           width: 100%;
@@ -179,6 +183,7 @@
           border-radius: 40px;
           width: 95%;
           position: relative;
+          
         }
       }
     }

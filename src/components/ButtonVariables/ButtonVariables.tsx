@@ -15,6 +15,7 @@ import { useHistory } from 'react-router-dom';
 import ReportBackBtn from '../../common/ReportBackBtn/ReportBackBtn';
 import { setAlertMsg } from '../../store/slices/commonSlice';
 // import { AlertDTO } from '../../models/Alert';
+import { postAPIAuth } from "../../services/apiInstance";
 
 type StoreProps = {
   buttonVariables: any[];
@@ -65,29 +66,121 @@ const MyBets: React.FC<StoreProps> = (props) => {
     //   });
     // }
     // fetchButtonVariables();
+try {
+    setLoading(true);
+
+    const payload = updateVariables.reduce((acc, item, index) => {
+      const i = index + 1;
+
+      acc[`label${i}`] = item.label;
+      acc[`price${i}`] = item.stake;
+
+      return acc;
+    }, {});
+
+    payload.type = "game";
+
+    const response = await postAPIAuth(
+      "/updateButtonAPI",
+      payload
+    );
+
+    console.log(response.data);
+
+    dispatch(
+      setAlertMsg({
+        type: "success",
+        message: "Saved Successfully",
+      })
+    );
+
+    getStakeButtons();
+
+  } catch (error) {
+    dispatch(
+      setAlertMsg({
+        type: "error",
+        message: "Save Failed",
+      })
+    );
+  }
+
     setLoading(false);
   };
 
+const getStakeButtons = async () => {
+  try {
+    setLoading(true);
+
+    const response = await postAPIAuth("/getStackButtonAPI", {});
+    console.log(response.data);
+
+    const res = response.data;
+
+    if (res.success === false || res.data.length === 0) {
+      const defaultButtons = [
+  { label: 100, stake: 100 },
+  { label: 200, stake: 200 },
+  { label: 500, stake: 500 },
+  { label: 1000, stake: 1000 },
+  { label: 2000, stake: 2000 },
+  { label: 5000, stake: 5000 },
+  { label: 10000, stake: 10000 },
+  { label: 15000, stake: 15000 },
+  { label: 20000, stake: 20000 },
+  { label: 50000, stake: 50000 },
+      ];
+
+      setUpdateVariables(defaultButtons);
+      return;
+    }
+
+    const priceArray = res.data?.priceArray || [];
+
+const formatted = priceArray.map((item: any) => {
+  const labelKey = Object.keys(item).find((k) =>
+    k.startsWith("label")
+  );
+
+  const priceKey = Object.keys(item).find((k) =>
+    k.startsWith("price")
+  );
+
+  return {
+    label: item[labelKey],
+    stake: item[priceKey],
+  };
+});
+
+setUpdateVariables(formatted);
+
+  } catch (error) {
+    console.log(error);
+  } finally {
+    setLoading(false);
+  }
+};
+
   useEffect(() => {
-    // fetchButtonVariables();
+    getStakeButtons();
   }, []);
 
 //   useEffect(() => {
 //     setUpdateVariables(buttonVariables);
 //   }, [buttonVariables]);
 
-useEffect(() => {
-  const dummyButtons = [
-    { label: "100", stake: 100 },
-    { label: "500", stake: 500 },
-    { label: "1000", stake: 1000 },
-    { label: "2000", stake: 2000 },
-    { label: "5000", stake: 5000 },
-    { label: "10000", stake: 10000 },
-  ];
+// useEffect(() => {
+//   const dummyButtons = [
+//     { label: "100", stake: 100 },
+//     { label: "500", stake: 500 },
+//     { label: "1000", stake: 1000 },
+//     { label: "2000", stake: 2000 },
+//     { label: "5000", stake: 5000 },
+//     { label: "10000", stake: 10000 },
+//   ];
 
-  setUpdateVariables(dummyButtons);
-}, []);
+//   setUpdateVariables(dummyButtons);
+// }, []);
 
   const updateButtonLabel = (index: number, label: string) => {
     const updateBtnVars = [...updateVariables];
@@ -210,8 +303,8 @@ useEffect(() => {
 
 const mapStateToProps = (state: any) => {
   return {
-    buttonVariables: state.exchBetslip.buttonVariables,
-    langData: state.common.langData,
+    buttonVariables: state?.exchBetslip?.buttonVariables || [],
+    langData: state?.common?.langData || {},
   };
 };
 

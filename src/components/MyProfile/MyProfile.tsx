@@ -31,6 +31,7 @@ import {
 } from './MyProfileSideBar/MyProfileComponents/Components';
 import MyProfileSideBar from './MyProfileSideBar/MyProfileSideBar';
 import BonusRewards from '../BonusRewards/BonusRewards';
+import ReportsHeader from '../../common/ReportsHeader/ReportsHeader';
 const Deposit = lazy(() => import('../../pages/Payment/Deposit'));
 const Withdrawal = lazy(() => import('../../pages/Payment/Withdrawal'));
 

@@ -6,7 +6,7 @@ import './PersonalInfo.scss';
 import Spinner from '../Spinner/Spinner';
 import { Button } from '@mui/material';
 import { demoUser, demoUserPrefix } from '../../util/stringUtil';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setAlertMsg } from '../../store/slices/commonSlice';
 import CustomButton from '../../common/CustomButton/CustomButton';
 
@@ -22,9 +22,11 @@ enum UserDetailFields {
 
 const PersonalInfo: React.FC<{ langData: any }> = (props) => {
   const { langData } = props;
-  const username = sessionStorage.getItem('username');
+const user = useSelector((state:any) => state.auth.user)  
+console.log(user);
+  const username = user?.username || sessionStorage.getItem('username');
   const pinCodeRegex = /^[1-9][0-9]{5}$/;
-  const [fullName, setFullName] = useState<string>(null);
+  const [fullName, setFullName] = useState(user?.fullname || '');
   const [phoneNumber, setPhoneNumber] = useState<number>(null);
   const [emailId, setEmailId] = useState<string>(null);
   const [address, setAddress] = useState<string>(null);

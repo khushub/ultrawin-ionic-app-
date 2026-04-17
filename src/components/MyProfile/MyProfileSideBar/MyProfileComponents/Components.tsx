@@ -84,9 +84,9 @@ export const Details = (props: DetailsProps) => {
 
 const mapStateToProps = (state: any) => {
   return {
-    balance: state.auth.balanceSummary.balance,
-    exposure: state.auth.balanceSummary.exposure,
-    bonus: state.auth.balanceSummary.bonus,
+    balance: state.auth?.balanceSummary?.balance || 0,
+    exposure: state.auth?.balanceSummary?.exposure || 0,
+    bonus: state.auth?.balanceSummary?.bonus || 0,
   };
 };
 export default connect(mapStateToProps)(Details);

@@ -669,20 +669,20 @@ body.dark {
   padding: 16px 12px;
   min-height: 85vh;
 
-  @media screen and(max-width: 720px) {
+  @media screen and (max-width: 720px) {
     background: none;
     margin: 0px 8px;
     padding: 0px;
   }
 
-  @media screen and(min-width: 720px) {
+  @media screen and (min-width: 720px) {
     .mob-view-mp {
       display: none !important;
     }
   }
 
   .mp-back-btn {
-    @media screen and(max-width: 720px) {
+    @media screen and (max-width: 720px) {
       padding: 0px 8px;
       margin-top: 5px;
     }
@@ -697,12 +697,12 @@ body.dark {
     margin-left: 10px;
     width: 100%;
 
-    @media screen and(max-width: 720px) {
+    @media screen and (max-width: 720px) {
       margin-left: 0px;
     }
 
     .deposit-ctn-new {
-      @media screen and(min-width: 720px) {
+      @media screen and (min-width: 720px) {
         margin: 0px;
       }
 
