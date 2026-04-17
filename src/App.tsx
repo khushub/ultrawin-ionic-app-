@@ -51,6 +51,8 @@ import CasinoV2 from './pages/Casino/CasinoV2/CasinoV2';
 import MyWallet from './pages/MyWallet/MyWallet';
 import ExchangeSportsHome from './pages/ExchSportsBook/ExchangeSportsHome';
 import UserRouter from './router/UserRouter';
+import MyProfile from './components/MyProfile/MyProfile';
+import ButtonVariables from './components/ButtonVariables/ButtonVariables';
 const langModules = import.meta.glob<Record<string, any>>("./assets/lang_json/*.json");
 const LoginPage = lazy(() => import('./pages/LoginPage'));
 const AcceptTerms = lazy(() => import('./pages/AcceptTerms'));
@@ -297,6 +299,9 @@ const App: React.FC = (props:any) => {
                 <Route path="/login"><LoginPage /></Route>
                 <Route path="/register"><SignUp /></Route>
                 <Route path="/forgot-password"><ForgotPwdForm /></Route>
+                <Route path="/my-profile"><MyProfile /></Route>
+                <Route path="/button-variables"><ButtonVariables /></Route>
+                
                 
                 
                    <Route exact path="/" component={UserRouter}>
@@ -335,13 +340,14 @@ export const useConsoleOpen = () => {
   useEffect(() => {
     let checkStatus;
 
-    var element = new Image();
-    Object.defineProperty(element, 'id', {
-      get: function () {
-        checkStatus = true;
-        throw new Error('Dev tools checker');
-      },
-    });
+   var element = new Image();
+
+Object.defineProperty(element, '__check__', {
+  get: function () {
+    checkStatus = true;
+    throw new Error('Dev tools checker');
+  },
+});
     requestAnimationFrame(function check() {
       setTimeout(() => {
         checkStatus = false;
