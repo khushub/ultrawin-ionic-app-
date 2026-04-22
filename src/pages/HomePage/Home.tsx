@@ -16,10 +16,11 @@ import { connect } from 'react-redux';
 // import { DcGameNew } from '../../models/dc/DcGame';
 import SitesInfo from './SiteInfo';
 import GamesCarousel from './GamesCarousel';
-import { AxiosResponse } from 'axios';
+import axios, { AxiosResponse } from 'axios';
 // import SVLS_API from '../../svls-api';
 import { setTrendingGames } from '../../store/slices/commonSlice';
 // import { CasinoGameDTO } from '../../models/IndianCasinoState';
+import trendingGamesData from '../../assets/api_json/indian-casino-games.json';
 
 import { isMobile } from 'react-device-detect';
 import { useHistory } from 'react-router';
@@ -79,35 +80,38 @@ const HomePage: React.FC<StoreProps> = (props) => {
     setShowDialog(show);
   };
 
-  const getGames = async () => {
-//     let response = await SVLS_API.get(
-//       '/catalog/v2/categories/indian-casino/games/',
-//       {
-//         params: {
-//           tag: 'live_casino_games,recommended_games,new_launch,slot',
-//           trending: true,
-//         },
-//       }
-//     );
+const getGames = async () => {
+  try {
+    const response = trendingGamesData;
 
-//     let macGames = response.data.filter(
-//       (game) => game.tag == 'recommended_games'
-//     );
-//   let trendingGamesData = response.data.filter(
-//   (game) => game.tag === 'new_launch'
-// );
-    
-//     let evolutionGames = response.data.filter(
-//       (game) => game.tag == 'live_casino_games'
-//     );
-//     let slotGames = response.data.filter((game) => game.tag == 'slot');
+    const macGamesData = response.filter(
+      (game) => game.tag === 'recommended_games'
+    );
 
-//     setMacGames(macGames);
-//     setTrendingGames(trendingGames);
-//     setTrendingGames(trendingGamesData);
-//     setEvolutionGames(evolutionGames);
-//     setSlotGames(slotGames);
-  };
+    const trendingGamesList = response.filter(
+      (game) => game.tag === 'new_launch'
+    );
+
+    const evolutionGamesData = response.filter(
+      (game) =>
+        game.tag === 'live_games' ||
+        game.tag === 'live_casino_games'
+    );
+
+    const slotGamesData = response.filter(
+      (game) => game.tag === 'slot'
+    );
+
+    setMacGames(macGamesData);
+    setTrendingGames(trendingGamesList);
+    setEvolutionGames(evolutionGamesData);
+    setSlotGames(slotGamesData);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+  
 
         // const fetchFavoruiteEvents = async () => {
         //   const response = await fetchFavEvents();

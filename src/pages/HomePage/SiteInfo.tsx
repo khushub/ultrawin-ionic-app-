@@ -1,10 +1,17 @@
 import { Skeleton, Card } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
-import Lottie from 'react-lottie';
+import Lottie from 'lottie-react';
 // import LANG_API from '../../api-services/language-api';
 import { makeStyles } from '@mui/styles';
 import { isMobile } from 'react-device-detect';
+import marbleRun from '../../assets/lottie_json/marble_run.json';
+import aviator from '../../assets/lottie_json/aviator.json';
+import mines from '../../assets/lottie_json//minws.json';
+import chickenGames from '../../assets/lottie_json/chicken_game.json';
+import colorPrediction from '../../assets/lottie_json/color_prediction.json';
+import livePrediction from '../../assets/lottie_json/live_prediction.json';
+
 
 const useStyles = makeStyles((theme) => ({
   sitesInfo: {
@@ -232,32 +239,16 @@ function SitesInfo({
     }
   };
 
-  const fetchJson = async () => {
-    try {
-      const newGifs = {}; // Create a new object to store the results
-
-      for (const game of [
-        'marble_run',
-        'mines',
-        'chicken_games',
-        'aviator',
-        'color_prediction',
-        'live_prediction',
-      ]) 
-    //   {
-    //     const res = await LANG_API.get(`/${game}.json.gz`);
-    //     newGifs[game] = res.data; // Store the result with the game name as the key
-    //   }
-
-      // Update state once with all the results
-      setGifs((prevState) => ({
-        ...prevState,
-        ...newGifs, // Merge the new data into the existing state
-      }));
-    } catch (error) {
-      console.error('Error fetching game data:', error);
-    }
-  };
+const fetchJson = async () => {
+  setGifs({
+    marble_run: marbleRun,
+    mines: mines,
+    chicken_games: chickenGames,
+    aviator: aviator,
+    color_prediction: colorPrediction,
+    live_prediction: livePrediction,
+  });
+};
 
   useEffect(() => {
     fetchJson();
@@ -304,7 +295,11 @@ function SitesInfo({
             >
               <div className="site-card-img">
                 {section.bannerInfo?.animationData ? (
-                  <Lottie options={section?.bannerInfo} />
+               <Lottie
+  animationData={section.bannerInfo.animationData}
+  loop={true}
+ 
+/>
                 ) : (
                   <div>
                     <Skeleton
@@ -374,7 +369,10 @@ function SitesInfo({
             >
               <div className="site-card-img">
                 {section.bannerInfo?.animationData ? (
-                  <Lottie options={section?.bannerInfo} />
+                <Lottie
+  animationData={section.bannerInfo.animationData}
+  loop={true}
+/>
                 ) : null}
               </div>
               {/* <CardContent className={classes.cardContent}>

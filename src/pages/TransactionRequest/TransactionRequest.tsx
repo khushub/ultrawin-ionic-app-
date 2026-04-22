@@ -20,7 +20,7 @@ import { connect, useDispatch, useSelector } from 'react-redux';
 
 import { useHistory } from 'react-router-dom';
 // import AGPAY_API from '../../api-services/feature-api';
-import  MyTransaction from '../../assets/images/reportIcons/MyTransaction.svg';
+import  MyTransaction from '../../assets/images/reportIcons/3.svg';
 import CustomTableMob, {
   HeaderParamsType,
   RowType,

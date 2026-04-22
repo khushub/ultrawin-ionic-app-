@@ -458,8 +458,8 @@
                 line-height: 40px;
             }
 
-            .MuiButton-label {
-                color: var(--ion-card-background-contrast);
+            .MuiButton-root {
+                color: var(--ion-card-background-contrast) !important;
                 text-transform: capitalize;
                 font-family: "Lato";
                 font-size: 12px;
@@ -489,7 +489,7 @@
             .check-bonus-btn {
                 margin-left: 20px;
                 color: black !important;
-                .MuiButton-label {
+                .MuiButton-root {
                     color: black;
                 }
             }
@@ -504,7 +504,7 @@
                     border-top: 3px solid white;
                 }
 
-                .MuiButton-label {
+                .MuiButton-root {
                     color: var(--active-text-color);
                 }
 
@@ -518,7 +518,7 @@
                     color: black !important;
                     animation: global-blink 2s infinite !important;
                     transition: background-color 2s;
-                    .MuiButton-label {
+                    .MuiButton-root {
                         color: black;
                     }
                 }
@@ -527,7 +527,7 @@
     }
 
     .color-change {
-        .MuiButton-label {
+        .MuiButton-root {
             animation-name: color-change !important;
             animation-duration: 3s;
             animation-iteration-count: infinite;
@@ -535,13 +535,12 @@
     }
 
     .cup-color-change {
-        &.active-link {
-            .MuiButton-label {
-                animation: none;
-            }
-        }
+      &.active-link .MuiButton-root,
+&.active .MuiButton-root {
+   color: var(--active-text-color) !important;
+}
 
-        .MuiButton-label {
+        .MuiButton-root {
             animation-name: cup-color-change !important;
             animation-duration: 3s;
             animation-iteration-count: infinite;
@@ -586,7 +585,7 @@
                 .MuiButton-root {
                     margin: 0px;
 
-                    .MuiButton-label {
+                    .MuiButton-root {
                         min-width: 54px;
                         font-size: 12px;
                         white-space: nowrap;
