@@ -70,7 +70,6 @@ const ReportsHeader = (props: Props) => {
       <div className="report-img-title">
         <div className="report-img-div-title">
           <div className="report-img-div">
-            {/* <img src={titleIcon} alt="" className="report-img" /> */}
             <div className="report-img-div">
   <img src={props.titleIcon} className="report-img" />
 </div>

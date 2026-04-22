@@ -71,8 +71,8 @@ import { fetchUserDetails } from '../store/slices/userDetailsSlice';
 // const SportsProviderIframe = lazy(
 //   () => import('../pages/SportsProvider/SportsProviderIframe')
 // );
-// const AccountStatement = lazy(
-//   () => import('../pages/AccountStatement/AccountStatement')
+const AccountStatement = lazy(
+  () => import('../pages/AccountStatement/AccountStatement') );
 // );
 // const AccountStatementEventLevelView = lazy(
 //   () => import('../pages/AccountStatement/AccountStatementEventLevel')
@@ -82,24 +82,24 @@ import { fetchUserDetails } from '../store/slices/userDetailsSlice';
 // );
 // const Deposit = lazy(() => import('../pages/Payment/Deposit'));
 // const Withdrawal = lazy(() => import('../pages/Payment/Withdrawal'));
-// const UserPLStatement = lazy(
-//   () => import('../pages/UserPLStatement/UserPLStatement')
-// );
-// const MyBets = lazy(() => import('../components/MyBets/MyBetsView'));
+const UserPLStatement = lazy(
+  () => import('../pages/UserPLStatement/UserPLStatement')
+);
+const MyBets = lazy(() => import('../components/MyBets/MyBets'));
 
 // const AdminNotification = lazy(
 //   () => import('../components/AdminNotifications/AdminNotification')
 // );
-// const ButtonVariables = lazy(
-//   () => import('../components/ButtonVariables/ButtonVariables')
-// );
+const ButtonVariables = lazy(
+  () => import('../components/ButtonVariables/ButtonVariables')
+);
 const ChangePassword = lazy(
   () => import('../components/ChangePassword/ChangePassword')
 );
-// const MobileHeader = lazy(
-//   () => import('../components/Header/MobileHeader/MobileHeader')
-// );
-// const MyProfile = lazy(() => import('../components/MyProfile/MyProfile'));
+const MobileHeader = lazy(
+  () => import('../components/Header/MobileHeader/MobileHeader')
+);
+const MyProfile = lazy(() => import('../components/MyProfile/MyProfile'));
 // const ResponsibleGaming = lazy(
 //   () => import('../components/ResponsibleGaming/ResponsibleGaming')
 // );
@@ -136,17 +136,17 @@ const ExchangeSportsBook = lazy(
 //   () => import('../pages/VirtualSports/VirtualSports')
 // );
 const SideHeader = lazy(() => import('../components/SideHeader/SideHeader'));
-// const BonusStatement = lazy(
-//   () => import('../pages/BonusStatement/BonusStatement')
-// );
-// const TurnOverStatement = lazy(
-//   () => import('../pages/TurnOverHistory/TurnOverStatement')
-// );
+const BonusStatement = lazy(
+  () => import('../pages/BonusStatement/BonusStatement')
+);
+const TurnOverStatement = lazy(
+  () => import('../pages/TurnOverStatement/TurnOverStatement')
+);
 // const DepositTurnoverReport = lazy(
 //   () => import('../pages/DepositTurnoverReport/DepositTurnoverReport')
 // );
 const MyWallet = lazy(() => import('../pages/MyWallet/MyWallet'));
-// const GameRules = lazy(() => import('../pages/GameRules/GameRules'));
+const GameRules = lazy(() => import('../pages/GameRules/GameRules'));
 // const Ledger = lazy(
 //   () => import('../../src/pages/AccountStatement/AccountStatementICLevel')
 // );
@@ -548,17 +548,17 @@ const UserRouter: React.FC<StateProps> = (props) => {
                     exact={true}
                   /> */}
 
-                  {/* <Route
+                  <Route
                     path="/bonus_statement"
                     component={BonusStatement}
                     exact={true}
-                  ></Route> */}
+                  ></Route>
 
-                  {/* <Route
+                  <Route
                     path="/bonus/turnover_history"
                     component={TurnOverStatement}
                     exact={true}
-                  ></Route> */}
+                  ></Route>
 
                   {/* <Route
                     path="/deposit-turnover"
@@ -574,21 +574,21 @@ const UserRouter: React.FC<StateProps> = (props) => {
                     path="/dashboard"
                     render={() => <DashboardView />}
                   ></Route> */}
-                  {/* <Route
+                  <Route
                     path="/account_statement"
                     component={AccountStatement}
                     exact={true}
-                  ></Route> */}
+                  ></Route>
                   {/* <Route
                     path="/market_account_statement"
                     component={AccountStatementEventLevelView}
                     exact={true}
                   ></Route> */}
-                  {/* <Route
+                  <Route
                     path="/my_bets"
                     component={MyBets}
                     exact={true}
-                  ></Route> */}
+                  ></Route>
                   <Route
                     path="/my_wallet"
                     component={MyWallet}
@@ -601,11 +601,11 @@ const UserRouter: React.FC<StateProps> = (props) => {
                     exact={true}
                   ></Route> */}
 
-                  {/* <Route
+                  <Route
                     path="/pl_statement"
                     component={UserPLStatement}
                     exact={true}
-                  ></Route> */}
+                  ></Route>
                   {/* <Route
                     path="/commission_report"
                     component={UserCommissionReport}
@@ -617,12 +617,12 @@ const UserRouter: React.FC<StateProps> = (props) => {
                     component={UserCommissionBySportView}
                     exact={true}
                   ></Route> */}
-{/* 
+                
                   <Route
                     path="/profile"
                     component={MyProfile}
                     exact={true}
-                  ></Route> */}
+                  ></Route>
 
                   {/* <Route
                     path="/profile/:tab"
@@ -634,6 +634,7 @@ const UserRouter: React.FC<StateProps> = (props) => {
                     path="/"
                     render={() => <Redirect to="/home" />}
                   />
+                   <Route path="/game-rules" render={() => <GameRules />} />
                   {/* <Route path="/rules" render={() => <RulesAndRegulations />} />
                   <Route path="/game-rules" render={() => <GameRules />} />
                   <Route
@@ -685,10 +686,10 @@ const UserRouter: React.FC<StateProps> = (props) => {
                       />
                     )}
                   /> */}
-                  {/* <Route
+                  <Route
                     path="/set-button-variables"
                     render={() => <ButtonVariables />}
-                  /> */}
+                  />
                   {/* <Route path="/sitemap" component={Sitemap} exact={true} /> */}
                   <>
                     {/* <Route
@@ -777,7 +778,7 @@ const UserRouter: React.FC<StateProps> = (props) => {
 
             {windowSize.width < 720 && !pathName?.includes('/dc/gamev1.1/') && (
               <div className="mob-header">
-                {/* <MobileHeader /> */}
+                <MobileHeader />
               </div>
             )}
 
