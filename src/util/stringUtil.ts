@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import LiveImg from "../assets/images/sportsbook/icons/liveIcon.svg";
 
 // import BaseballImg from "../assets/images/sportsbook/baseball-live.png";
@@ -9,13 +10,13 @@ import LiveImg from "../assets/images/sportsbook/icons/liveIcon.svg";
 // import TennisImg from "../assets/images/sportsbook/tennis-inplay.png";
 
 //new icon
-// import { ReactComponent as NewBaseballImg } from "../assets/images/sportsbook/new-inplay-icons/baseball.svg";
-// import { ReactComponent as NewBasketballImg } from "../assets/images/sportsbook/new-inplay-icons/baseketball.svg";
-// import { ReactComponent as NewCricketImg } from "../assets/images/sportsbook/new-inplay-icons/cricket.svg";
-// import { ReactComponent as NewFootBallImg } from "../assets/images/sportsbook/new-inplay-icons/football.svg";
-// import { ReactComponent as NewGreyHoundImg } from "../assets/images/sportsbook/new-inplay-icons/greyhound.svg";
-// import { ReactComponent as NewHorseInplay } from "../assets/images/sportsbook/new-inplay-icons/horse.svg";
-// import { ReactComponent as NewTennisImg } from "../assets/images/sportsbook/new-inplay-icons/tennis.svg";
+import NewBaseballImg from "../assets/images/sportsbook/new-inplay-icons/baseball.svg?react";
+import NewBasketballImg from "../assets/images/sportsbook/new-inplay-icons/baseketball.svg?react";
+import NewCricketImg from "../assets/images/sportsbook/new-inplay-icons/cricket.svg?react";
+import NewFootBallImg from "../assets/images/sportsbook/new-inplay-icons/football.svg?react";
+import NewGreyHoundImg from "../assets/images/sportsbook/new-inplay-icons/greyhound.svg?react";
+import NewHorseInplay from "../assets/images/sportsbook/new-inplay-icons/horse.svg?react";
+import NewTennisImg from "../assets/images/sportsbook/new-inplay-icons/tennis.svg?react";
 // import { ReactComponent as NewFutsalImg } from "../assets/images/sidebar/futsal.svg";
 // import { ReactComponent as NewDartsImg } from "../assets/images/sidebar/darts.svg";
 // import { ReactComponent as NewVolleyballImg } from "../assets/images/sidebar/volleyball.svg";
@@ -26,7 +27,6 @@ import LiveImg from "../assets/images/sportsbook/icons/liveIcon.svg";
 // import { ReactComponent as MMAImg } from "../assets/images/sidebar/mma.svg";
 // import { ReactComponent as BinaryImg } from "../assets/images/sidebar/binary.svg";
 import { BRAND_DOMAIN } from "../constants/Branding";
-
 
 export function similarity(s1: string, s2: string) {
     let longer = s1;
@@ -68,6 +68,9 @@ function editDistance(s1: string, s2: string) {
     }
     return costs[s2.length];
 }
+
+/** Provider name/id for BetFair (used for odds fallback logic in events tables). */
+export const BETFAIR_PROVIDER_ID = "BetFair";
 
 export const OutcomeDescByEnumMap = {
     Lost: "Lost",
@@ -199,25 +202,25 @@ export const liveImagesMap = {
 //     "99994": "",
 // };
 
-// export const SportIconMapInplay = {
-//     "1": NewFootBallImg,
-//     "2": NewTennisImg,
-//     "4": NewCricketImg,
-//     "7": NewHorseInplay,
-//     "4339": NewGreyHoundImg,
-//     "7522": NewBasketballImg,
-//     "7511": NewBaseballImg,
-//     sr_sport_29: NewFutsalImg,
-//     sr_sport_22: NewDartsImg,
-//     sr_sport_23: NewVolleyballImg,
-//     sr_sport_20: NewTableTennisImg,
-//     "99990": BinaryImg,
-//     "2378961": PoliticsImg,
-//     sr_sport_4: NewIceHockeyImg,
-//     sr_sport_117: MMAImg,
-//     sr_sport_12: RugbyImg,
-//     "99994": "",
-// };
+export const SportIconMapInplay = {
+    "1": NewFootBallImg,
+    "2": NewTennisImg,
+    "4": NewCricketImg,
+    "7": NewHorseInplay,
+    "4339": NewGreyHoundImg,
+    "7522": NewBasketballImg,
+    "7511": NewBaseballImg,
+    // sr_sport_29: NewFutsalImg,
+    // sr_sport_22: NewDartsImg,
+    // sr_sport_23: NewVolleyballImg,
+    // sr_sport_20: NewTableTennisImg,
+    // "99990": BinaryImg,
+    // "2378961": PoliticsImg,
+    // sr_sport_4: NewIceHockeyImg,
+    // sr_sport_117: MMAImg,
+    // sr_sport_12: RugbyImg,
+    // "99994": "",
+};
 
 const SportIdByNameMap: { [key: string]: string } = {
     soccer: "1",
@@ -747,3 +750,22 @@ export const ValidateOdds = (eventData: any, bets: any[]) => {
         }
     }
 };
+
+const getCurrencyTypeFromToken = () => {
+    if (sessionStorage.getItem("jwt_token")) {
+        const claim = sessionStorage.getItem("jwt_token").split(".")[1];
+        return JSON.parse(window.atob(claim)).cur;
+    }
+    return 0;
+};
+
+export const isOddEvenFancy = (
+    marketName?: string,
+    oddType?: string,
+): boolean => {
+    if (oddType === "ODD_EVEN") return true;
+    const name = (marketName || "").toLowerCase();
+    return name.includes("odd even run bhav");
+};
+
+export const INDIAN_PREMIER_LEAGUE_COMPETITION_NAME = "Indian Premier League";

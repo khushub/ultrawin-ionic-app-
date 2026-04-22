@@ -1,13 +1,6 @@
 import React, { useEffect, useState } from 'react';
-// import Sports from '../../assets/images/promotions/sports.webp';
-// import FortuneWheel from '../../assets/images/promotions/fortune_wheel.webp';
-// import Ezugi from '../../assets/images/promotions/ezugi.webp';
-// import CasinoPromotion from '../../assets/images/promotions/casino_promotion.webp';
-// import Cricket from '../../assets/images/promotions/cricket.webp';
-// import Promotion from '../../assets/images/promotions/promotion.webp';
 import './PromotionSidebar.scss';
 import { NavLink, useHistory, useLocation } from 'react-router-dom';
-// import { AuthResponse } from '../../models/api/AuthResponse';
 // import SVLS_API from '../../svls-api';
 import { BRAND_DOMAIN } from '../../constants/Branding';
 // import { DcGameNew } from '../../models/dc/DcGame';
@@ -17,7 +10,6 @@ import { isMobile } from 'react-device-detect';
 
 type PromotionProps = {
   loggedIn: boolean;
-  loggedInUserStatus: any;
 };
 
 const lottieBanners = [
@@ -29,7 +21,7 @@ const lottieBanners = [
 ];
 
 const PromotionSidebar: React.FC<PromotionProps> = (props) => {
-  const { loggedIn, loggedInUserStatus } = props;
+  const { loggedIn } = props;
   const [apiMobBanners, setApiMobBanners] = useState([]);
   const [games, setGames] = useState<any[]>([]);
   const [showDialog, setShowDialog] = useState<boolean>(false);
@@ -62,7 +54,7 @@ const PromotionSidebar: React.FC<PromotionProps> = (props) => {
       category = 'Baseballbanner';
     }
     // try {
-    //   const response: AuthResponse = await SVLS_API.get(
+    //   const response: any = await SVLS_API.get(
     //     `/account/v2/books/${BRAND_DOMAIN}/banners`,
     //     {
     //       headers: {
@@ -147,10 +139,6 @@ const PromotionSidebar: React.FC<PromotionProps> = (props) => {
     subProvider: string
   ) => {
     if (loggedIn) {
-      // status check
-      if (loggedInUserStatus === 0 || loggedInUserStatus === 3) {
-        history.push(`/home`);
-      }
       if (provider === 'Indian Casino') {
         history.push(`/casino/indian/${gameCode}`);
       } else {
@@ -210,15 +198,8 @@ const PromotionSidebar: React.FC<PromotionProps> = (props) => {
 };
 
 const mapStateToProps = (state: any) => {
-  let status = 0;
-  if (state.auth.loggedIn) {
-    status = JSON.parse(
-      window.atob(sessionStorage.getItem('jwt_token').split('.')[1])
-    ).status;
-  }
   return {
     loggedIn: state.auth.loggedIn,
-    loggedInUserStatus: status,
   };
 };
 

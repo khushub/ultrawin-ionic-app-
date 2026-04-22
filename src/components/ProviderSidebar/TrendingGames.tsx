@@ -1,29 +1,16 @@
 import React, { useEffect, useState } from 'react';
-// import { any } from '../../models/dc/DcGame';
-// import { RootState } from '../../models/RootState';
 import { setTrendingGames } from '../../store/slices/commonSlice';
 import { connect } from 'react-redux';
-// import { getCurrencyTypeFromToken } from '../../store';
-
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogActions,
-  Button,
-} from '@mui/material';
+import { Dialog, DialogContent, DialogTitle, DialogActions, Button } from '@mui/material';
 import { useHistory } from 'react-router';
-import { AxiosResponse } from 'axios';
-// import SVLS_API from '../../svls-api';
-
 import { NavLink } from 'react-router-dom';
-import ChevronRightOutlinedIcon from '@mui/icons-material/ChevronRightOutlined';
+import { ChevronRightOutlined } from '@mui/icons-material';
 import { Skeleton } from '@mui/material';
+
 
 type TrendingProps = {
   trendingGames: any[];
   loggedIn: boolean;
-  loggedInUserStatus: any;
   setTrendingGames: Function;
   langData: any;
 };
@@ -32,7 +19,6 @@ const TrendingGames: React.FC<TrendingProps> = (props) => {
   const {
     trendingGames,
     loggedIn,
-    loggedInUserStatus,
     setTrendingGames,
     langData,
   } = props;
@@ -53,10 +39,6 @@ const TrendingGames: React.FC<TrendingProps> = (props) => {
     superProvider: string
   ) => {
     if (loggedIn) {
-      // status check
-      if (loggedInUserStatus === 0 || loggedInUserStatus === 3) {
-        history.push(`/home`);
-      }
       if (provider === 'Indian Casino') {
         history.push(`/casino/indian/${gameCode}`);
       } else {
@@ -73,65 +55,10 @@ const TrendingGames: React.FC<TrendingProps> = (props) => {
   };
 
   const getTrendingGames = async () => {
-    // let response: AxiosResponse;
-    // response = await SVLS_API.get(
-    //   '/catalog/v2/categories/indian-casino/games/',
-    //   {
-    //     params: {
-    //       providerId: 'MAC88,DC',
-    //       trending: true,
-    //       subProviderId: '',
-    //     },
-    //   }
-    // );
-
-    // let trendingGames = response?.data?.filter(
-    //   (game) => game?.tag == 'new_launch'
-    // );
-  const rulesData = [
-    {
-      gameId: '1',
-      gameName: 'Cricket Rules',
-      gameCode: 'CRICKET',
-      providerName: 'Rules',
-      subProviderName: 'Rules',
-      superProviderName: 'Rules',
-      urlThumb:
-        'https://via.placeholder.com/250x140.png?text=Cricket+Rules',
-    },
-    {
-      gameId: '2',
-      gameName: 'Football Rules',
-      gameCode: 'FOOTBALL',
-      providerName: 'Rules',
-      subProviderName: 'Rules',
-      superProviderName: 'Rules',
-      urlThumb:
-        'https://via.placeholder.com/250x140.png?text=Football+Rules',
-    },
-    {
-      gameId: '3',
-      gameName: 'Casino Rules',
-      gameCode: 'CASINO',
-      providerName: 'Rules',
-      subProviderName: 'Rules',
-      superProviderName: 'Rules',
-      urlThumb:
-        'https://via.placeholder.com/250x140.png?text=Casino+Rules',
-    },
-    {
-      gameId: '4',
-      gameName: 'Live Betting Rules',
-      gameCode: 'LIVE',
-      providerName: 'Rules',
-      subProviderName: 'Rules',
-      superProviderName: 'Rules',
-      urlThumb:
-        'https://via.placeholder.com/250x140.png?text=Live+Betting',
-    },
-  ];
-
-    setTrendingGames(rulesData);
+    const jsonModule = await import('../../assets/api_json/trending-games.json');
+    const rawGamesData = jsonModule.default;
+    const trendingGames = rawGamesData?.filter((game) => game?.tag == 'new_launch');
+    setTrendingGames(trendingGames);
   };
 
   useEffect(() => {
@@ -182,7 +109,7 @@ const TrendingGames: React.FC<TrendingProps> = (props) => {
       <div className="trending-game-heading">
         <div>{langData?.['trending_games']}</div>
         <NavLink className="see-more" to={`/casino`}>
-          {langData?.['see_more']} <ChevronRightOutlinedIcon />{' '}
+          {langData?.['see_more']} <ChevronRightOutlined />{' '}
         </NavLink>
       </div>
       <div className="games-container">
@@ -253,16 +180,9 @@ const TrendingGames: React.FC<TrendingProps> = (props) => {
 };
 
 const mapStateToProps = (state: any) => {
-  let status = 0;
-  if (state.auth.loggedIn) {
-    status = JSON.parse(
-      window.atob(sessionStorage.getItem('jwt_token').split('.')[1])
-    ).status;
-  }
   return {
     loggedIn: state.auth.loggedIn,
     trendingGames: state.common.trendingGames,
-    loggedInUserStatus: status,
   };
 };
 

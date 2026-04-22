@@ -1,5 +1,13 @@
 import { IonSpinner } from "@ionic/react";
-import { FormControl, FormHelperText, IconButton, InputAdornment, OutlinedInput, TextField, Button } from "@mui/material";
+import {
+    FormControl,
+    FormHelperText,
+    IconButton,
+    InputAdornment,
+    OutlinedInput,
+    TextField,
+    Button,
+} from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
@@ -29,7 +37,11 @@ import SocialMediaNew from "../SocialMediaNew/SocialMediaNew";
 // import CopyIcon from "../../assets/images/MyProfileIcons/copy_icon.svg";
 import { StyledAlertBox } from "../Alert/AlertBox";
 import { CONFIG } from "../../config/config";
-import { loginSuccess, requestEnd, requestStart } from "../../store/slices/authSlice";
+import {
+    loginSuccess,
+    requestEnd,
+    requestStart,
+} from "../../store/slices/authSlice";
 import { postAPI, postAPIAuth } from "../../services/apiInstance";
 
 type ForgotPwdForm = {
@@ -44,11 +56,7 @@ const ForgotPwdForm: React.FC<ForgotPwdForm> = (props) => {
     return (
         <div className="fgt-pwd">
             <div className="title-row">
-                <img
-                    src={CONFIG.logo}
-                    alt="title"
-                    className="logo"
-                />
+                <img src={CONFIG.logo} alt="title" className="logo" />
             </div>
             <div className="form-ctn">
                 <UsernameVerfication langData={langData} />
@@ -85,21 +93,26 @@ function UsernameVerfication({ langData }) {
 
     const sendOtpFormik = useFormik({
         initialValues: { username: "", phonenumber: "" },
-        validationSchema: () => Yup.object(
-            option === "Username"? {
-                username: Yup.string()
-                .required(requiredMessage)
-                .min(4)
-                .max(20)
-                .trim()
-                .matches(
-                    /^[a-zA-Z0-9 ]+$/,
-                    langData?.["special_characters_restriction_txt"]
-                ),
-            } : {
-                phonenumber: Yup.string().required(requiredMessage),
-            }
-        ),
+        validationSchema: () =>
+            Yup.object(
+                option === "Username"
+                    ? {
+                          username: Yup.string()
+                              .required(requiredMessage)
+                              .min(4)
+                              .max(20)
+                              .trim()
+                              .matches(
+                                  /^[a-zA-Z0-9 ]+$/,
+                                  langData?.[
+                                      "special_characters_restriction_txt"
+                                  ],
+                              ),
+                      }
+                    : {
+                          phonenumber: Yup.string().required(requiredMessage),
+                      },
+            ),
         onSubmit: (values) => {
             setErrorMsg(null);
             if (!otpTimer) {
@@ -133,120 +146,114 @@ function UsernameVerfication({ langData }) {
             const resetPwdReq = {
                 resetPassword: values.newPassword,
             };
-           const phoneNumber = sendOtpFormik.values.phonenumber;
+            const phoneNumber = sendOtpFormik.values.phonenumber;
 
-resetPassword(
-  phoneNumber, 
-  values.otp,
-  resetPwdReq,
-);
+            resetPassword(phoneNumber, values.otp, resetPwdReq);
         },
     });
 
-const resetPassword = async (phone, otp, request) => {
-  try {
-    setLoading(true);
-    dispatch(requestStart());
+    const resetPassword = async (phone, otp, request) => {
+        try {
+            setLoading(true);
+            dispatch(requestStart());
 
-    const onlyDigits = phone.replace(/\D/g, '');
-    const actualPhone = onlyDigits.slice(-10);
+            const onlyDigits = phone.replace(/\D/g, "");
+            const actualPhone = onlyDigits.slice(-10);
 
-    const data = {
-      phone: actualPhone,
-      orderId: order,
-      otp: otp,
-      managerId: CONFIG.managerId,
-      countryCode: "91",
+            const data = {
+                phone: actualPhone,
+                orderId: order,
+                otp: otp,
+                managerId: CONFIG.managerId,
+                countryCode: "91",
+            };
+
+            // ✅ STEP 1: OTP VERIFY
+            const verifyRes = await postAPI("/loginWithOtpAPI", data);
+
+            const token = verifyRes?.data?.output?.verifytoken;
+
+            if (!verifyRes?.data?.success || !token) {
+                setErrMsg(verifyRes?.data?.message || "OTP incorrect");
+                return;
+            }
+
+            // ✅ STEP 2: SAVE TOKEN (Redux + localStorage)
+            dispatch(
+                loginSuccess({
+                    user: verifyRes?.data?.output?.details,
+                    token: token,
+                }),
+            );
+
+            // ✅ STEP 3: PASSWORD UPDATE (AUTH API)
+            const updateRes = await postAPIAuth("/changePasswordAPI", {
+                password: request.resetPassword,
+                token: token,
+            });
+
+            console.log("Update Password Response:", updateRes);
+
+            if (updateRes?.data?.success) {
+                dispatch(
+                    setAlertMsg({
+                        type: "success",
+                        message: "Password updated successfully ✅",
+                    }),
+                );
+            } else {
+                setErrMsg(updateRes?.data?.message);
+            }
+        } catch (err) {
+            setErrMsg(err?.response?.data?.message || "Something went wrong");
+        } finally {
+            dispatch(requestEnd());
+            setLoading(false);
+        }
     };
 
-    // ✅ STEP 1: OTP VERIFY
-    const verifyRes = await postAPI('/loginWithOtpAPI', data);
+    const sendOtp = async () => {
+        setErrorMsg("");
 
-    const token = verifyRes?.data?.output?.verifytoken;
+        try {
+            let phoneNumber = sendOtpFormik.values.phonenumber;
 
-    if (!verifyRes?.data?.success || !token) {
-      setErrMsg(verifyRes?.data?.message || "OTP incorrect");
-      return;
-    }
+            // 🔥 CLEAN NUMBER (IMPORTANT)
+            const onlyDigits = phoneNumber.replace(/\D/g, "");
+            const countryCode = "91";
+            const actualPhone = onlyDigits.startsWith(countryCode)
+                ? onlyDigits.slice(countryCode.length)
+                : onlyDigits;
 
-    // ✅ STEP 2: SAVE TOKEN (Redux + localStorage)
-    dispatch(
-      loginSuccess({
-        user: verifyRes?.data?.output?.details,
-        token: token,
-      })
-    );
+            const data = {
+                phone: actualPhone,
+                managerId: CONFIG.managerId,
+                countryCode: countryCode,
+            };
 
-    // ✅ STEP 3: PASSWORD UPDATE (AUTH API)
-   const updateRes = await postAPIAuth('/changePasswordAPI', {
-  password: request.resetPassword,
-  token: token,
-});
+            const response = await postAPI("/createOtpAPI", data);
+            console.log("OTP Response:", response);
 
-console.log("Update Password Response:", updateRes);
+            if (response?.data?.success) {
+                handleOtpTimer(60);
+                setDisable(false);
+                setOrder(response?.data?.orderId);
 
-    if (updateRes?.data?.success) {
-      dispatch(
-        setAlertMsg({
-          type: "success",
-          message: "Password updated successfully ✅",
-        })
-      );
-    } else {
-      setErrMsg(updateRes?.data?.message);
-    }
-
-  } catch (err) {
-    setErrMsg(err?.response?.data?.message || "Something went wrong");
-  } finally {
-    dispatch(requestEnd());
-    setLoading(false);
-  }
-};
-
-const sendOtp = async () => {
-  setErrorMsg('');
-
-  try {
-    let phoneNumber = sendOtpFormik.values.phonenumber;
-
-    // 🔥 CLEAN NUMBER (IMPORTANT)
-    const onlyDigits = phoneNumber.replace(/\D/g, '');
-    const countryCode = "91";
-    const actualPhone = onlyDigits.startsWith(countryCode)
-      ? onlyDigits.slice(countryCode.length)
-      : onlyDigits;
-
-    const data = {
-      phone: actualPhone,
-      managerId: CONFIG.managerId,
-      countryCode: countryCode,
+                dispatch(
+                    setAlertMsg({
+                        type: "success",
+                        message: "OTP Sent Successfully",
+                    }),
+                );
+            } else {
+                setErrorMsg(response?.data?.message);
+            }
+        } catch (err) {
+            setErrorMsg(err?.response?.data?.message || "OTP failed");
+        } finally {
+            setProgress(false);
+        }
     };
-
-    const response = await postAPI('/createOtpAPI', data);
-    console.log("OTP Response:", response);
-
-    if (response?.data?.success) {
-      handleOtpTimer(60);
-      setDisable(false);
-      setOrder(response?.data?.orderId)
-
-      dispatch(
-        setAlertMsg({
-          type: "success",
-          message: "OTP Sent Successfully",
-        })
-      );
-    } else {
-      setErrorMsg(response?.data?.message);
-    }
-
-  } catch (err) {
-    setErrorMsg(err?.response?.data?.message || "OTP failed");
-  } finally {
-    setProgress(false);
-  }
-};
 
     const redirectToSignUp = () => {
         history.push("/register");

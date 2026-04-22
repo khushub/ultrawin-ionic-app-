@@ -4,8 +4,6 @@ import { connect } from 'react-redux';
 
 import EventsTable from '../../components/ExchEventsTable/ExchEventsTable';
 import ExchRaceTable from '../../components/ExchEventsTable/ExchRaceEventsTable';
-// import { RootState } from '../../models/RootState';
-// import { SelectedObj } from '../../models/ExchangeSportsState';
 import './ExchangeSportsHomeView.scss';
 import PromotionSidebar from '../../components/ProviderSidebar/PromotionSidebar';
 import TrendingGames from '../../components/ProviderSidebar/TrendingGames';
@@ -19,6 +17,7 @@ type StoreProps = {
 
 const ExchSportsHome: React.FC<StoreProps> = (props) => {
   const { loggedIn, selectedEventType, langData } = props;
+  console.log('Choota');
   return (
     <div>
       <IonRow className="sports-home-view">
@@ -54,7 +53,7 @@ const ExchSportsHome: React.FC<StoreProps> = (props) => {
 const mapStateToProps = (state: any) => {
   return {
     loggedIn: state.auth.loggedIn,
-    selectedEventType: state.exchangeSports.selectedEventType,
+    selectedEventType: state.homeMarkets.selectedEventType,
     langData: state.common.langData,
   };
 };

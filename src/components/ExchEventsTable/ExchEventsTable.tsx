@@ -1,35 +1,18 @@
-import {
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-} from '@mui/material';
-
+import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { NavLink, useHistory, useLocation, useParams } from 'react-router-dom';
-// import { SelectedObj } from '../../models/ExchangeSportsState';
-// import { RootState } from '../../models/RootState';
-// import {
-//   fetchEventsByCompetition,
-//   fetchEventsBySport,
-//   getExchangeEvents,
-//   setCompetition,
-//   setExchEvent,
-// } from '../../store';
+import { fetchEventsByCompetition, fetchEventsBySport, setCompetition, setExchEvent } from '../../store/slices/homeMarketsSlice';
+import { getExchangeEvents } from '../../store/selectors/homeMarketsSelectors';
 import AddIcon from '@mui/icons-material/Add';
 
 import moment from 'moment';
-// import NoEventsIcon from '../../assets/images/No_events_icon.svg';
+import NoEventsIcon from '../../assets/images/No_events_icon.svg';
 import EventDateDisplay from '../../common/EventDateDisplay/EventDateDisplay';
 import EventName from '../../common/EventName/EventName';
 import MarketEnabled from '../../common/MarketEnabled/MarketEnabled';
 import NoDataComponent from '../../common/NoDataComponent/NoDataComponent';
 import { BRAND_NAME, PROVIDER_ID } from '../../constants/Branding';
-// import { EventDTO } from '../../models/common/EventDTO';
 // import {
 //   disconnectToWS,
 //   subscribeWsForEventOdds,
@@ -41,9 +24,9 @@ import SEO from '../SEO/Seo';
 import './ExchEventsTable.scss';
 import { isMobile } from 'react-device-detect';
 import {
-//   BETFAIR_PROVIDER_ID,
+  BETFAIR_PROVIDER_ID,
   getSportLangKeyByName,
-//   SportIconMapInplay,
+  SportIconMapInplay,
   SPToBFIdMap,
 } from '../../util/stringUtil';
 // import CATALOG_API from '../../catalog-api';
@@ -51,23 +34,24 @@ import {
 import { Button, Tabs } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
 import { Check } from '@mui/icons-material';
+
 type StoreProps = {
   events: any[];
   selectedEventType: any;
   selectedCompetition: any;
-//   fetchEventsByCompetition: (
-//     sportId: string,
-//     competitionId: string,
-//     events: any[]
-//   ) => void;
-//   setExchEvent: (event: any) => void;
-//   setCompetition: (competition: any) => void;
-//   fetchEventsBySport: (sportId: string, events: any[]) => void;
+  fetchEventsByCompetition: (
+    sportId: string,
+    competitionId: string,
+    events: any[]
+  ) => void;
+  setExchEvent: (event: any) => void;
+  setCompetition: (competition: any) => void;
+  fetchEventsBySport: (sportId: string, events: any[]) => void;
   fetchingEvents: boolean;
   allowedConfig: number;
   loggedIn: boolean;
-  betFairWSConnected: boolean;
-  topicUrls: any;
+  // betFairWSConnected: boolean;
+  // topicUrls: any;
   loading: boolean;
   langData: any;
 };
@@ -83,18 +67,17 @@ const EventsTable: React.FC<StoreProps> = (props) => {
     events,
     selectedEventType,
     selectedCompetition,
-    // fetchEventsByCompetition,
-    // setExchEvent,
-    // setCompetition,
-    // fetchEventsBySport,
+    fetchEventsByCompetition,
+    setExchEvent,
+    setCompetition,
+    fetchEventsBySport,
     fetchingEvents,
     loggedIn,
-    topicUrls,
-    betFairWSConnected,
+    // topicUrls,
+    // betFairWSConnected,
     loading,
     langData,
   } = props;
-
   const history = useHistory();
   const pathParams = useParams();
   const pathLocation = useLocation();
@@ -184,9 +167,7 @@ const EventsTable: React.FC<StoreProps> = (props) => {
     }
 
     // Fallback when name matching fails (BetFair only): 1st runner → 1, 2nd → 2, 3rd → X
-    const isBetFair = 0
-    //   eventData?.providerName?.toLowerCase() ===
-    //   BETFAIR_PROVIDER_ID?.toLowerCase();
+    const isBetFair = eventData?.providerName?.toLowerCase() === BETFAIR_PROVIDER_ID?.toLowerCase();
     if (!isBetFair || runners.length === 0) return null;
     const idx =
       teamType === 'home'
@@ -224,7 +205,7 @@ const EventsTable: React.FC<StoreProps> = (props) => {
 
   useEffect(() => {
     if (!pathParams['competition']) {
-      // setCompetition({ id: '', name: '', slug: '' });
+      setCompetition({ id: '', name: '', slug: '' });
     }
   }, [pathParams]);
 
@@ -271,43 +252,43 @@ const EventsTable: React.FC<StoreProps> = (props) => {
 
   const updateEvents = () => {
     if (!pathParams['competition']) {
-    //   fetchEventsBySport(
-    //     SPToBFIdMap[selectedEventType.id]
-    //       ? SPToBFIdMap[selectedEventType.id]
-    //       : selectedEventType.id,
-    //     events
-    //   );
+      fetchEventsBySport(
+        SPToBFIdMap[selectedEventType.id]
+          ? SPToBFIdMap[selectedEventType.id]
+          : selectedEventType.id,
+        events
+      );
     } else {
-    //   fetchEventsByCompetition(
-    //     SPToBFIdMap[selectedEventType.id]
-    //       ? SPToBFIdMap[selectedEventType.id]
-    //       : selectedEventType.id,
-    //     selectedCompetition.id,
-    //     events
-    //   );
+      fetchEventsByCompetition(
+        SPToBFIdMap[selectedEventType.id]
+          ? SPToBFIdMap[selectedEventType.id]
+          : selectedEventType.id,
+        selectedCompetition.id,
+        events
+      );
     }
   };
 
   useEffect(() => {
     if (!pathParams['competition']) {
-    //   fetchEventsBySport(
-    //     SPToBFIdMap[selectedEventType.id]
-    //       ? SPToBFIdMap[selectedEventType.id]
-    //       : selectedEventType.id,
-    //     events
-    //   );
+      fetchEventsBySport(
+        SPToBFIdMap[selectedEventType.id]
+          ? SPToBFIdMap[selectedEventType.id]
+          : selectedEventType.id,
+        events
+      );
     }
   }, [selectedEventType]);
 
   useEffect(() => {
     if (pathParams['competition'] && !events) {
-    //   fetchEventsByCompetition(
-    //     SPToBFIdMap[selectedEventType.id]
-    //       ? SPToBFIdMap[selectedEventType.id]
-    //       : selectedEventType.id,
-    //     selectedCompetition.id,
-    //     events
-    //   );
+      fetchEventsByCompetition(
+        SPToBFIdMap[selectedEventType.id]
+          ? SPToBFIdMap[selectedEventType.id]
+          : selectedEventType.id,
+        selectedCompetition.id,
+        events
+      );
     }
   }, [selectedCompetition]);
 
@@ -337,33 +318,33 @@ const EventsTable: React.FC<StoreProps> = (props) => {
     }
   }, [selectedCompetition, pathParams]);
 
-  useEffect(() => {
-    if (loggedIn && topicUrls?.matchOddsTopic) {
-      if (selectedEventType.id === '4' && events) {
-        updateMatchOddsTopic(
-          topicUrls?.matchOddsTopic,
-          topicUrls?.matchOddsBaseUrl
-        );
-        let subs = [...wsChannels];
-        for (let event of events) {
-          if (
-            event.status === 'IN_PLAY' &&
-            !wsChannels.includes(event.eventId)
-          ) {
-            subs.push(event.eventId);
-            // subscribeWsForEventOdds(
-            //   topicUrls?.matchOddsTopic,
-            //   event.sportId,
-            //   event.competitionId,
-            //   event.eventId,
-            //   event.matchOdds?.marketId
-            // );
-          }
-        }
-        setWsChannels(subs);
-      }
-    }
-  }, [betFairWSConnected, events, selectedEventType, loggedIn]);
+  // useEffect(() => {
+  //   if (loggedIn && topicUrls?.matchOddsTopic) {
+  //     if (selectedEventType.id === '4' && events) {
+  //       updateMatchOddsTopic(
+  //         topicUrls?.matchOddsTopic,
+  //         topicUrls?.matchOddsBaseUrl
+  //       );
+  //       let subs = [...wsChannels];
+  //       for (let event of events) {
+  //         if (
+  //           event.status === 'IN_PLAY' &&
+  //           !wsChannels.includes(event.eventId)
+  //         ) {
+  //           subs.push(event.eventId);
+  //           // subscribeWsForEventOdds(
+  //           //   topicUrls?.matchOddsTopic,
+  //           //   event.sportId,
+  //           //   event.competitionId,
+  //           //   event.eventId,
+  //           //   event.matchOdds?.marketId
+  //           // );
+  //         }
+  //       }
+  //       setWsChannels(subs);
+  //     }
+  //   }
+  // }, [betFairWSConnected, events, selectedEventType, loggedIn]);
 
   const getCompetitionSlug = (competitionName: string) => {
     return competitionName
@@ -388,16 +369,16 @@ const EventsTable: React.FC<StoreProps> = (props) => {
   };
 
   const handleEventChange = (event: any) => {
-    // setCompetition({
-    //   id: event.competitionId,
-    //   name: event.competitionName,
-    //   slug: getCompetitionSlug(event.competitionName),
-    // });
-    // setExchEvent({
-    //   id: event.eventId,
-    //   name: event.eventName,
-    //   slug: event.eventSlug,
-    // });
+    setCompetition({
+      id: event.competitionId,
+      name: event.competitionName,
+      slug: getCompetitionSlug(event.competitionName),
+    });
+    setExchEvent({
+      id: event.eventId,
+      name: event.eventName,
+      slug: event.eventSlug,
+    });
     history.push(
       event?.providerName?.toLowerCase() === 'sportradar' &&
         event?.catId === 'SR VIRTUAL'
@@ -457,8 +438,7 @@ const EventsTable: React.FC<StoreProps> = (props) => {
 //   }, [loggedIn]);
 
   const GetSportIcon = ({ sportId }) => {
-    // const IconComponent = SportIconMapInplay[sportId];
-    const IconComponent = sportId;
+    const IconComponent = SportIconMapInplay[sportId];
 
     if (!IconComponent) {
       return null; // or a default icon/component
@@ -943,7 +923,7 @@ const EventsTable: React.FC<StoreProps> = (props) => {
         <NoDataComponent
           title={langData?.['no_events_display_txt']}
           bodyContent={langData?.['no_events_placed']}
-        //   noDataImg={NoEventsIcon}
+          noDataImg={NoEventsIcon}
         />
       ) : null}
     </div>
@@ -962,21 +942,21 @@ function EmptyOddsBlock() {
 }
 
 const mapStateToProps = (state: any) => {
-  const eventType = state.exchangeSports.selectedEventType;
-  const competition = state.exchangeSports.selectedCompetition;
+  const eventType = state.homeMarkets.selectedEventType;
+  const competition = state.homeMarkets.selectedCompetition;
 
   return {
-    // events: getExchangeEvents(
-    //   state.exchangeSports.events,
-    //   SPToBFIdMap[eventType.id] ? SPToBFIdMap[eventType.id] : eventType.id,
-    //   competition.id
-    // ),
+    events: getExchangeEvents(
+      state.homeMarkets.events,
+      SPToBFIdMap[eventType.id] ? SPToBFIdMap[eventType.id] : eventType.id,
+      competition.id
+    ),
     selectedEventType: eventType,
     selectedCompetition: competition,
-    fetchingEvents: state.exchangeSports.fetchingEvents,
+    fetchingEvents: state.homeMarkets.fetchingEvents,
     allowedConfig: state.common.allowedConfig,
-    topicUrls: state?.exchangeSports?.topicUrls,
-    betFairWSConnected: state.exchangeSports.betFairWSConnected,
+    // topicUrls: state?.exchangeSports?.topicUrls,
+    // betFairWSConnected: state.exchangeSports.betFairWSConnected,
     loading: state.auth.loading,
     langData: state.common.langData,
   };
@@ -984,17 +964,15 @@ const mapStateToProps = (state: any) => {
 
 const mapDispatchToProps = (dispatch: Function) => {
   return {
-    // fetchEventsByCompetition: (
-    //   sportId: string,
-    //   competitionId: string,
-    //   events: any[]
-    // ) => dispatch(fetchEventsByCompetition(sportId, competitionId, events)),
-    // setExchEvent: (event: any) => dispatch(setExchEvent(event)),
-    // setCompetition: (competition: any) =>
-    //   dispatch(setCompetition(competition)),
+    fetchEventsByCompetition: (
+      sportId: string,
+      competitionId: string,
+      events: any[]
+    ) => dispatch(fetchEventsByCompetition({eventTypeId: sportId, competitionId, events, track: undefined})),
+    setExchEvent: (event: any) => dispatch(setExchEvent(event)),
+    setCompetition: (competition: any) => dispatch(setCompetition(competition)),
     // addExchangeBet: (data: BsData) => dispatch(addExchangeBet(data)),
-    // fetchEventsBySport: (sportId: string, events: any[]) =>
-    //   dispatch(fetchEventsBySport(sportId, events)),
+    fetchEventsBySport: (sportId: string, events: any[]) => dispatch(fetchEventsBySport({eventTypeId: sportId, events})),
   };
 };
 

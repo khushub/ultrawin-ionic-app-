@@ -18,6 +18,7 @@ type ModalProps = {
   noTitle?: boolean;
   disableFullScreen?: boolean;
   hideCloseIcon?: boolean;
+  children?: React.ReactNode; 
 };
 
 const Modal: React.FC<ModalProps> = (props) => {
