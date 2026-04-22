@@ -287,28 +287,16 @@ const App: React.FC = (props:any) => {
       <IonReactRouter>
         <IonRouterOutlet>
           <Suspense fallback={<LoadingPage />}>
-            
+            <BrowserRouter> 
               <Switch>
-                <Route exact path="/home">
-  <IonContent fullscreen scrollY={true}>
-                    <HomePage />
-                  </IonContent>
-                </Route>
                 <Route path="/terms-and-conditions"><AcceptTerms /></Route>
                 <Route path="/reset-password"><ResetPassword /></Route>
                 <Route path="/login"><LoginPage /></Route>
                 <Route path="/register"><SignUp /></Route>
                 <Route path="/forgot-password"><ForgotPwdForm /></Route>
-                <Route path="/my-profile"><MyProfile /></Route>
-                <Route path="/button-variables"><ButtonVariables /></Route>
-                
-                
-                
-                   <Route exact path="/" component={UserRouter}>
-
-                </Route>    
+                <Route path="/"><MainPage /></Route>
               </Switch>
-            
+            </BrowserRouter>
           </Suspense>
         </IonRouterOutlet>
       </IonReactRouter>

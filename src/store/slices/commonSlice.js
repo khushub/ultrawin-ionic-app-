@@ -1,16 +1,18 @@
-import { createSlice, createAsyncThunk  } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { CONFIG_PERMISSIONS } from "../../constants/ConfigPermissions";
 
 export const isSiteUnderMaintenance = createAsyncThunk(
-  "common/isSiteUnderMaintenance",
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await CATALOG_API.get(`/catalog/site-under-maintenance`);
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error);
-    }
-  }
+    "common/isSiteUnderMaintenance",
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await CATALOG_API.get(
+                `/catalog/site-under-maintenance`,
+            );
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(error);
+        }
+    },
 );
 
 const initialState = {
@@ -27,23 +29,23 @@ const initialState = {
         suppportContacts: null,
         apkUrl: null,
         b2cEnabled: false,
-        ruleScope: 'HOUSE',
+        ruleScope: "HOUSE",
     },
+    contentConfig: null,
     alert: {
-        type: '',
-        message: '',
+        type: "",
+        message: "",
     },
     languages: [],
     langSelected: null,
     langData: null,
-    maintenanceTimer: '',
+    maintenanceTimer: "",
     trendingGames: [],
     demoUserWhatsappDetails: null,
 };
 
-
 const commonSlice = createSlice({
-    name: 'common',
+    name: "common",
     initialState,
     reducers: {
         setAllowedConfig: (state, action) => {
@@ -56,31 +58,29 @@ const commonSlice = createSlice({
             state.domainConfig = action.payload;
         },
         setAlertMsg: (state, action) => {
-            state.alert.type = action.payload.type || '';
-            state.alert.message = action.payload.message || '';
+            state.alert.type = action.payload.type || "";
+            state.alert.message = action.payload.message || "";
         },
         setLanguages: (state, action) => {
-            state.languages = action.payload
+            state.languages = action.payload;
         },
         setLangSelected: (state, action) => {
-            state.langSelected = action.payload
+            state.langSelected = action.payload;
         },
         setLangData: (state, action) => {
-            state.langData = action.payload
+            state.langData = action.payload;
         },
-        setMaintenanceTimer: (state, action)=>{
-            state.maintenanceTimer = action.payload
+        setMaintenanceTimer: (state, action) => {
+            state.maintenanceTimer = action.payload;
         },
         setTrendingGames: (state, action) => {
-    state.trendingGames = action.payload;
-},
-setDemoUserWhatsappDetails: (state, action) => {
-    state.demoUserWhatsappDetails = action.payload;
-},
-
-    }
+            state.trendingGames = action.payload;
+        },
+        setDemoUserWhatsappDetails: (state, action) => {
+            state.demoUserWhatsappDetails = action.payload;
+        },
+    },
 });
-
 
 export const {
     setAllowedConfig,
@@ -91,7 +91,7 @@ export const {
     setLangSelected,
     setLangData,
     setMaintenanceTimer,
-     setTrendingGames ,
-     setDemoUserWhatsappDetails
+    setTrendingGames,
+    setDemoUserWhatsappDetails,
 } = commonSlice.actions;
 export default commonSlice.reducer;

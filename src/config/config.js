@@ -23,6 +23,22 @@ const hosts = {
         apk_url: 'apk.uvwin2024.co/ultrawin.apk',
         b2c_enabled: true,
         rule_scope: 'HOUSE',
+        showThemes: true,
+        skins: [
+            {
+                label: "99exch",
+                domain: `https://99exc.krishexch.com`,
+            },
+            {
+                label: "Lotus",
+                domain: `https://lotus365.krishexch.com`,
+            },
+            {
+                label: "Ultrawin",
+                domain: `http://localhost:5173`,
+                disabled: true,
+            },
+        ],
 
         managerId: '68ce8fe00363531b35841293',
         siteurl: 'getid.vip',

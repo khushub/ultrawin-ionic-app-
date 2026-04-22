@@ -51,7 +51,7 @@ type StoreProps = {
   fetchingEvents: boolean;
   loggedIn: boolean;
   topicUrls: any;
-  betFairWSConnected: boolean;
+  // betFairWSConnected: boolean;
   langData: any;
 };
 
@@ -67,7 +67,7 @@ const EventsTable: React.FC<StoreProps> = (props) => {
     fetchingEvents,
     loggedIn,
     topicUrls,
-    betFairWSConnected,
+    // betFairWSConnected,
     langData,
   } = props;
 
@@ -188,34 +188,34 @@ const EventsTable: React.FC<StoreProps> = (props) => {
     }
   }, [selectedCompetition, pathParams]);
 
-  useEffect(() => {
-    if (loggedIn && topicUrls?.matchOddsTopic) {
-      if (selectedEventType.id === '4' && events) {
-        let subs = [...wsChannels];
-        for (let event of events) {
-          if (
-            event.status === 'IN_PLAY' &&
-            !wsChannels.includes(event.eventId)
-          ) {
-            subs.push(event.eventId);
-            updateMatchOddsTopic(
-              topicUrls?.matchOddsTopic,
-              topicUrls?.matchOddsBaseUrl
-            );
-            // subscribeWsForEventOdds(
-            //   topicUrls?.matchOddsTopic,
-            //   event.sportId,
-            //   event.competitionId,
-            //   event.eventId,
-            //   event.matchOdds?.marketId,
-            //   event.providerName
-            // );
-          }
-        }
-        setWsChannels(subs);
-      }
-    }
-  }, [betFairWSConnected, events, selectedEventType, loggedIn]);
+  // useEffect(() => {
+  //   if (loggedIn && topicUrls?.matchOddsTopic) {
+  //     if (selectedEventType.id === '4' && events) {
+  //       let subs = [...wsChannels];
+  //       for (let event of events) {
+  //         if (
+  //           event.status === 'IN_PLAY' &&
+  //           !wsChannels.includes(event.eventId)
+  //         ) {
+  //           subs.push(event.eventId);
+  //           updateMatchOddsTopic(
+  //             topicUrls?.matchOddsTopic,
+  //             topicUrls?.matchOddsBaseUrl
+  //           );
+  //           subscribeWsForEventOdds(
+  //             topicUrls?.matchOddsTopic,
+  //             event.sportId,
+  //             event.competitionId,
+  //             event.eventId,
+  //             event.matchOdds?.marketId,
+  //             event.providerName
+  //           );
+  //         }
+  //       }
+  //       setWsChannels(subs);
+  //     }
+  //   }
+  // }, [betFairWSConnected, events, selectedEventType, loggedIn]);
 
   useEffect(() => {
     if (events) {
@@ -479,7 +479,7 @@ const mapStateToProps = (state: any) => {
     selectedCompetition: competition,
     fetchingEvents: state.exchangeSports.fetchingEvents,
     topicUrls: state?.exchangeSports?.topicUrls,
-    betFairWSConnected: state.exchangeSports.betFairWSConnected,
+    // betFairWSConnected: state.exchangeSports.betFairWSConnected,
     langData: state.common.langData,
   };
 };

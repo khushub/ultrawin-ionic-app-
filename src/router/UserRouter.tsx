@@ -2,26 +2,19 @@ import { IonApp, IonContent, IonRefresher, IonRefresherContent } from '@ionic/re
 import React, { useEffect, useState, lazy } from 'react';
 import { Switch } from 'react-router';
 import { Redirect, Route } from 'react-router-dom';
+import ProtectedRoute from './ProtectedRoute';
 import { Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-
-// import Dialog from '@material-ui/core/Dialog';
-// import DialogContent from '@material-ui/core/DialogContent';
-// import DialogTitle from '@material-ui/core/DialogTitle';
-// import IconButton from '@material-ui/core/IconButton';
-
-// import CloseIcon from '@material-ui/icons/Close';
 import { connect, useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 // import SVLS_API from '../api-services/svls-api';
-// import '../assets/global_styles/marquee.scss';
+import '../assets/global_styles/marquee.scss';
 // import { BRAND_DOMAIN } from '../constants/Branding';
 import { ALLOW_CASINO } from '../constants/CasinoPermission';
 import { CONFIG_PERMISSIONS } from '../constants/ConfigPermissions';
 
 // import {
 //   enableCommission,
-//   fetchBalance,
 //   getHouseIdFromToken,
 //   getParentIdFromToken,
 //   setAllowedConfig,
@@ -38,6 +31,8 @@ import HomePage from '../pages/HomePage/Home';
 import Promotions from '../pages/Promotions/Promotions';
 import ApkDesktopBanner from '../assets/images/banners/apk_popup_desktop.webp';
 import ApkMobileBanner from '../assets/images/banners/apk_popup_mobile.webp';
+import PopupBannerDesktop from '../assets/images/banners/popup_banner_desktop.webp';
+import PopupBannerMobile from '../assets/images/banners/popup_banner_mobile.webp';
 
 // import {
 //   checkPNStompClientSubscriptions,
@@ -48,14 +43,9 @@ import ApkMobileBanner from '../assets/images/banners/apk_popup_mobile.webp';
 // } from '../webSocket/pnWebsocket';
 
 // import { getAccessTokenWithRefreshToken, logout } from '../store/auth/authActions';
-// ✅ ADD THIS
 import { logout } from '../store/slices/authSlice';
-
-// import PremiumCasino from '../pages/Casino/CasinoNew/PremiumCasino';
-// import { pageViewEvent } from '../util/facebookPixelEvent';
-// import PromoPopup from '../assets/images/banners/login_popup.webp';
-// import Modal from '../components/Modal/index';
-// import CasinoV2 from '../pages/Casino/CasinoV2/CasinoV2';
+import Modal from '../components/Modal';
+import CasinoV2 from '../pages/Casino/CasinoV2/CasinoV2';
 // import {
 //   isSiteUnderMaintenance,
 //   setMaintenanceTimer,
@@ -68,6 +58,7 @@ import { AxiosResponse } from 'axios';
 
 import { isIOS } from 'react-device-detect';
 import { enableCommission, setAllowedConfig, setDomainConfig } from '../store/slices/commonSlice';
+import { fetchUserDetails } from '../store/slices/userDetailsSlice';
 
 // const MarketTermsCondi = lazy(
 //   () => import('../components/MarketTermsCondi/MarketTermsCondi')
@@ -116,7 +107,7 @@ const ChangePassword = lazy(
 //   () => import('../pages/Casino/IndianCasino/indianCasinoPage')
 // );
 const ExchangeSportsBook = lazy(
-  () => import('../pages/ExchSportsBook/ExchangeSportsHome')
+  () => import('../pages/ExchSportsBook')
 );
 // const ResetPassword = lazy(
 //   () => import('../pages/ResetPassword/ResetPassword')
@@ -144,7 +135,7 @@ const ExchangeSportsBook = lazy(
 // const VirtualSports = lazy(
 //   () => import('../pages/VirtualSports/VirtualSports')
 // );
-// const SideHeader = lazy(() => import('../components/SideHeader/SideHeader'));
+const SideHeader = lazy(() => import('../components/SideHeader/SideHeader'));
 // const BonusStatement = lazy(
 //   () => import('../pages/BonusStatement/BonusStatement')
 // );
@@ -159,7 +150,7 @@ const MyWallet = lazy(() => import('../pages/MyWallet/MyWallet'));
 // const Ledger = lazy(
 //   () => import('../../src/pages/AccountStatement/AccountStatementICLevel')
 // );
-// const SubHeader = lazy(() => import('../views/SubHeader/SubHeader'));
+const SubHeader = lazy(() => import('../components/SubHeader/SubHeader'));
 
 // const MlobbyIframeNew = lazy(
 //   () => import('../pages/Casino/MlobbyIframeNew/MlobbyIframeNew')
@@ -169,13 +160,14 @@ const MyWallet = lazy(() => import('../pages/MyWallet/MyWallet'));
 //   () => import('../pages/CricketBattle/CricketBattleWidget')
 // );
 
+
 type StateProps = {
   role: string;
   allowedConfig: number;
   commissionEnabled: boolean;
   status: number;
   loggedIn: boolean;
-  fetchBalance: () => void;
+  fetchUserDetails: () => void;
   setAllowedConfig: (allowedConfig: number) => void;
   setDomainConfig: (config: any) => void;
   setEnableCommission: (commission: boolean) => void;
@@ -184,31 +176,19 @@ type StateProps = {
   parentId: string;
   accountId: string;
   notificationUpdated: number;
-  pushNotifWSConnection: boolean;
+  // pushNotifWSConnection: boolean;
   langData: any;
 };
 
 const UserRouter: React.FC<StateProps> = (props) => {
   const windowSize = useWindowSize();
-  // const [config, setConfig] = useState<DomainConfig>({
-  //   demoUser: false,
-  //   signup: false,
-  //   whatsapp: false,
-  //   payments: false,
-  //   bonus: false,
-  //   affiliate: false,
-  //   depositWagering: false,
-  //   suppportContacts: null,
-  //   apkUrl: null,
-
-  // });
 
   const {
     role,
     allowedConfig,
     status,
     loggedIn,
-    fetchBalance,
+    fetchUserDetails,
     setAllowedConfig,
     setEnableCommission,
     balanceChanged,
@@ -216,7 +196,7 @@ const UserRouter: React.FC<StateProps> = (props) => {
     parentId,
     accountId,
     notificationUpdated,
-    pushNotifWSConnection,
+    // pushNotifWSConnection,
     langData,
   } = props;
 
@@ -238,31 +218,31 @@ const UserRouter: React.FC<StateProps> = (props) => {
 
   const [showApkPopup, setShowApkPopup] = useState(false);
 
-  const getPopupBanners = async () => {
-    // const bannersRes: AxiosResponse<BannerResData> = await SVLS_API.get(
-    //   `/account/v2/books/${BRAND_DOMAIN}/banners`,
-    //   {
-    //     params: {
-    //       category: 'popupbanner',
-    //       status: 'active',
-    //     },
-    //   }
-    // );
-    // if (bannersRes.data.banners && bannersRes.data.banners.length >= 2) {
-    //   setPopupBanner(
-    //     bannersRes.data.banners.filter((b) => b.deviceType == 'desktop')[0]
-    //   );
-    //   setPopupMobileBanner(
-    //     bannersRes.data.banners.filter((b) => b.deviceType == 'mobile')[0]
-    //   );
-    // }
-  };
+  // const getPopupBanners = async () => {
+  //   const bannersRes: AxiosResponse<BannerResData> = await SVLS_API.get(
+  //     `/account/v2/books/${BRAND_DOMAIN}/banners`,
+  //     {
+  //       params: {
+  //         category: 'popupbanner',
+  //         status: 'active',
+  //       },
+  //     }
+  //   );
+  //   if (bannersRes.data.banners && bannersRes.data.banners.length >= 2) {
+  //     setPopupBanner(
+  //       bannersRes.data.banners.filter((b) => b.deviceType == 'desktop')[0]
+  //     );
+  //     setPopupMobileBanner(
+  //       bannersRes.data.banners.filter((b) => b.deviceType == 'mobile')[0]
+  //     );
+  //   }
+  // };
 
-  useEffect(() => {
-    if (!sessionStorage.getItem('popup_shown')) {
-      getPopupBanners();
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (!sessionStorage.getItem('popup_shown')) {
+  //     getPopupBanners();
+  //   }
+  // }, []);
 
   const closePopup = () => {
     sessionStorage.setItem('popup_shown', 'true');
@@ -287,6 +267,7 @@ const UserRouter: React.FC<StateProps> = (props) => {
   };
 
   const [isApkAvailable, setIsApkAvailable] = useState<boolean>(false);
+  console.log('isApkAvailable: ', isApkAvailable)
 
   useEffect(() => {
     setIsApkAvailable(!!domainConfig?.apkUrl);
@@ -391,13 +372,13 @@ const UserRouter: React.FC<StateProps> = (props) => {
   };
 
   const dispatch = useDispatch();
- useEffect(() => {
-  getAllowedConfig();
-}, [loggedIn]);
+  useEffect(() => {
+    getAllowedConfig();
+  }, [loggedIn]);
 
   useEffect(() => {
     if (loggedIn) {
-      fetchBalance();
+      fetchUserDetails();
     }
   }, [loggedIn, balanceChanged]);
 
@@ -451,10 +432,9 @@ const UserRouter: React.FC<StateProps> = (props) => {
     }
   }, [loggedIn, pathName]);
 
-  // useEffect(() => {
-  //   pageViewEvent();
-  //   document?.getElementsByClassName('router-ctn')?.[0]?.scrollIntoView();
-  // }, [pathName]);
+  useEffect(() => {
+    document?.getElementsByClassName('router-ctn')?.[0]?.scrollIntoView();
+  }, [pathName]);
 
   useEffect(() => {
     if (loggedIn) {
@@ -477,7 +457,7 @@ const UserRouter: React.FC<StateProps> = (props) => {
         <Redirect to="/reset-password" />
       ) : status !== -1 && status === 2 ? (
         <Redirect to="/terms-and-conditions" />
-      ) : role && role !== 'User' ? (
+      ) : role && role.toLocaleLowerCase() !== 'user' ? (
         <Redirect to="/access-redirect" />
       ) : !ALLOW_CASINO &&
         (window.location.pathname.includes('/casino') ||
@@ -807,20 +787,8 @@ const UserRouter: React.FC<StateProps> = (props) => {
               </div>
             ) : null}
 
-            {/* {
-              isMobile && (
-                <Modal
-                  open={showPromoPopup}
-                  closeHandler={() => setShowPromoPopup(false)}
-                  title=""
-                  size="lg"
-                >
-                    <img src={PromoPopup} />
-                </Modal>
-              )
-            } */}
 
-            {/* {showPopup && popupBanner && popupMobileBanner && (
+            {showPopup && popupBanner && popupMobileBanner && (
               <Modal
                 open={showPopup}
                 closeHandler={closePopup}
@@ -828,19 +796,14 @@ const UserRouter: React.FC<StateProps> = (props) => {
                 size="sm"
                 disableFullScreen
                 noTitle
-                // hideCloseIcon
               >
                 <img
-                  src={
-                    isMobile
-                      ? popupMobileBanner?.publicUrl
-                      : popupBanner?.publicUrl
-                  }
+                  src={isMobile? PopupBannerMobile : PopupBannerDesktop}
                 />
               </Modal>
-            )} */}
+            )}
 
-            {/* {!loggedIn && isApkAvailable && showApkPopup && (
+            {!loggedIn && isApkAvailable && showApkPopup && (
               <Modal
                 open={showApkPopup}
                 closeHandler={closeApkPopup}
@@ -854,7 +817,7 @@ const UserRouter: React.FC<StateProps> = (props) => {
                   onClick={downloadApp}
                 />
               </Modal>
-            )} */}
+            )}
           </div>
         </IonApp>
       )}
@@ -871,13 +834,10 @@ const mapStateToProps = (state: any) => {
       langData: state.common.langData,
     };
   }
-  let claim = state.auth?.jwtToken?.split('.')?.[1] || '';
-  const role = JSON.parse(window.atob(claim)).role;
-  const status = JSON.parse(window.atob(claim)).sts;
   return {
     loggedIn: state.auth.loggedIn,
-    role: role,
-    status,
+    role: state.auth.user?.role,
+    status: state.auth.user?.transctionpasswordstatus,
     allowedConfig: state.common.allowedConfig,
     commissionEnabled: state.common.commissionEnabled,
     balanceChanged: state.common.balanceChanged,
@@ -885,7 +845,7 @@ const mapStateToProps = (state: any) => {
     // houseId: getHouseIdFromToken(),
     // parentId: getParentIdFromToken(),
     accountId: sessionStorage.getItem('aid'),
-    pushNotifWSConnection: state.exchangeSports.pushNotifWSConnection,
+    // pushNotifWSConnection: state.exchangeSports.pushNotifWSConnection,
     langData: state.common.langData,
     domainConfig: state.common.domainConfig,
   };
@@ -893,7 +853,7 @@ const mapStateToProps = (state: any) => {
 
 const mapDispatchToProps = (dispatch: Function) => {
   return {
-    // fetchBalance: () => dispatch(fetchBalance()),
+    fetchUserDetails: () => dispatch(fetchUserDetails()),
     setAllowedConfig: (allowedConfig: number) => dispatch(setAllowedConfig(allowedConfig)),
     setDomainConfig: (config: any) => dispatch(setDomainConfig(config)),
     setEnableCommission: (commission: boolean) => dispatch(enableCommission(commission)),
