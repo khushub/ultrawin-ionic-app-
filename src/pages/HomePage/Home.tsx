@@ -21,6 +21,7 @@ import axios, { AxiosResponse } from 'axios';
 import { setTrendingGames } from '../../store/slices/commonSlice';
 // import { CasinoGameDTO } from '../../models/IndianCasinoState';
 import trendingGamesData from '../../assets/api_json/indian-casino-games.json';
+import TopMatchesData from '../../assets/top_matches/TopMatches.json';
 
 import { isMobile } from 'react-device-detect';
 import { useHistory } from 'react-router';
@@ -33,6 +34,7 @@ import BottomTab from './BottomTab';
 //   setExchEvent,
 // } from '../../store/exchangeSports/exchangeSportsActions';
 import CricketBattle from '../../assets/images/banners/cricket_battle.webp';
+import { postAPI } from '../../services/apiInstance';
 // import { EventDTO } from '../../models/common/EventDTO';
 // import { FavoriteEventDTO } from '../../models/common/FavoriteEventDTO';
 // const SportsCarousel = lazy(() => import('./SportsCarousel'));
@@ -82,7 +84,11 @@ const HomePage: React.FC<StoreProps> = (props) => {
 
 const getGames = async () => {
   try {
-    const response = trendingGamesData;
+    const res = await import('../../assets/api_json/indian-casino-games.json');
+
+
+    const response = res.default;
+   
 
     const macGamesData = response.filter(
       (game) => game.tag === 'recommended_games'
@@ -111,16 +117,24 @@ const getGames = async () => {
   }
 };
 
+
+
   
 
-        // const fetchFavoruiteEvents = async () => {
-        //   const response = await fetchFavEvents();
-        //   setFavouriteEvents(response as any[]);
-        // };
+        const fetchFavoruiteEvents = async () => {
+  try {
+    const inplay = await postAPI('/getFreeInplyEventsAPI', {});
+    
+
+    setFavouriteEvents(inplay.data.result);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
   useEffect(() => {
     getGames();
-    // fetchFavoruiteEvents();
+    fetchFavoruiteEvents();
   }, []);
 
   return (

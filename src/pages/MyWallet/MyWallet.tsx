@@ -35,6 +35,7 @@ import CustomTableMob, {
   RowType,
 } from '../../common/CustomTableMob/CustomTableMob';
 import { useWindowSize } from '../../hooks/useWindowSize';
+import { postAPIAuth } from '../../services/apiInstance';
 
 type StoreProps = {
   allowedConfig: number;
@@ -114,6 +115,7 @@ const [records, setRecords] = useState<any[]>([
 
   const [filters, setFilters] = useState<Filters>(defaultFilters);
   const [nextPageToken, setNextPageToken] = useState<string>(null);
+  
 
   const fetchRecords = async () => {
     setLoading(true);
@@ -160,8 +162,19 @@ const [records, setRecords] = useState<any[]>([
   }, [filters]);
 
   const fetchCliamBalance = async () => {
-    setLoading(false);
+    try {
+    setLoading(true);
     setErrorMsg(null);
+
+    const response = await postAPIAuth('/getUserDetailsAPI', {});
+    setBalanceInfo(response.data);
+    console.log(response); 
+  } catch (err) {
+    console.log(err);
+    setErrorMsg('Failed to load wallet');
+  } finally {
+    setLoading(false);
+  }
 
     // try {
     //   const walletId = sessionStorage.getItem('aid');
@@ -281,54 +294,41 @@ const [records, setRecords] = useState<any[]>([
         <>
           <ReportBackBtn back={langData?.['back']} />
           <ReportsHeader
-            titleIcon={WalletIcon}
-            reportName={langData?.['my_wallet']}
-            tabsOrBtns={[
-              {
-                label: `${langData?.['available_balance_caps_txt']}: ${
-                  balance ? Number(balance / cFactor).toFixed(2) : '0.00'
-                }`,
-                onSelect: () => {},
-                className: 'avail-bal-label',
-              },
-            ]}
-            reportFilters={[
-              {
-                element: (
-                  <DateTemplate
-                    value={filters.fromDate}
-                    label={langData?.['from']}
-                    // onChange={fromDateChangeHandler}
-
-                    onChange={(e) => fromDateChangeHandler(e)}
-                    minDate={moment().subtract(1, 'months').calendar()}
-                    maxDate={filters.toDate}
-                  />
-                ),
-              },
-              {
-                element: (
-                  <DateTemplate
-                    value={filters.toDate}
-                    label={langData?.['to']}
-                    onChange={(e) => toDateChangeHandler(e)}
-                    minDate={filters.fromDate}
-                  />
-                ),
-              },
-              // {
-              //   fullWidthInMob: true,
-              //   element: (
-              //     <button
-              //       className={'claim-btn'}
-              //       onClick={onClaimCommissionHandler}
-              //     >
-              //       {'Claim ' + (balanceInfo?.incentive / cFactor).toFixed(2)}
-              //     </button>
-              //   ),
-              // },
-            ]}
-          />
+  titleIcon={WalletIcon}
+  reportName={langData?.['my_wallet']}
+  tabsOrBtns={[
+    {
+     label: `${langData?.['available_balance_caps_txt']}: ${(
+  Number(balanceInfo?.doc?.balance || 0) / (cFactor || 1)
+).toFixed(2)}`,
+      onSelect: () => {},
+      className: 'avail-bal-label',
+    },
+  ]}
+  reportFilters={[
+    {
+      element: (
+        <DateTemplate
+          value={filters.fromDate}
+          label={langData?.['from']}
+          onChange={(e) => fromDateChangeHandler(e)}
+          minDate={moment().subtract(1, 'months').calendar()}
+          maxDate={filters.toDate}
+        />
+      ),
+    },
+    {
+      element: (
+        <DateTemplate
+          value={filters.toDate}
+          label={langData?.['to']}
+          onChange={(e) => toDateChangeHandler(e)}
+          minDate={filters.fromDate}
+        />
+      ),
+    },
+  ]}
+/>
 
           <div className="content-ctn light-bg">
             <div className="balance-history-tbl-ctn">

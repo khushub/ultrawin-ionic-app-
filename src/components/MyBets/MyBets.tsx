@@ -38,6 +38,7 @@ import {
 } from '../../util/stringUtil';
 import Spinner from '../Spinner/Spinner';
 import './MyBets.scss';
+import { postAPIAuth } from '../../services/apiInstance';
 // import { Tabs } from '@material-ui/core';
 
 type StoreProps = {
@@ -307,7 +308,90 @@ const MyBets: React.FC<StoreProps> = (props) => {
   };
 
   const fetchData = useCallback(async () => {
-    // setLoading(true);
+    setLoading(true);
+
+    
+
+  try {
+  let payload: any = {
+    deleted: false,
+    dateFrom: filters.startDate.format('YYYY-MM-DD'),
+    dateTo: filters.endDate.clone().add(1, 'day').format('YYYY-MM-DD'),
+  };
+
+  // BET STATUS FILTER
+  switch (filters.status) {
+    case 'Open':
+      payload.result = 'ACTIVE';
+      break;
+
+    case 'Settled':
+      payload.result = { $in: ['WON', 'LOST'] };
+      break;
+
+    case 'All':
+      payload.result = { $in: ['WON', 'LOST', 'ACTIVE', 'VOID'] };
+      break;
+
+    case 'Voided':
+      payload.result = 'VOID';
+      break;
+
+    default:
+      payload.result = filters.status.toUpperCase();
+  }
+
+  // GAME FILTER
+  switch (filters.selectedGame) {
+    case 'SPORTS':
+      payload.eventTypeId =
+        filters.sport === 'All'
+          ? { $nin: ['c9', 'm1', 'a1', 'd1'] }
+          : filters.sport;
+      break;
+
+    case 'CASINO':
+      payload.eventTypeId = { $in: ['c9', 'm1', 'a1', 'd1'] };
+      break;
+
+    case 'SPORTS_BOOK':
+      payload.categoryType = 'SPORTS_BOOK';
+      break;
+
+    case 'PREMIUM':
+      payload.categoryType = 'PREMIUM';
+      break;
+
+    default:
+      break;
+  }
+
+  const responce = await postAPIAuth('/getBetsAPI', payload);
+  console.log(responce.data);
+
+  const betList = responce?.data?.data || [];
+
+  const finalData = betList.map((bet) => ({
+    ...bet,
+    stakeAmount: bet.stakeAmount / cFactor,
+    payOutAmount: bet.payOutAmount / cFactor,
+    rowClassName:
+      bet.betType === 'BACK'
+        ? 'mb-profit-amount'
+        : 'mb-loss-amount',
+  }));
+
+  setBets(finalData);
+  setNextPageToken(responce?.data?.pageToken || null);
+
+} catch (err) {
+  console.log(err);
+  setBets([]);
+  setNextPageToken(null);
+} finally {
+  setLoading(false);
+}
+
     // try {
     //   const response = await REPORTING_API.get('reports/v2/orders/:search', {
     //     headers: {

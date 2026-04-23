@@ -1,9 +1,9 @@
 import React, { useMemo } from 'react';
 // import { EventDTO } from '../../models/common/EventDTO';
-import {
-  FavoriteEventDTO,
-  adaptFavoriteEventToEventDTO,
-} from '../../models/common/FavoriteEventDTO';
+// import {
+//   FavoriteEventDTO,
+//   adaptFavoriteEventToEventDTO,
+// } from '../../models/common/FavoriteEventDTO';
 
 import MarketEnabled from '../../common/MarketEnabled/MarketEnabled';
 import ExchOddBtn from '../../components/ExchOddButton/ExchOddButton';
@@ -35,39 +35,41 @@ const TopMatches: React.FC<Props> = ({
 }) => {
   const history = useHistory();
   const teamTypes = ['home', 'draw', 'away'];
+  console.log('favouriteEvents in TopMatches:', favouriteEvents);
 
-  const getOdds = (eventData: any, teamType: string) => {
-    const team =
-      teamType === 'home'
-        ? eventData?.homeTeam
-        : teamType === 'away'
-          ? eventData?.awayTeam
-          : teamType;
-    for (let runner of eventData?.matchOdds?.runners) {
-      if (
-        runner?.runnerName?.toLowerCase() === team?.toLowerCase() ||
-        runner?.runnerName?.toLowerCase().includes(team?.toLowerCase())
-      ) {
-        return [
-          {
-            type: 'back-odd',
-            price: runner?.backPrices?.[0]?.price,
-            size: runner?.backPrices?.[0]?.size,
-            outcomeId: runner?.runnerId,
-            outcomeName: runner?.runnerName,
-          },
-          {
-            type: 'lay-odd',
-            price: runner?.layPrices?.[0]?.price,
-            size: runner?.layPrices?.[0]?.size,
-            outcomeId: runner?.runnerId,
-            outcomeName: runner?.runnerName,
-          },
-        ];
-      }
-    }
-    return null;
-  };
+ const getOdds = (eventData: any, teamType: string) => {
+  const runners = eventData?.marketBook?.runners || [];
+
+  const team =
+    teamType === 'home'
+      ? runners[0]?.runnerName
+      : teamType === 'away'
+      ? runners[1]?.runnerName
+      : 'draw';
+
+  const runner = runners.find((r: any) =>
+    r.runnerName?.toLowerCase().includes(team?.toLowerCase())
+  );
+
+  if (!runner) return null;
+
+  return [
+    {
+      type: 'back-odd',
+      price: runner.availableToBack?.price,
+      size: runner.availableToBack?.size,
+      outcomeId: runner.selectionId,
+      outcomeName: runner.runnerName,
+    },
+    {
+      type: 'lay-odd',
+      price: runner.availableToLay?.price,
+      size: runner.availableToLay?.size,
+      outcomeId: runner.selectionId,
+      outcomeName: runner.runnerName,
+    },
+  ];
+};
 
 //   const handleEventChange = (event: any) => {
 //     const competitionSlug = event.competitionName
@@ -114,10 +116,7 @@ const TopMatches: React.FC<Props> = ({
 //     }
 //   };
   // Convert FavoriteEventDTO to EventDTO format for component compatibility
-  const adaptedEvents: any[] = useMemo(
-    () => favouriteEvents.map((event) => adaptFavoriteEventToEventDTO(event)),
-    [favouriteEvents]
-  );
+  const adaptedEvents = favouriteEvents;
   if (!favouriteEvents || favouriteEvents.length === 0) {
     return null;
   }
@@ -145,14 +144,14 @@ const TopMatches: React.FC<Props> = ({
                 <div className="category-name-container">
                   <div className="sport-icon-container">
                     <img
-                      src={sportIconsMap[event.sportId]}
-                      alt={event.sportName}
+                      src={sportIconsMap[event.eventTypeId]}
+                      alt={event.eventTypeName}
                       className="sport-icon"
                       height={25}
                       loading="lazy"
                     />
                     <div className="sport-name-top-matches">
-                      {sportNamesMap[event.sportId]}
+                      {sportNamesMap[event.eventTypeId]}
                     </div>
                   </div>
 
@@ -164,15 +163,15 @@ const TopMatches: React.FC<Props> = ({
                       marketType={'P'}
                     />
                     <MarketEnabled
-                      marketEnabled={event?.enableMatchOdds}
+                      marketEnabled={event?.marketType === "MATCH_ODDS"}
                       marketType={'MO'}
                     />
                     <MarketEnabled
-                      marketEnabled={event?.enableBookmaker}
+                      marketEnabled={event?.bm}
                       marketType={'BM'}
                     />
                     <MarketEnabled
-                      marketEnabled={event?.enableFancy}
+                      marketEnabled={event?.fancy}
                       marketType={'F'}
                     />
                     <MarketEnabled
@@ -190,11 +189,12 @@ const TopMatches: React.FC<Props> = ({
               <div className="event-details">
                 <div className="event-name-container">
                   <div className="team-names">
-                    {event?.homeTeam && event?.awayTeam
+                    {event.marketBook?.runners?.[0]?.runnerName &&
+event.marketBook?.runners?.[1]?.runnerName
                       ? `${event.homeTeam} V ${event.awayTeam}`
                       : event.eventName}
                   </div>
-                  {event.status === 'IN_PLAY' && (
+                  {event.marketBook?.inplay && (
                     <img
                       src={LiveEvent}
                       alt="Live Event"
@@ -221,7 +221,7 @@ const TopMatches: React.FC<Props> = ({
             <div className="odds-section">
               {teamTypes.map((teamType, index) => (
                 <div key={teamType + index} className="team-odds">
-                  {event?.matchOdds ? (
+                  {event?.marketBook?.runners?.length ? (
                     getOdds(event, teamType) ? (
                       getOdds(event, teamType).map((odd) => (
                         <ExchOddBtn
@@ -230,9 +230,8 @@ const TopMatches: React.FC<Props> = ({
                           oddType={
                             odd.type === 'back-odd' ? 'back-odd' : 'lay-odd'
                           }
-                          disable={event.matchOdds.status
-                            .toLowerCase()
-                            .includes('suspended')}
+                          disable={event.marketBook?.status?.toLowerCase().includes('suspended') ||
+         event.marketBook?.status?.toLowerCase().includes('closed')}
                           valueType="matchOdds"
                           showSubValueinKformat={true}
                           onClick={() => null}

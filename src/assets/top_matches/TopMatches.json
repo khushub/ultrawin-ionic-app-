@@ -1,0 +1,1294 @@
+[
+    {
+        "openDate": "2026-04-23T05:00:00.000+00:00",
+        "sportId": "4",
+        "sportName": "Cricket",
+        "competitionId": "9962116",
+        "competitionName": "One Day Internationals",
+        "eventId": "35514110",
+        "eventName": "Bangladesh v New Zealand",
+        "marketId": "1.257111674",
+        "status": "IN_PLAY",
+        "providerName": "BetFair",
+        "markets": {
+            "matchOddsProvider": "BetFair",
+            "matchOddsBaseUrl": "https://feed.uvwin2024.co/odds-feed",
+            "matchOddsTopic": "/topic/betfair_match_odds_update",
+            "enableMatchOdds": false,
+            "enableBookmaker": true,
+            "enableFancy": true,
+            "enablePremium": false,
+            "fancySuspended": false,
+            "fancyDisabled": false,
+            "enableLine": true,
+            "enableGoal": false,
+            "enableSetWinner": false
+        },
+        "enabled": true,
+        "premiumEnabled": false,
+        "winnerMarketEnabled": false,
+        "forcedInplay": true,
+        "virtualEvent": false,
+        "favorite": true,
+        "favoritePriority": 1,
+        "liveStreamChannelId": "35243",
+        "srScorecardEnabled": false,
+        "macPremiumEnabled": false
+    },
+    {
+        "openDate": "2026-04-23T14:00:00.000+00:00",
+        "sportId": "4",
+        "sportName": "Cricket",
+        "competitionId": "101480",
+        "competitionName": "Indian Premier League",
+        "eventId": "35514293",
+        "eventName": "Mumbai Indians v Chennai Super Kings",
+        "marketId": "1.257104784",
+        "status": "IN_PLAY",
+        "providerName": "BetFair",
+        "markets": {
+            "matchOddsProvider": "BetFair",
+            "matchOddsBaseUrl": "https://feed.uvwin2024.co/odds-feed",
+            "matchOddsTopic": "/topic/betfair_match_odds_update",
+            "matchOdds": [
+                {
+                    "marketId": "1.257104784",
+                    "marketName": "Match Odds",
+                    "marketTime": 1776952800000,
+                    "marketType": "MATCH_ODDS",
+                    "status": "OPEN",
+                    "runners": [
+                        {
+                            "runnerId": "2954281",
+                            "runnerName": "Mumbai Indians",
+                            "status": "ACTIVE",
+                            "backPrices": [
+                                {
+                                    "price": 1.59,
+                                    "size": 3147.06
+                                }
+                            ],
+                            "layPrices": [
+                                {
+                                    "price": 1.61,
+                                    "size": 2089.17
+                                }
+                            ],
+                            "sort": "1"
+                        },
+                        {
+                            "runnerId": "2954263",
+                            "runnerName": "Chennai Super Kings",
+                            "status": "ACTIVE",
+                            "backPrices": [
+                                {
+                                    "price": 2.64,
+                                    "size": 81.81
+                                }
+                            ],
+                            "layPrices": [
+                                {
+                                    "price": 2.68,
+                                    "size": 175.85
+                                }
+                            ],
+                            "sort": "2"
+                        }
+                    ],
+                    "commissionEnabled": false,
+                    "suspended": false,
+                    "disabled": false,
+                    "limits": {
+                        "minBetValue": 0.0,
+                        "maxBetValue": 0.0,
+                        "oddsLimit": 0.0,
+                        "delay": 0.0
+                    }
+                }
+            ],
+            "enableMatchOdds": true,
+            "enableBookmaker": true,
+            "enableFancy": true,
+            "enablePremium": false,
+            "fancySuspended": false,
+            "fancyDisabled": false,
+            "enableToss": true,
+            "enableLine": false,
+            "enableGoal": false,
+            "enableSetWinner": false
+        },
+        "enabled": true,
+        "premiumEnabled": false,
+        "winnerMarketEnabled": false,
+        "forcedInplay": true,
+        "virtualEvent": false,
+        "favorite": true,
+        "favoritePriority": 1,
+        "liveStreamChannelId": "35245",
+        "srScorecardEnabled": false,
+        "macPremiumEnabled": false
+    },
+    {
+        "openDate": "2026-04-23T09:30:00.000+00:00",
+        "customOpenDate": "2026-04-23T09:30:00.000+00:00",
+        "sportId": "4",
+        "sportName": "Cricket",
+        "competitionId": "10693181",
+        "competitionName": "Pakistan Super League",
+        "eventId": "35518130",
+        "eventName": "Rawalpindi Pindiz v Islamabad United",
+        "marketId": "1.257155940",
+        "status": "IN_PLAY",
+        "providerName": "BetFair",
+        "markets": {
+            "matchOddsProvider": "BetFair",
+            "matchOddsBaseUrl": "https://feed.uvwin2024.co/odds-feed",
+            "matchOddsTopic": "/topic/betfair_match_odds_update",
+            "matchOdds": [
+                {
+                    "marketId": "1.257155940",
+                    "marketName": "Match Odds",
+                    "marketTime": 1776936600000,
+                    "marketType": "MATCH_ODDS",
+                    "status": "OPEN",
+                    "runners": [
+                        {
+                            "runnerId": "96549129",
+                            "runnerName": "Rawalpindi Pindiz",
+                            "status": "ACTIVE",
+                            "backPrices": [
+                                {
+                                    "price": 2.76,
+                                    "size": 6.94
+                                }
+                            ],
+                            "layPrices": [
+                                {
+                                    "price": 2.78,
+                                    "size": 21.97
+                                }
+                            ],
+                            "sort": "1"
+                        },
+                        {
+                            "runnerId": "10782589",
+                            "runnerName": "Islamabad United",
+                            "status": "ACTIVE",
+                            "backPrices": [
+                                {
+                                    "price": 1.56,
+                                    "size": 227.1
+                                }
+                            ],
+                            "layPrices": [
+                                {
+                                    "price": 1.57,
+                                    "size": 201.85
+                                }
+                            ],
+                            "sort": "2"
+                        }
+                    ],
+                    "commissionEnabled": false,
+                    "suspended": false,
+                    "disabled": false,
+                    "limits": {
+                        "minBetValue": 0.0,
+                        "maxBetValue": 0.0,
+                        "oddsLimit": 0.0,
+                        "delay": 0.0
+                    }
+                }
+            ],
+            "enableMatchOdds": true,
+            "enableBookmaker": true,
+            "enableFancy": true,
+            "enablePremium": false,
+            "fancySuspended": false,
+            "fancyDisabled": false,
+            "enableToss": true,
+            "enableLine": false,
+            "enableGoal": false,
+            "enableSetWinner": false
+        },
+        "enabled": true,
+        "premiumEnabled": false,
+        "winnerMarketEnabled": false,
+        "forcedInplay": true,
+        "virtualEvent": false,
+        "favorite": true,
+        "favoritePriority": 3,
+        "liveStreamChannelId": "35244",
+        "srScorecardEnabled": false,
+        "macPremiumEnabled": false
+    },
+    {
+        "openDate": "2026-04-26T14:00:00.000+00:00",
+        "sportId": "4",
+        "sportName": "Cricket",
+        "competitionId": "101480",
+        "competitionName": "Indian Premier League",
+        "eventId": "35521809",
+        "eventName": "Lucknow Super Giants v Kolkata Knight Riders",
+        "marketId": "1.257193416",
+        "status": "IN_PLAY",
+        "providerName": "BetFair",
+        "markets": {
+            "matchOddsProvider": "BetFair",
+            "matchOddsBaseUrl": "https://feed.uvwin2024.co/odds-feed",
+            "matchOddsTopic": "/topic/betfair_match_odds_update",
+            "matchOdds": [
+                {
+                    "marketId": "1.257193416",
+                    "marketName": "Match Odds",
+                    "marketTime": 1777212000000,
+                    "marketType": "MATCH_ODDS",
+                    "status": "OPEN",
+                    "runners": [
+                        {
+                            "runnerId": "42821393",
+                            "runnerName": "Lucknow Super Giants",
+                            "status": "ACTIVE",
+                            "backPrices": [
+                                {
+                                    "price": 1.95,
+                                    "size": 16.17
+                                }
+                            ],
+                            "layPrices": [
+                                {
+                                    "price": 2.14,
+                                    "size": 5.82
+                                }
+                            ],
+                            "sort": "1"
+                        },
+                        {
+                            "runnerId": "2954260",
+                            "runnerName": "Kolkata Knight Riders",
+                            "status": "ACTIVE",
+                            "backPrices": [
+                                {
+                                    "price": 1.89,
+                                    "size": 6.59
+                                }
+                            ],
+                            "layPrices": [
+                                {
+                                    "price": 2.06,
+                                    "size": 15.31
+                                }
+                            ],
+                            "sort": "2"
+                        }
+                    ],
+                    "commissionEnabled": false,
+                    "suspended": false,
+                    "disabled": false,
+                    "limits": {
+                        "minBetValue": 0.0,
+                        "maxBetValue": 0.0,
+                        "oddsLimit": 0.0,
+                        "delay": 0.0
+                    }
+                }
+            ],
+            "enableMatchOdds": true,
+            "enableBookmaker": true,
+            "enableFancy": false,
+            "enablePremium": false,
+            "fancySuspended": false,
+            "fancyDisabled": false,
+            "enableToss": true,
+            "enableLine": false,
+            "enableGoal": false,
+            "enableSetWinner": false
+        },
+        "enabled": true,
+        "premiumEnabled": false,
+        "winnerMarketEnabled": false,
+        "forcedInplay": true,
+        "virtualEvent": false,
+        "favorite": true,
+        "favoritePriority": 3,
+        "srScorecardEnabled": false,
+        "macPremiumEnabled": false
+    },
+    {
+        "openDate": "2026-04-24T14:00:00.000+00:00",
+        "sportId": "4",
+        "sportName": "Cricket",
+        "competitionId": "101480",
+        "competitionName": "Indian Premier League",
+        "eventId": "35514299",
+        "eventName": "Royal Challengers Bengaluru v Gujarat Titans",
+        "marketId": "1.257104595",
+        "status": "IN_PLAY",
+        "providerName": "BetFair",
+        "markets": {
+            "matchOddsProvider": "BetFair",
+            "matchOddsBaseUrl": "https://feed.uvwin2024.co/odds-feed",
+            "matchOddsTopic": "/topic/betfair_match_odds_update",
+            "matchOdds": [
+                {
+                    "marketId": "1.257104595",
+                    "marketName": "Match Odds",
+                    "marketTime": 1777039200000,
+                    "marketType": "MATCH_ODDS",
+                    "status": "OPEN",
+                    "runners": [
+                        {
+                            "runnerId": "67868736",
+                            "runnerName": "Royal Challengers Bengaluru",
+                            "status": "ACTIVE",
+                            "backPrices": [
+                                {
+                                    "price": 1.7,
+                                    "size": 69.2
+                                }
+                            ],
+                            "layPrices": [
+                                {
+                                    "price": 1.73,
+                                    "size": 6.24
+                                }
+                            ],
+                            "sort": "1"
+                        },
+                        {
+                            "runnerId": "42821394",
+                            "runnerName": "Gujarat Titans",
+                            "status": "ACTIVE",
+                            "backPrices": [
+                                {
+                                    "price": 2.38,
+                                    "size": 4.54
+                                }
+                            ],
+                            "layPrices": [
+                                {
+                                    "price": 2.44,
+                                    "size": 48.21
+                                }
+                            ],
+                            "sort": "2"
+                        }
+                    ],
+                    "commissionEnabled": false,
+                    "suspended": false,
+                    "disabled": false,
+                    "limits": {
+                        "minBetValue": 0.0,
+                        "maxBetValue": 0.0,
+                        "oddsLimit": 0.0,
+                        "delay": 0.0
+                    }
+                }
+            ],
+            "enableMatchOdds": true,
+            "enableBookmaker": true,
+            "enableFancy": true,
+            "enablePremium": false,
+            "fancySuspended": false,
+            "fancyDisabled": false,
+            "enableToss": true,
+            "enableLine": false,
+            "enableGoal": false,
+            "enableSetWinner": false
+        },
+        "enabled": true,
+        "premiumEnabled": false,
+        "winnerMarketEnabled": false,
+        "forcedInplay": true,
+        "virtualEvent": false,
+        "favorite": true,
+        "favoritePriority": 10,
+        "srScorecardEnabled": false,
+        "macPremiumEnabled": false
+    },
+    {
+        "openDate": "2025-03-31T13:00:00.000+00:00",
+        "customOpenDate": "2026-03-25T14:00:00.000+00:00",
+        "sportId": "4",
+        "sportName": "Cricket",
+        "competitionId": "101480",
+        "competitionName": "Indian Premier League",
+        "eventId": "28127348",
+        "eventName": "     Indian Premier League",
+        "marketId": "1.245690241",
+        "status": "IN_PLAY",
+        "providerName": "BetFair",
+        "markets": {
+            "matchOddsProvider": "BetFair",
+            "matchOddsBaseUrl": "https://feed.uvwin2024.co/odds-feed",
+            "matchOddsTopic": "/topic/betfair_match_odds_update",
+            "matchOdds": [
+                {
+                    "marketId": "1.245690241",
+                    "marketName": "Winner",
+                    "marketTime": 1779800400000,
+                    "marketType": "MATCH_ODDS",
+                    "status": "OPEN",
+                    "runners": [
+                        {
+                            "runnerId": "38528100",
+                            "runnerName": "Punjab Kings",
+                            "status": "ACTIVE",
+                            "backPrices": [
+                                {
+                                    "price": 3.5,
+                                    "size": 168.07
+                                }
+                            ],
+                            "layPrices": [
+                                {
+                                    "price": 3.6,
+                                    "size": 74.58
+                                }
+                            ],
+                            "sort": "6"
+                        },
+                        {
+                            "runnerId": "67868736",
+                            "runnerName": "Royal Challengers Bengaluru",
+                            "status": "ACTIVE",
+                            "backPrices": [
+                                {
+                                    "price": 4.6,
+                                    "size": 2476.96
+                                }
+                            ],
+                            "layPrices": [
+                                {
+                                    "price": 4.7,
+                                    "size": 442.22
+                                }
+                            ],
+                            "sort": "2"
+                        },
+                        {
+                            "runnerId": "2954266",
+                            "runnerName": "Rajasthan Royals",
+                            "status": "ACTIVE",
+                            "backPrices": [
+                                {
+                                    "price": 6.0,
+                                    "size": 223.03
+                                }
+                            ],
+                            "layPrices": [
+                                {
+                                    "price": 6.2,
+                                    "size": 1241.36
+                                }
+                            ],
+                            "sort": "10"
+                        },
+                        {
+                            "runnerId": "2954281",
+                            "runnerName": "Mumbai Indians",
+                            "status": "ACTIVE",
+                            "backPrices": [
+                                {
+                                    "price": 7.4,
+                                    "size": 826.64
+                                }
+                            ],
+                            "layPrices": [
+                                {
+                                    "price": 7.6,
+                                    "size": 70.9
+                                }
+                            ],
+                            "sort": "1"
+                        },
+                        {
+                            "runnerId": "22121561",
+                            "runnerName": "Delhi Capitals",
+                            "status": "ACTIVE",
+                            "backPrices": [
+                                {
+                                    "price": 22.0,
+                                    "size": 302.9
+                                }
+                            ],
+                            "layPrices": [
+                                {
+                                    "price": 23.0,
+                                    "size": 68.39
+                                }
+                            ],
+                            "sort": "5"
+                        },
+                        {
+                            "runnerId": "7671295",
+                            "runnerName": "Sunrisers Hyderabad",
+                            "status": "ACTIVE",
+                            "backPrices": [
+                                {
+                                    "price": 10.5,
+                                    "size": 499.27
+                                }
+                            ],
+                            "layPrices": [
+                                {
+                                    "price": 11.0,
+                                    "size": 545.45
+                                }
+                            ],
+                            "sort": "4"
+                        },
+                        {
+                            "runnerId": "42821394",
+                            "runnerName": "Gujarat Titans",
+                            "status": "ACTIVE",
+                            "backPrices": [
+                                {
+                                    "price": 22.0,
+                                    "size": 365.36
+                                }
+                            ],
+                            "layPrices": [
+                                {
+                                    "price": 23.0,
+                                    "size": 293.53
+                                }
+                            ],
+                            "sort": "7"
+                        },
+                        {
+                            "runnerId": "2954263",
+                            "runnerName": "Chennai Super Kings",
+                            "status": "ACTIVE",
+                            "backPrices": [
+                                {
+                                    "price": 44.0,
+                                    "size": 31.08
+                                }
+                            ],
+                            "layPrices": [
+                                {
+                                    "price": 50.0,
+                                    "size": 12.0
+                                }
+                            ],
+                            "sort": "3"
+                        },
+                        {
+                            "runnerId": "42821393",
+                            "runnerName": "Lucknow Super Giants",
+                            "status": "ACTIVE",
+                            "backPrices": [
+                                {
+                                    "price": 430.0,
+                                    "size": 14.96
+                                }
+                            ],
+                            "layPrices": [
+                                {
+                                    "price": 490.0,
+                                    "size": 1.12
+                                }
+                            ],
+                            "sort": "8"
+                        },
+                        {
+                            "runnerId": "2954260",
+                            "runnerName": "Kolkata Knight Riders",
+                            "status": "ACTIVE",
+                            "backPrices": [
+                                {
+                                    "price": 330.0,
+                                    "size": 20.71
+                                }
+                            ],
+                            "layPrices": [
+                                {
+                                    "price": 390.0,
+                                    "size": 3.93
+                                }
+                            ],
+                            "sort": "9"
+                        }
+                    ],
+                    "commissionEnabled": false,
+                    "suspended": false,
+                    "disabled": false,
+                    "limits": {
+                        "minBetValue": 0.0,
+                        "maxBetValue": 0.0,
+                        "oddsLimit": 0.0,
+                        "delay": 0.0
+                    }
+                }
+            ],
+            "enableMatchOdds": true,
+            "enableBookmaker": true,
+            "enableFancy": true,
+            "enablePremium": false,
+            "fancySuspended": false,
+            "fancyDisabled": false,
+            "enableLine": false,
+            "enableGoal": false,
+            "enableSetWinner": false
+        },
+        "enabled": true,
+        "premiumEnabled": false,
+        "winnerMarketEnabled": false,
+        "forcedInplay": true,
+        "virtualEvent": false,
+        "favorite": true,
+        "favoritePriority": 20,
+        "srScorecardEnabled": false,
+        "macPremiumEnabled": false
+    },
+    {
+        "openDate": "2026-04-23T17:00:00.000+00:00",
+        "sportId": "1",
+        "sportName": "Soccer",
+        "competitionId": "117",
+        "competitionName": "Spanish La Liga",
+        "eventId": "35458426",
+        "eventName": "Levante v Sevilla",
+        "marketId": "1.256358251",
+        "status": "IN_PLAY",
+        "providerName": "BetFair",
+        "markets": {
+            "matchOddsProvider": "BetFair",
+            "matchOddsBaseUrl": "https://feed.uvwin2024.co/odds-feed",
+            "matchOddsTopic": "/topic/betfair_match_odds_update",
+            "matchOdds": [
+                {
+                    "marketId": "1.256358251",
+                    "marketName": "Match Odds",
+                    "marketTime": 1776963600000,
+                    "marketType": "MATCH_ODDS",
+                    "status": "OPEN",
+                    "runners": [
+                        {
+                            "runnerId": "214865",
+                            "runnerName": "Levante",
+                            "status": "ACTIVE",
+                            "backPrices": [
+                                {
+                                    "price": 2.54,
+                                    "size": 321.36
+                                }
+                            ],
+                            "layPrices": [
+                                {
+                                    "price": 2.56,
+                                    "size": 6.01
+                                }
+                            ],
+                            "sort": "1"
+                        },
+                        {
+                            "runnerId": "52480974",
+                            "runnerName": "Sevilla",
+                            "status": "ACTIVE",
+                            "backPrices": [
+                                {
+                                    "price": 3.2,
+                                    "size": 364.83
+                                }
+                            ],
+                            "layPrices": [
+                                {
+                                    "price": 3.25,
+                                    "size": 123.67
+                                }
+                            ],
+                            "sort": "2"
+                        },
+                        {
+                            "runnerId": "58805",
+                            "runnerName": "The Draw",
+                            "status": "ACTIVE",
+                            "backPrices": [
+                                {
+                                    "price": 3.3,
+                                    "size": 6237.38
+                                }
+                            ],
+                            "layPrices": [
+                                {
+                                    "price": 3.35,
+                                    "size": 6348.46
+                                }
+                            ],
+                            "sort": "3"
+                        }
+                    ],
+                    "commissionEnabled": false,
+                    "suspended": false,
+                    "disabled": false,
+                    "limits": {
+                        "minBetValue": 0.0,
+                        "maxBetValue": 0.0,
+                        "oddsLimit": 0.0,
+                        "delay": 0.0
+                    }
+                }
+            ],
+            "enableMatchOdds": true,
+            "enableBookmaker": true,
+            "enableFancy": false,
+            "enablePremium": false,
+            "fancySuspended": false,
+            "fancyDisabled": false,
+            "enableLine": false,
+            "enableGoal": false,
+            "enableSetWinner": false
+        },
+        "enabled": true,
+        "premiumEnabled": false,
+        "winnerMarketEnabled": false,
+        "forcedInplay": true,
+        "virtualEvent": false,
+        "favorite": true,
+        "favoritePriority": 21,
+        "liveStreamChannelId": "8527",
+        "srScorecardEnabled": false,
+        "macPremiumEnabled": false
+    },
+    {
+        "openDate": "2026-04-23T18:00:00.000+00:00",
+        "sportId": "1",
+        "sportName": "Soccer",
+        "competitionId": "117",
+        "competitionName": "Spanish La Liga",
+        "eventId": "35458434",
+        "eventName": "Rayo Vallecano v Espanyol",
+        "marketId": "1.256358114",
+        "status": "IN_PLAY",
+        "providerName": "BetFair",
+        "markets": {
+            "matchOddsProvider": "BetFair",
+            "matchOddsBaseUrl": "https://feed.uvwin2024.co/odds-feed",
+            "matchOddsTopic": "/topic/betfair_match_odds_update",
+            "matchOdds": [
+                {
+                    "marketId": "1.256358114",
+                    "marketName": "Match Odds",
+                    "marketTime": 1776967200000,
+                    "marketType": "MATCH_ODDS",
+                    "status": "OPEN",
+                    "runners": [
+                        {
+                            "runnerId": "10779",
+                            "runnerName": "Rayo Vallecano",
+                            "status": "ACTIVE",
+                            "backPrices": [
+                                {
+                                    "price": 2.16,
+                                    "size": 2214.17
+                                }
+                            ],
+                            "layPrices": [
+                                {
+                                    "price": 2.2,
+                                    "size": 1447.53
+                                }
+                            ],
+                            "sort": "1"
+                        },
+                        {
+                            "runnerId": "59044",
+                            "runnerName": "Espanyol",
+                            "status": "ACTIVE",
+                            "backPrices": [
+                                {
+                                    "price": 4.1,
+                                    "size": 292.52
+                                }
+                            ],
+                            "layPrices": [
+                                {
+                                    "price": 4.2,
+                                    "size": 386.39
+                                }
+                            ],
+                            "sort": "2"
+                        },
+                        {
+                            "runnerId": "58805",
+                            "runnerName": "The Draw",
+                            "status": "ACTIVE",
+                            "backPrices": [
+                                {
+                                    "price": 3.3,
+                                    "size": 1456.68
+                                }
+                            ],
+                            "layPrices": [
+                                {
+                                    "price": 3.35,
+                                    "size": 757.12
+                                }
+                            ],
+                            "sort": "3"
+                        }
+                    ],
+                    "commissionEnabled": false,
+                    "suspended": false,
+                    "disabled": false,
+                    "limits": {
+                        "minBetValue": 0.0,
+                        "maxBetValue": 0.0,
+                        "oddsLimit": 0.0,
+                        "delay": 0.0
+                    }
+                }
+            ],
+            "enableMatchOdds": true,
+            "enableBookmaker": true,
+            "enableFancy": false,
+            "enablePremium": false,
+            "fancySuspended": false,
+            "fancyDisabled": false,
+            "enableLine": false,
+            "enableGoal": false,
+            "enableSetWinner": false
+        },
+        "enabled": true,
+        "premiumEnabled": false,
+        "winnerMarketEnabled": false,
+        "forcedInplay": true,
+        "virtualEvent": false,
+        "favorite": true,
+        "favoritePriority": 22,
+        "liveStreamChannelId": "8541",
+        "srScorecardEnabled": false,
+        "macPremiumEnabled": false
+    },
+    {
+        "openDate": "2026-04-23T18:45:00.000+00:00",
+        "sportId": "1",
+        "sportName": "Soccer",
+        "competitionId": "11458113",
+        "competitionName": "German Cup",
+        "eventId": "35343186",
+        "eventName": "Stuttgart v Freiburg",
+        "marketId": "1.254907828",
+        "status": "IN_PLAY",
+        "providerName": "BetFair",
+        "markets": {
+            "matchOddsProvider": "BetFair",
+            "matchOddsBaseUrl": "https://feed.uvwin2024.co/odds-feed",
+            "matchOddsTopic": "/topic/betfair_match_odds_update",
+            "matchOdds": [
+                {
+                    "marketId": "1.254907828",
+                    "marketName": "Match Odds",
+                    "marketTime": 1776969900000,
+                    "marketType": "MATCH_ODDS",
+                    "status": "OPEN",
+                    "runners": [
+                        {
+                            "runnerId": "44519",
+                            "runnerName": "Stuttgart",
+                            "status": "ACTIVE",
+                            "backPrices": [
+                                {
+                                    "price": 1.66,
+                                    "size": 85.93
+                                }
+                            ],
+                            "layPrices": [
+                                {
+                                    "price": 1.68,
+                                    "size": 595.14
+                                }
+                            ],
+                            "sort": "1"
+                        },
+                        {
+                            "runnerId": "44520",
+                            "runnerName": "Freiburg",
+                            "status": "ACTIVE",
+                            "backPrices": [
+                                {
+                                    "price": 5.6,
+                                    "size": 3.04
+                                }
+                            ],
+                            "layPrices": [
+                                {
+                                    "price": 5.8,
+                                    "size": 162.39
+                                }
+                            ],
+                            "sort": "2"
+                        },
+                        {
+                            "runnerId": "58805",
+                            "runnerName": "The Draw",
+                            "status": "ACTIVE",
+                            "backPrices": [
+                                {
+                                    "price": 4.4,
+                                    "size": 124.09
+                                }
+                            ],
+                            "layPrices": [
+                                {
+                                    "price": 4.6,
+                                    "size": 21.65
+                                }
+                            ],
+                            "sort": "3"
+                        }
+                    ],
+                    "commissionEnabled": false,
+                    "suspended": false,
+                    "disabled": false,
+                    "limits": {
+                        "minBetValue": 0.0,
+                        "maxBetValue": 0.0,
+                        "oddsLimit": 0.0,
+                        "delay": 0.0
+                    }
+                }
+            ],
+            "enableMatchOdds": true,
+            "enableBookmaker": false,
+            "enableFancy": false,
+            "enablePremium": false,
+            "fancySuspended": false,
+            "fancyDisabled": false,
+            "enableLine": false,
+            "enableGoal": true,
+            "enableSetWinner": false
+        },
+        "enabled": true,
+        "premiumEnabled": false,
+        "winnerMarketEnabled": false,
+        "forcedInplay": true,
+        "virtualEvent": false,
+        "favorite": true,
+        "favoritePriority": 23,
+        "liveStreamChannelId": "8547",
+        "srScorecardEnabled": false,
+        "macPremiumEnabled": false
+    },
+    {
+        "openDate": "2026-04-23T19:30:00.000+00:00",
+        "sportId": "1",
+        "sportName": "Soccer",
+        "competitionId": "117",
+        "competitionName": "Spanish La Liga",
+        "eventId": "35458425",
+        "eventName": "Oviedo v Villarreal",
+        "marketId": "1.256358388",
+        "status": "IN_PLAY",
+        "providerName": "BetFair",
+        "markets": {
+            "matchOddsProvider": "BetFair",
+            "matchOddsBaseUrl": "https://feed.uvwin2024.co/odds-feed",
+            "matchOddsTopic": "/topic/betfair_match_odds_update",
+            "matchOdds": [
+                {
+                    "marketId": "1.256358388",
+                    "marketName": "Match Odds",
+                    "marketTime": 1776972600000,
+                    "marketType": "MATCH_ODDS",
+                    "status": "OPEN",
+                    "runners": [
+                        {
+                            "runnerId": "21678",
+                            "runnerName": "Oviedo",
+                            "status": "ACTIVE",
+                            "backPrices": [
+                                {
+                                    "price": 3.75,
+                                    "size": 249.06
+                                }
+                            ],
+                            "layPrices": [
+                                {
+                                    "price": 3.8,
+                                    "size": 212.43
+                                }
+                            ],
+                            "sort": "1"
+                        },
+                        {
+                            "runnerId": "28191",
+                            "runnerName": "Villarreal",
+                            "status": "ACTIVE",
+                            "backPrices": [
+                                {
+                                    "price": 2.22,
+                                    "size": 1330.46
+                                }
+                            ],
+                            "layPrices": [
+                                {
+                                    "price": 2.24,
+                                    "size": 430.87
+                                }
+                            ],
+                            "sort": "2"
+                        },
+                        {
+                            "runnerId": "58805",
+                            "runnerName": "The Draw",
+                            "status": "ACTIVE",
+                            "backPrices": [
+                                {
+                                    "price": 3.45,
+                                    "size": 1898.25
+                                }
+                            ],
+                            "layPrices": [
+                                {
+                                    "price": 3.5,
+                                    "size": 6.96
+                                }
+                            ],
+                            "sort": "3"
+                        }
+                    ],
+                    "commissionEnabled": false,
+                    "suspended": false,
+                    "disabled": false,
+                    "limits": {
+                        "minBetValue": 0.0,
+                        "maxBetValue": 0.0,
+                        "oddsLimit": 0.0,
+                        "delay": 0.0
+                    }
+                }
+            ],
+            "enableMatchOdds": true,
+            "enableBookmaker": true,
+            "enableFancy": false,
+            "enablePremium": false,
+            "fancySuspended": false,
+            "fancyDisabled": false,
+            "enableLine": false,
+            "enableGoal": false,
+            "enableSetWinner": false
+        },
+        "enabled": true,
+        "premiumEnabled": false,
+        "winnerMarketEnabled": false,
+        "forcedInplay": true,
+        "virtualEvent": false,
+        "favorite": true,
+        "favoritePriority": 24,
+        "liveStreamChannelId": "8553",
+        "srScorecardEnabled": false,
+        "macPremiumEnabled": false
+    },
+    {
+        "openDate": "2026-03-24T12:00:00.000+00:00",
+        "customOpenDate": "2026-03-26T12:00:00.000+00:00",
+        "sportId": "4",
+        "sportName": "Cricket",
+        "competitionId": "10693181",
+        "competitionName": "Pakistan Super League",
+        "eventId": "28102621",
+        "eventName": "  Pakistan Super League",
+        "marketId": "1.255730196",
+        "status": "IN_PLAY",
+        "providerName": "BetFair",
+        "markets": {
+            "matchOddsProvider": "BetFair",
+            "matchOddsBaseUrl": "https://feed.uvwin2024.co/odds-feed",
+            "matchOddsTopic": "/topic/betfair_match_odds_update",
+            "matchOdds": [
+                {
+                    "marketId": "1.255730196",
+                    "marketName": "Winner",
+                    "marketTime": 1777820400000,
+                    "marketType": "MATCH_ODDS",
+                    "status": "OPEN",
+                    "runners": [
+                        {
+                            "runnerId": "10791812",
+                            "runnerName": "Peshawar Zalmi",
+                            "status": "ACTIVE",
+                            "backPrices": [
+                                {
+                                    "price": 2.38,
+                                    "size": 13.2
+                                }
+                            ],
+                            "layPrices": [
+                                {
+                                    "price": 2.8,
+                                    "size": 4.37
+                                }
+                            ],
+                            "sort": "4"
+                        },
+                        {
+                            "runnerId": "17162689",
+                            "runnerName": "Multan Sultans",
+                            "status": "ACTIVE",
+                            "backPrices": [
+                                {
+                                    "price": 4.9,
+                                    "size": 10.49
+                                }
+                            ],
+                            "layPrices": [
+                                {
+                                    "price": 5.0,
+                                    "size": 28.59
+                                }
+                            ],
+                            "sort": "2"
+                        },
+                        {
+                            "runnerId": "10782634",
+                            "runnerName": "Lahore Qalandars",
+                            "status": "ACTIVE",
+                            "backPrices": [
+                                {
+                                    "price": 10.5,
+                                    "size": 3.0
+                                }
+                            ],
+                            "sort": "6"
+                        },
+                        {
+                            "runnerId": "10782589",
+                            "runnerName": "Islamabad United",
+                            "status": "ACTIVE",
+                            "backPrices": [
+                                {
+                                    "price": 5.6,
+                                    "size": 13.77
+                                }
+                            ],
+                            "layPrices": [
+                                {
+                                    "price": 6.2,
+                                    "size": 2.47
+                                }
+                            ],
+                            "sort": "1"
+                        },
+                        {
+                            "runnerId": "96547939",
+                            "runnerName": "Hyderabad Kingsmen",
+                            "status": "ACTIVE",
+                            "backPrices": [
+                                {
+                                    "price": 5.6,
+                                    "size": 3.0
+                                }
+                            ],
+                            "sort": "5"
+                        },
+                        {
+                            "runnerId": "10782635",
+                            "runnerName": "Karachi Kings",
+                            "status": "ACTIVE",
+                            "backPrices": [
+                                {
+                                    "price": 2.1,
+                                    "size": 10.99
+                                }
+                            ],
+                            "layPrices": [
+                                {
+                                    "price": 950.0,
+                                    "size": 5.0
+                                }
+                            ],
+                            "sort": "3"
+                        },
+                        {
+                            "runnerId": "96549129",
+                            "runnerName": "Rawalpindi Pindiz",
+                            "status": "ACTIVE",
+                            "backPrices": [
+                                {
+                                    "price": 40.0,
+                                    "size": 4.48
+                                }
+                            ],
+                            "sort": "8"
+                        },
+                        {
+                            "runnerId": "10782588",
+                            "runnerName": "Quetta Gladiators",
+                            "status": "ACTIVE",
+                            "backPrices": [
+                                {
+                                    "price": 100.0,
+                                    "size": 2.0
+                                }
+                            ],
+                            "sort": "7"
+                        }
+                    ],
+                    "commissionEnabled": false,
+                    "suspended": false,
+                    "disabled": false,
+                    "limits": {
+                        "minBetValue": 0.0,
+                        "maxBetValue": 0.0,
+                        "oddsLimit": 0.0,
+                        "delay": 0.0
+                    }
+                }
+            ],
+            "enableMatchOdds": true,
+            "enableBookmaker": true,
+            "enableFancy": false,
+            "enablePremium": false,
+            "fancySuspended": false,
+            "fancyDisabled": false,
+            "enableLine": false,
+            "enableGoal": false,
+            "enableSetWinner": false
+        },
+        "enabled": true,
+        "premiumEnabled": false,
+        "winnerMarketEnabled": false,
+        "forcedInplay": true,
+        "virtualEvent": false,
+        "favorite": true,
+        "favoritePriority": 25,
+        "srScorecardEnabled": false,
+        "macPremiumEnabled": false
+    },
+    {
+        "openDate": "2026-03-29T20:00:00.000+00:00",
+        "customOpenDate": "2026-05-04T08:00:00.000+00:00",
+        "sportId": "4",
+        "sportName": "Cricket",
+        "competitionId": "RX123",
+        "competitionName": "Other",
+        "eventId": "1774820038",
+        "customEventName": "\uD83C\uDFCE️MIAMI GRAND PRIX - RACE",
+        "eventName": "MIAMI GRAND PRIX - RACE",
+        "status": "IN_PLAY",
+        "providerName": "RX",
+        "markets": {
+            "enableMatchOdds": false,
+            "enableBookmaker": true,
+            "enableFancy": false,
+            "enablePremium": false,
+            "fancySuspended": false,
+            "fancyDisabled": false,
+            "enableLine": false,
+            "enableGoal": false,
+            "enableSetWinner": false
+        },
+        "enabled": true,
+        "premiumEnabled": false,
+        "winnerMarketEnabled": false,
+        "forcedInplay": true,
+        "virtualEvent": false,
+        "favorite": true,
+        "favoritePriority": 90,
+        "srScorecardEnabled": false,
+        "macPremiumEnabled": false
+    }
+]
