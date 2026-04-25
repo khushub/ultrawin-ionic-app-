@@ -25,6 +25,8 @@ const CasinoV2: React.FC = () => {
     providerRefs,
     categoryRefs,
   } = useCasinoHook();
+  
+
 
   return (
     <div className="casino-container">
@@ -86,12 +88,12 @@ const CasinoV2: React.FC = () => {
                 'MAC88-CWI103',
                 'MAC88-CWI102',
               ]?.includes(g.gameCode) && (
-                <CasinoGameCard
-                  key={g.gameId}
-                  index={i}
-                  game={g}
-                  handleGameClick={handleGameClick}
-                />
+               <CasinoGameCard
+  key={g.gameId || g.game_id}
+  index={i}
+  game={g}
+  handleGameClick={handleGameClick}
+/>
               )
           )}
       </div>

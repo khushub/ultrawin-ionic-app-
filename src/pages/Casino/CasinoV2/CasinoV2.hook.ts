@@ -1,25 +1,20 @@
 import { useEffect, useRef, useState } from 'react';
-import { AxiosResponse } from 'axios';
 import { useSelector } from 'react-redux';
-// import { RootState } from '../../../models/RootState';
 import { useHistory, useLocation } from 'react-router';
-import SVLS_API from '../../../svls-api';
-import { getCurrencyTypeFromToken } from '../../../store';
 import { DcGameNew } from '../../../models/dc/DcGame';
+import { postAPIAuth } from '../../../services/apiInstance';
+
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
 
 export const useCasinoHook = () => {
+  const { user } = useSelector((state: any) => state.auth);
+  const currencyType = user?.currencyType || 0;
   const history = useHistory();
   const loggedIn = useSelector((state: any) => state.auth.loggedIn);
   let loggedInUserStatus = 0;
-  if (loggedIn) {
-    loggedInUserStatus = JSON.parse(
-      window.atob(sessionStorage.getItem('jwt_token').split('.')[1])
-    ).status;
-  }
 
   const { langData } = useSelector((state: any) => state.common);
   const [searchTerm, setSearchTerm] = useState('');
@@ -29,164 +24,94 @@ export const useCasinoHook = () => {
   let categoryRefs = useRef({});
 
   const categoryFromParams = searchParams?.get('category');
-  let providerFromParams = searchParams?.get('provider') || 'ALL';
+  let providerFromParams = searchParams?.get('provider');
 
   const [dialogShow, setDialogShow] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  
 
-  const [gameInfo, setGameInfo] =
-    useState<Record<string, Record<string, any[]>>>(null);
 
-  // Sub-provider tabs
-  const subProviderList = gameInfo ? Object.keys(gameInfo) : [];
+  const [categoryMap, setCategoryMap] = useState<Record<string, string[]>>({});
 
-  // Category tabs
-  const categoryList =
-    gameInfo !== null && providerFromParams
-      ? gameInfo?.[providerFromParams]
-        ? Object.keys(gameInfo?.[providerFromParams])
-        : []
-      : [];
+ 
+  const [gameInfo, setGameInfo] = useState<Record<string, Record<string, any[]>>>({});
+  const [recentGames, setRecentGames] = useState<any[]>([]);
 
-  // Game list display filtered based on selected sub-provider and category
-  const filteredGames =
-    gameInfo !== null && categoryFromParams && providerFromParams
-      ? gameInfo?.[providerFromParams]?.[categoryFromParams]
-      : [];
+const subProviderList = [
+  'All',
+  'Recent',
+  'MAC88',
+  'KINGMIDAS',
+  'CRASH88',
+  'SPRIBE',
+  'SUNO',
+  'AVIATOR',
+  'AWC',
+  'BETCORE',
+  'BETGAMES',
+  'CREED',
+  'DC',
+  'DRGS',
+  'EZUGI',
+  'GAPLOBBY',
+  'JACKTOP',
+  'JILI',
+  'MACAW',
+  'MARBLES',
+  'PINKY',
+  'RANDORA',
+  'RG',
+  'RICH88',
+  'SAP',
+  'TURBO',
+];
 
-  const gameListDisplay = filteredGames?.filter((game) =>
-    game.gameName.toLowerCase().includes(searchTerm?.toLowerCase())
+
+  const categoryList: string[] =
+  providerFromParams === 'Recent'
+    ? []
+    : providerFromParams === 'All'
+    ? ['All', ...new Set(Object.values(categoryMap).flat())]
+    : categoryMap[providerFromParams] ?? [];
+
+  
+ const filteredGames: any[] =
+  providerFromParams === 'Recent'
+    ? recentGames
+    : providerFromParams === 'All'
+    ? Object.values(gameInfo)
+        .flatMap((provider: any) => Object.values(provider).flat())
+    : categoryFromParams === 'All'
+    ? Object.values(gameInfo?.[providerFromParams] || {}).flat()
+    : gameInfo?.[providerFromParams]?.[categoryFromParams] ?? [];
+
+
+const gameListDisplay = filteredGames
+  .filter((game) =>
+    (game?.gameName || game?.game_name || '')
+      .toLowerCase()
+      .includes(searchTerm?.toLowerCase())
+  )
+  .filter(
+    (game, index, self) =>
+      index ===
+      self.findIndex(
+        (g) =>
+          (g.gameId || g.game_id) ===
+          (game.gameId || game.game_id)
+      )
   );
 
-  const getGameUrl = async (
-    gameId: string,
-    gameName: string,
-    gameCode: string,
-    provider: string,
-    subProvider: string,
-    superProvider: string
-  ) => {
-    if (loggedIn) {
-      // status check
-      if (loggedInUserStatus === 0 || loggedInUserStatus === 3) {
-        history.push(`/home`);
-      }
-      if (provider === 'Indian Casino') {
-        // setCasinoGame({ id: gameCode, name: gameName });
-        history.push(`/casino/indian/${gameCode}`);
-      } else {
-        history.push({
-          pathname: `/dc/gamev1.1/${gameName?.toLowerCase().replace(/\s+/g, '-')}-${btoa(
-            gameId?.toString()
-          )}-${btoa(gameCode)}-${btoa(provider)}-${btoa(subProvider)}-${btoa(superProvider)}`,
-          state: { gameName },
-        });
-      }
-    } else {
-      setDialogShow(true);
-    }
-  };
-
-  const handleGameClickNavigation = async (
-    gameId: string,
-    gameName: string,
-    gameCode: string,
-    subProvider: string,
+  const setCategoryParam = (
+    category: string,
     provider?: string,
-    superProvider?: string
+    replace: boolean = false
   ) => {
-    if (
-      getCurrencyTypeFromToken() === 0 &&
-      !(
-        provider?.toLocaleLowerCase() === 'ezugi' ||
-        subProvider === 'BetGames.TV' ||
-        subProvider === 'Pragmatic Play' ||
-        subProvider === 'Onetouch Live' ||
-        subProvider === 'OneTouch' ||
-        provider === 'RG'
-      )
-    ) {
-      getGameUrl(
-        gameId,
-        gameName,
-        gameCode,
-        provider,
-        subProvider,
-        superProvider
-      );
-    } else {
-      getGameUrl(
-        gameId,
-        gameName,
-        gameCode,
-        provider,
-        subProvider,
-        superProvider
-      );
-    }
-  };
-
-  const handleGameClick = (
-    gameId: string,
-    gameName: string,
-    gameCode: string,
-    subProvider: string,
-    provider?: string,
-    superProvider?: string
-  ) => {
-    handleGameClickNavigation(
-      gameId,
-      gameName,
-      gameCode,
-      subProvider,
-      provider,
-      superProvider
-    );
-  };
-
-  const extractAllGames = (gamesData: Record<string, any[]>): DcGameNew[] => {
-    let allGames: DcGameNew[] = [];
-    if (!gamesData) return allGames;
-    Object.keys(gamesData)?.forEach((provider) => {
-      Object.keys(gamesData?.[provider]).forEach((category) => {
-        allGames = allGames.concat(gamesData?.[provider]?.[category]);
-      });
-    });
-    allGames.sort((a, b) => {
-      if (a.priority === null && b.priority === null) {
-        return 0; // Both are null, keep their relative order
-      }
-      if (a.priority === null) {
-        return 1; // a.priority is null, so move it to the bottom
-      }
-      if (b.priority === null) {
-        return -1; // b.priority is null, so move it to the bottom
-      }
-      return a.priority - b.priority; // Normal sort
-    });
-    return allGames;
-  };
-
-  const addAllCategory = (gameData) => {
-    let games = { ...gameData };
-    if (gameData) {
-      if (providerFromParams !== 'ALL') {
-        let providerAllGames = extractAllGames(games?.[providerFromParams]);
-        games[providerFromParams] = {
-          ALL: providerAllGames,
-          ...games[providerFromParams],
-        };
-        setCategoryParam('ALL', true);
-      }
-    }
-
-    setGameInfo(games);
-  };
-
-  const setCategoryParam = (category: string, replace: boolean = false) => {
+    const prov = provider ?? providerFromParams;
     const navigationMethod = replace ? history.replace : history.push;
     navigationMethod({
       pathname: '/casino',
-      search: `?provider=${providerFromParams}&category=${category}`,
+      search: `?provider=${prov}&category=${category}`,
     });
   };
 
@@ -194,121 +119,270 @@ export const useCasinoHook = () => {
     const navigationMethod = replace ? history.replace : history.push;
     navigationMethod({
       pathname: '/casino',
-      search: `?provider=${provider}&category=${categoryFromParams}`,
+      search: `?provider=${provider}&category=`,
     });
   };
 
-  const handleCasinoSubProviderBlockClick = (subProviderName: string) => {
-    providerFromParams = subProviderName;
-    setProviderParam(subProviderName);
-    if (gameInfo) {
-      if (providerFromParams !== 'ALL') {
-        addAllCategory(gameInfo);
-      } else {
-        const subProviderCategories = Object.keys(gameInfo[subProviderName]);
-        const firstCategory = subProviderCategories[0];
-        setCategoryParam(firstCategory);
+  const fetchCategories = async (provider: string) => {
+    if (provider === 'All') {
+  setCategoryParam('All', 'All');
+  return;
+}
+    if (categoryMap[provider]) {
+      const firstCategory = categoryMap[provider][0];
+      setCategoryParam(firstCategory, provider);
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      console.log('Fetching categories for provider: ', provider);
+
+    
+      const response = await postAPIAuth('getGapCategoryAPI', {
+        providerName: provider,
+      });
+
+      const categories: string[] = response?.data?.data ?? [];
+
+      setCategoryMap((prev) => ({
+        ...prev,
+        [provider]: categories,
+      }));
+
+      if (categories.length > 0) {
+        setCategoryParam(categories[0], provider);
       }
+    } catch (err) {
+      console.error('fetchCategories error:', err);
+    } finally {
+      setLoading(false);
     }
   };
 
+  const fetchGames = async (provider: string, category: string) => {
+    if (gameInfo?.[provider]?.[category]) {
+      setCategoryParam(category, provider);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const response = await postAPIAuth('getGapGamesAPI', {
+        provider,
+        category,
+      });
+
+      // response.data.data = [{ game_name, game_id, game_code, ... }]
+      const games: any[] = response?.data?.data ?? [];
+
+      setGameInfo((prev) => ({
+        ...prev,
+        [provider]: {
+          ...(prev?.[provider] ?? {}),
+          [category]: games,
+        },
+      }));
+
+      setCategoryParam(category, provider);
+    } catch (err) {
+      console.error('fetchGames error:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+ const handleCasinoSubProviderBlockClick = (
+  subProviderName: string
+) => {
+  setProviderParam(subProviderName);
+
+  if (subProviderName === 'All') {
+    return;
+  }
+
+  if (subProviderName === 'Recent') {
+  const savedRecent =
+    JSON.parse(localStorage.getItem('recentCasinoGames') || '[]');
+
+  setRecentGames(savedRecent);
+  setProviderParam('Recent');
+  return;
+}
+
+  fetchCategories(subProviderName);
+};
+
   const handleCasinoCategoryClick = (categoryName: string) => {
-    setCategoryParam(categoryName);
+  if (categoryName === 'All') {
+    setCategoryParam('All', providerFromParams);
+    return;
+  }
+
+  fetchGames(providerFromParams, categoryName);
+};
+
+//  const loggedInUserStatus = user?.status ?? user?.userStatus ?? 1;
+
+// const loggedInUserStatus = user?.status ?? user?.userStatus ?? 1;
+
+const getGameUrl = async (
+  gameId: string,
+  gameName: string,
+  gameCode: string,
+  provider: string,
+  subProvider: string,
+  superProvider: string
+) => {
+  if (!loggedIn) {
+    setDialogShow(true);
+    return;
+  }
+
+  // if (loggedInUserStatus === 0 || loggedInUserStatus === 3) {
+  //   history.push('/home');
+  //   return;
+  // }
+
+  try {
+    setLoading(true);
+
+    // provider hi superProvider hoga
+    const providerName = provider || superProvider || '';
+
+    const response = await postAPIAuth('UserloginToGapApi', {
+      gameId: gameId,
+      providerName: providerName,
+    });
+    console.log('launchGapGameApi response: ', response);
+
+    const launchUrl =
+      response?.data?.data?.url ||
+      response?.data?.data?.gameUrl ||
+      response?.data?.url ||
+      response?.data?.launchUrl;
+
+    if (launchUrl) {
+      window.location.href = launchUrl;
+      return;
+    }
+
+    // fallback old route
+    const slug = (gameName || 'game')
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, '-')
+      .replace(/[^a-z0-9-_]/g, '');
+
+    history.push({
+      pathname: `/dc/gamev1.1/${slug}-${btoa(gameId)}-${btoa(
+        gameCode || ''
+      )}-${btoa(providerName)}-${btoa(subProvider || '')}-${btoa(
+        superProvider || ''
+      )}`,
+      state: { gameName },
+    });
+  } catch (error) {
+    console.error('launchGapGameApi error:', error);
+  } finally {
+    setLoading(false);
+  }
+};
+
+
+  // Hook mein getGameUrl call fix karo
+const handleGameClickNavigation = async (
+  gameId: string,
+  gameName: string,
+  gameCode: string,
+  subProvider: string,
+  provider?: string,
+  superProvider?: string
+) => {
+  getGameUrl(
+    gameId,
+    gameName,
+    gameCode,
+    provider || '',
+    subProvider,
+    superProvider || ''
+  );
+};
+
+const handleGameClick = (
+  gameId?: string,
+  gameName?: string,
+  gameCode?: string,
+  subProvider?: string,
+  provider?: string,
+  superProvider?: string,
+  url_thumb?: string
+) => {
+
+  const clickedGame = {
+    gameId: gameId || '',
+    gameName: gameName || '',
+    gameCode: gameCode || '',
+    subProviderName: subProvider || '',
+    providerName: provider || '',
+    superProviderName: superProvider || '',
+    urlThumb: url_thumb || '',
   };
 
-//   const getDcGames = async (...providers: String[]) => {
-//     let response: AxiosResponse<any>;
-//     if (loggedIn) {
-//       response = await SVLS_API.get(
-//         '/catalog/v2/categories/indian-casino/games/list',
-//         {
-//           params: {
-//             providerId: providers?.length > 0 ? providers?.join(',') : '*',
-//           },
-//           headers: {
-//             Authorization: sessionStorage.getItem('jwt_token'),
-//           },
-//         }
-//       );
-//     } else {
-//       response = await SVLS_API.get(
-//         '/catalog/v2/categories/indian-casino/games/list',
-//         {
-//           params: {
-//             providerId: providers?.length > 0 ? providers?.join(',') : '*',
-//           },
-//         }
-//       );
-//     }
+  // ✅ Recent games localStorage mein save karo
+  const oldRecent = JSON.parse(localStorage.getItem('recentCasinoGames') || '[]');
+  const updatedRecent = [
+    clickedGame,
+    ...oldRecent.filter((item: any) => item.gameId !== gameId),
+  ].slice(0, 20);
+  localStorage.setItem('recentCasinoGames', JSON.stringify(updatedRecent));
+  setRecentGames(updatedRecent);
 
-//     const allGames = response?.data;
+  handleGameClickNavigation(
+    gameId || '',
+    gameName || '',
+    gameCode || '',
+    subProvider || '',
+    provider || '',
+    superProvider || ''
+  );
+};
+  const onClear = () => setSearchTerm('');
 
-//     addAllCategory(allGames);
+  useEffect(() => {
+    const defaultProvider = providerFromParams || 'MAC88';
+    fetchCategories(defaultProvider);
+  }, [pathname]);
+  useEffect(() => {
+    if (
+      providerFromParams &&
+      categoryFromParams &&
+      !gameInfo?.[providerFromParams]?.[categoryFromParams]
+    ) {
+      fetchGames(providerFromParams, categoryFromParams);
+    }
+  }, [categoryFromParams, providerFromParams]);
 
-//     let selectedProvider;
-//     let selectedCategory;
-
-//     if (providerFromParams) {
-//       selectedProvider = providerFromParams;
-//     } else {
-//       selectedProvider = Object.keys(allGames)[0];
-//     }
-
-//     if (categoryFromParams) {
-//       selectedCategory = categoryFromParams;
-//     } else {
-//       selectedCategory = Object.keys(
-//         allGames[selectedProvider]
-//       )[0]?.toLowerCase();
-//     }
-
-//     // Use replace for initialization to avoid multiple history entries
-//     setProviderParam(selectedProvider, true);
-//     setTimeout(() => {
-//       setCategoryParam(selectedCategory, true);
-//     }, 100);
-//   };
-
-  const onClear = () => {
-    setSearchTerm('');
-  };
-
-  // Scroll to the selected provider when it changes
+  // Scroll to selected provider
   useEffect(() => {
     setTimeout(() => {
-      const scrolls = providerRefs.current[providerFromParams];
-      if (scrolls) {
-        scrolls.scrollIntoView({
-          behavior: 'smooth',
-          block: 'center',
-          // inline: 'center'
-        });
-      }
+      const el = providerRefs.current[providerFromParams];
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }, 500);
   }, [providerFromParams]);
 
-  // Scroll to the selected category when it changes
+  // Scroll to selected category
   useEffect(() => {
     setTimeout(() => {
       if (categoryFromParams && categoryRefs.current[categoryFromParams]) {
         categoryRefs.current[categoryFromParams].scrollIntoView({
           behavior: 'smooth',
           block: 'center',
-          // inline: 'center'
         });
       }
     }, 500);
   }, [categoryFromParams]);
-
-//   useEffect(() => {
-//     if (loggedIn) {
-//       if (pathname?.includes('premium-casino')) {
-//         getDcGames('MAC88', 'MAC88 VIRTUALS', 'FUN GAMES', 'COLOR GAMES');
-//       } else {
-//         getDcGames();
-//       }
-//     }
-//   }, [pathname]);
 
   return {
     dialogShow,
@@ -318,8 +392,8 @@ export const useCasinoHook = () => {
     handleCasinoSubProviderBlockClick,
     gameInfo,
     subProviderList,
-    categoryList,
-    gameListDisplay,
+    categoryList,       
+    gameListDisplay,    
     providerFromParams,
     handleCasinoCategoryClick,
     langData,
@@ -328,6 +402,6 @@ export const useCasinoHook = () => {
     onClear,
     providerRefs,
     categoryRefs,
+    loading,
   };
 };
- 
