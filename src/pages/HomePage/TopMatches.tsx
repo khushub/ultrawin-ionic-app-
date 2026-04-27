@@ -34,87 +34,97 @@ const TopMatches: React.FC<Props> = ({
   setExchEvent,
 }) => {
   const history = useHistory();
-  const teamTypes = ['home', 'draw', 'away'];
+  const getTeamTypes = (event: any) => {
+    const count = event?.marketBook?.runners?.length || 0;
+
+    if (count === 2) return ['home', 'away'];
+    if (count === 3) return ['home', 'draw', 'away'];
+
+    return [];
+  }
   console.log('favouriteEvents in TopMatches:', favouriteEvents);
 
- const getOdds = (eventData: any, teamType: string) => {
-  const runners = eventData?.marketBook?.runners || [];
+  const getOdds = (eventData: any, teamType: string) => {
 
-  const team =
-    teamType === 'home'
-      ? runners[0]?.runnerName
-      : teamType === 'away'
-      ? runners[1]?.runnerName
-      : 'draw';
+    console.log('Getting odds for teamType:', teamType, eventData.eventName);
+    const runners = eventData?.marketBook?.runners || [];
 
-  const runner = runners.find((r: any) =>
-    r.runnerName?.toLowerCase().includes(team?.toLowerCase())
-  );
+    let runner = null;
 
-  if (!runner) return null;
+    if (runners.length === 2) {
+      runner = teamType === 'home' ? runners[0] : runners[1];
+    }
 
-  return [
-    {
-      type: 'back-odd',
-      price: runner.availableToBack?.price,
-      size: runner.availableToBack?.size,
-      outcomeId: runner.selectionId,
-      outcomeName: runner.runnerName,
-    },
-    {
-      type: 'lay-odd',
-      price: runner.availableToLay?.price,
-      size: runner.availableToLay?.size,
-      outcomeId: runner.selectionId,
-      outcomeName: runner.runnerName,
-    },
-  ];
-};
+    if (runners.length === 3) {
+      if (teamType === 'home') runner = runners[0];
+      if (teamType === 'draw') runner = runners[1];
+      if (teamType === 'away') runner = runners[2];
+    }
 
-//   const handleEventChange = (event: any) => {
-//     const competitionSlug = event.competitionName
-//       ? event.competitionName
-//           .toLocaleLowerCase()
-//           .replace(/[^a-z0-9]/g, ' ')
-//           .replace(/ +/g, ' ')
-//           .trim()
-//           .split(' ')
-//           .join('-')
-//       : 'league';
+    if (!runner) return null;
 
-//     setCompetition({
-//       id: event.competitionId,
-//       name: event.competitionName,
-//       slug: competitionSlug,
-//     });
+    return [
+      {
+        type: 'back-odd',
+        price: runner?.availableToBack?.price || '--',
+        size: runner?.availableToBack?.size || '--',
+        outcomeId: runner.selectionId,
+        outcomeName: runner.runnerName,
+      },
+      {
+        type: 'lay-odd',
+        price: runner?.availableToLay?.price || '--',
+        size: runner?.availableToLay?.size || '--',
+        outcomeId: runner.selectionId,
+        outcomeName: runner.runnerName,
+      },
+    ];
+  };
 
-//     setExchEvent({
-//       id: event.eventId,
-//       name: event.eventName,
-//       slug: event.eventSlug,
-//     });
+  //   const handleEventChange = (event: any) => {
+  //     const competitionSlug = event.competitionName
+  //       ? event.competitionName
+  //           .toLocaleLowerCase()
+  //           .replace(/[^a-z0-9]/g, ' ')
+  //           .replace(/ +/g, ' ')
+  //           .trim()
+  //           .split(' ')
+  //           .join('-')
+  //       : 'league';
 
-//     if (event?.providerName?.toLowerCase() === 'sportradar' && !loggedIn) {
-//       history.push('/login');
-//     } else if (event?.catId === 'SR VIRTUAL') {
-//       history.push(
-//         `/exchange_sports/virtuals/${eventTypesNameMap[event?.sportId]?.toLowerCase()}/${competitionSlug}/${
-//           event.eventSlug
-//         }/${btoa(`${event.sportId}:${event.competitionId}:${event.eventId}`)}`
-//       );
-//     } else {
-//       history.push(
-//         `/exchange_sports/${eventTypesNameMap[event?.sportId]?.toLowerCase()}/${competitionSlug}/${
-//           event.eventSlug
-//         }/${btoa(`${event.providerName}:${event.sportId}:${event.competitionId}:${event.eventId}`)}`,
-//         {
-//           homeTeam: event?.homeTeam,
-//           awayTeam: event?.awayTeam,
-//           openDate: event?.openDate,
-//         }
-//       );
-//     }
-//   };
+  //     setCompetition({
+  //       id: event.competitionId,
+  //       name: event.competitionName,
+  //       slug: competitionSlug,
+  //     });
+
+  //     setExchEvent({
+  //       id: event.eventId,
+  //       name: event.eventName,
+  //       slug: event.eventSlug,
+  //     });
+
+  //     if (event?.providerName?.toLowerCase() === 'sportradar' && !loggedIn) {
+  //       history.push('/login');
+  //     } else if (event?.catId === 'SR VIRTUAL') {
+  //       history.push(
+  //         `/exchange_sports/virtuals/${eventTypesNameMap[event?.sportId]?.toLowerCase()}/${competitionSlug}/${
+  //           event.eventSlug
+  //         }/${btoa(`${event.sportId}:${event.competitionId}:${event.eventId}`)}`
+  //       );
+  //     } else {
+  //       history.push(
+  //         `/exchange_sports/${eventTypesNameMap[event?.sportId]?.toLowerCase()}/${competitionSlug}/${
+  //           event.eventSlug
+  //         }/${btoa(`${event.providerName}:${event.sportId}:${event.competitionId}:${event.eventId}`)}`,
+  //         {
+  //           homeTeam: event?.homeTeam,
+  //           awayTeam: event?.awayTeam,
+  //           openDate: event?.openDate,
+  //         }
+  //       );
+  //     }
+  //   };
   // Convert FavoriteEventDTO to EventDTO format for component compatibility
   const adaptedEvents = favouriteEvents;
   if (!favouriteEvents || favouriteEvents.length === 0) {
@@ -131,13 +141,13 @@ const TopMatches: React.FC<Props> = ({
         className="top-matches-slider"
         enableAutoScroll={false}
         isInfinite={false}
-        // dependencies={[adaptedEvents]}
+      // dependencies={[adaptedEvents]}
       >
         {adaptedEvents.map((event) => (
           <div
             key={event.eventId}
             className="top-match-card"
-            // onClick={() => handleEventChange(event)}
+          // onClick={() => handleEventChange(event)}
           >
             <div className="match-info">
               <div className="category-and-live">
@@ -189,10 +199,12 @@ const TopMatches: React.FC<Props> = ({
               <div className="event-details">
                 <div className="event-name-container">
                   <div className="team-names">
-                    {event.marketBook?.runners?.[0]?.runnerName &&
-event.marketBook?.runners?.[1]?.runnerName
-                      ? `${event.homeTeam} V ${event.awayTeam}`
-                      : event.eventName}
+                    {
+                      event.marketBook?.runners?.[0]?.runnerName &&
+                        event.marketBook?.runners?.[1]?.runnerName
+                        ? `${event.marketBook.runners[0].runnerName} V ${event.marketBook.runners[1].runnerName}`
+                        : event.eventName
+                    }
                   </div>
                   {event.marketBook?.inplay && (
                     <img
@@ -219,7 +231,13 @@ event.marketBook?.runners?.[1]?.runnerName
             </div>
 
             <div className="odds-section">
-              {teamTypes.map((teamType, index) => (
+              {(
+                event?.marketBook?.runners?.length === 2
+                  ? ['home', 'away']
+                  : event?.marketBook?.runners?.length === 3
+                    ? ['home', 'draw', 'away']
+                    : []
+              ).map((teamType, index) => (
                 <div key={teamType + index} className="team-odds">
                   {event?.marketBook?.runners?.length ? (
                     getOdds(event, teamType) ? (
@@ -231,7 +249,7 @@ event.marketBook?.runners?.[1]?.runnerName
                             odd.type === 'back-odd' ? 'back-odd' : 'lay-odd'
                           }
                           disable={event.marketBook?.status?.toLowerCase().includes('suspended') ||
-         event.marketBook?.status?.toLowerCase().includes('closed')}
+                            event.marketBook?.status?.toLowerCase().includes('closed')}
                           valueType="matchOdds"
                           showSubValueinKformat={true}
                           onClick={() => null}

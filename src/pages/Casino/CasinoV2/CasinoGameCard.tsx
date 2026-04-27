@@ -64,7 +64,7 @@ const CasinoGameCard: React.FC<CasinoGameCardProps> = ({
           title={gameName}
       onClick={() =>
   handleGameClick(
-    // ✅ camelCase pehle check karo (recent games), phir snake_case (API games)
+
     game.gameId || game.game_id || '',
     game.gameName || game.game_name || '',
     game.gameCode || game.game_code || '',

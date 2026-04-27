@@ -77,9 +77,9 @@ const AccountStatement = lazy(
 // const AccountStatementEventLevelView = lazy(
 //   () => import('../pages/AccountStatement/AccountStatementEventLevel')
 // );
-// const CasinoIframeNew = lazy(
-//   () => import('../pages/Casino/CasinoIframeNew/CasinoIframeNew')
-// );
+const CasinoIframeNew = lazy(
+  () => import('../pages/Casino/CasinoIframeNew/CasinoIframeNew')
+);
 // const Deposit = lazy(() => import('../pages/Payment/Deposit'));
 // const Withdrawal = lazy(() => import('../pages/Payment/Withdrawal'));
 const UserPLStatement = lazy(
@@ -536,11 +536,11 @@ const UserRouter: React.FC<StateProps> = (props) => {
                     component={ChangePassword}
                     exact={true}
                   />
-                  {/* <Route
+                  <Route
                     path="/dc/gamev1.1/:gamePath"
                     component={CasinoIframeNew}
                     exact={true}
-                  /> */}
+                  />
 
                   {/* <Route
                     path="/ic_account_statement"

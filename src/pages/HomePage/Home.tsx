@@ -126,7 +126,7 @@ const getGames = async () => {
     const inplay = await postAPI('/getFreeInplyEventsAPI', {});
     
 
-    setFavouriteEvents(inplay.data.result);
+    setFavouriteEvents(inplay?.data?. result ?? []);
   } catch (error) {
     console.log(error);
   }

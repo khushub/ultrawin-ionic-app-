@@ -1,254 +1,187 @@
-(this.webpackJsonpwebsite = this.webpackJsonpwebsite || []).push([[105], {
-    298: function(t, r, e) {
-        "use strict";
-        e.r(r),
-        e.d(r, "ion_spinner", (function() {
-            return o
-        }
-        ));
-        var n = e(77)
-          , i = e(20)
-          , s = e(325)
-          , a = e(574)
-          , o = function() {
-            function t(t) {
-                Object(n.k)(this, t),
-                this.paused = !1
+import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
+import { useHistory, useLocation } from 'react-router';
+import { useParams } from 'react-router-dom';
+// import { RootState } from '../../../models/RootState';
+import './CasinoIframeNew.scss';
+import { isMobile, isIOS } from 'react-device-detect';
+import LoadingPage from '../../LoadingPage/index';
+// import SVLS_API from '../../../svls-api';
+
+type StoreProps = {
+  gameUrl: string;
+  loggedIn: boolean;
+  token: string;
+};
+
+type RouteParams = {
+    gamePath: string;
+};
+
+const CasinoIframeNew: React.FC<StoreProps> = (props) => {
+    const [gameSrc, setGameSrc] = useState<string>('');
+    const [loading, setLoading] = useState<boolean>(false);
+
+   const { loggedIn, token } = props;
+
+    const { gamePath } = useParams<RouteParams>();
+
+    console.log('Received gamePath:', gamePath);
+    const history = useHistory();
+
+    const locationState: any = useLocation().state;
+
+
+
+    useEffect(() => {
+        document.getElementsByClassName('router-ctn')[0].scrollIntoView();
+    }, []);
+
+    const getGameUrl = async (
+        // gameId: string,
+        // gameCode: string,
+        // provider: string,
+        // subProvider: string,
+        // superProvider: string
+        gameId: string,
+        gameName: string,
+        provider: string
+    ) => {
+        if (loggedIn) {
+            setLoading(true);
+            // const claims = sessionStorage.getItem('jwt_token').split('.')[1];
+            // const userStatus = JSON.parse(window.atob(claims)).status;
+            if (!token) {
+  history.replace('/login');
+  return;
+}
+
+const claims = token.split('.')[1];
+const userStatus = JSON.parse(window.atob(claims)).status;
+
+            if (userStatus === 0 || userStatus === 3) {
+                return history.push(`/home`);
             }
-            return t.prototype.getName = function() {
-                var t = this.name || i.b.get("spinner")
-                  , r = Object(n.d)(this);
-                return t || ("ios" === r ? "lines" : "circular")
+
+            // if (provider.toLocaleLowerCase() === 'ezugi') {
+            //   let response;
+            try {
+                // const reqBody = {
+                //   gameId: gameId,
+                //   gameCode: gameCode,
+                //   providerName: provider,
+                //   subProviderName: subProvider,
+                //   platformId: isMobile ? 'mobile' : 'desktop',
+                //   superProviderName: superProvider,
+                //   redirectUrl: window.location.origin,
+                // };
+                // response = await SVLS_API.post(
+                //   '/catalog/v2/live-casino/game-url',
+                //   reqBody,
+                //   {
+                //     headers: {
+                //       Authorization: sessionStorage.getItem('jwt_token'),
+                //     },
+                //   }
+                // );
+
+                const launchUrl = locationState?.launchUrl;
+                if (isMobile && isIOS) {
+                    window.location.href = launchUrl;
+                } else {
+                    setGameSrc(launchUrl);
+                }
+            } catch (e) {
+                console.log(e);
+            } finally {
+                setLoading(false);
             }
-            ,
-            t.prototype.render = function() {
-                var t, r = Object(n.d)(this), e = this.getName(), o = a.a[e] || a.a.lines, f = "number" === typeof this.duration && this.duration > 10 ? this.duration : o.dur, u = [];
-                if (void 0 !== o.circles)
-                    for (var p = 0; p < o.circles; p++)
-                        u.push(c(o, f, p, o.circles));
-                else if (void 0 !== o.lines)
-                    for (p = 0; p < o.lines; p++)
-                        u.push(l(o, f, p, o.lines));
-                return Object(n.i)(n.a, {
-                    class: Object.assign(Object.assign({}, Object(s.a)(this.color)), (t = {},
-                    t[r] = !0,
-                    t["spinner-" + e] = !0,
-                    t["spinner-paused"] = !!this.paused || i.b.getBoolean("_testing"),
-                    t)),
-                    role: "progressbar",
-                    style: o.elmDuration ? {
-                        animationDuration: f + "ms"
-                    } : {}
-                }, u)
-            }
-            ,
-            Object.defineProperty(t, "style", {
-                get: function() {
-                    return ":host{display:inline-block;position:relative;width:28px;height:28px;color:var(--color);-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}:host(.ion-color){color:var(--ion-color-base)}svg{left:0;top:0;-webkit-transform-origin:center;transform-origin:center;position:absolute;width:100%;height:100%;-webkit-transform:translateZ(0);transform:translateZ(0)}:host-context([dir=rtl]) svg,[dir=rtl] svg{left:unset;right:unset;right:0;-webkit-transform-origin:calc(100% - center);transform-origin:calc(100% - center)}:host(.spinner-lines) line,:host(.spinner-lines-small) line{stroke-width:4px;stroke-linecap:round;stroke:currentColor}:host(.spinner-lines) svg,:host(.spinner-lines-small) svg{-webkit-animation:spinner-fade-out 1s linear infinite;animation:spinner-fade-out 1s linear infinite}:host(.spinner-bubbles) svg{-webkit-animation:spinner-scale-out 1s linear infinite;animation:spinner-scale-out 1s linear infinite;fill:currentColor}:host(.spinner-circles) svg{-webkit-animation:spinner-fade-out 1s linear infinite;animation:spinner-fade-out 1s linear infinite;fill:currentColor}:host(.spinner-crescent) circle{fill:transparent;stroke-width:4px;stroke-dasharray:128px;stroke-dashoffset:82px;stroke:currentColor}:host(.spinner-crescent) svg{-webkit-animation:spinner-rotate 1s linear infinite;animation:spinner-rotate 1s linear infinite}:host(.spinner-dots) circle{stroke-width:0;fill:currentColor}:host(.spinner-dots) svg{-webkit-animation:spinner-dots 1s linear infinite;animation:spinner-dots 1s linear infinite}:host(.spinner-circular){-webkit-animation:spinner-circular linear infinite;animation:spinner-circular linear infinite}:host(.spinner-circular) circle{-webkit-animation:spinner-circular-inner ease-in-out infinite;animation:spinner-circular-inner ease-in-out infinite;stroke:currentColor;stroke-dasharray:80px,200px;stroke-dashoffset:0px;stroke-width:5.6;fill:none}:host(.spinner-paused),:host(.spinner-paused) circle,:host(.spinner-paused) svg{-webkit-animation-play-state:paused;animation-play-state:paused}@-webkit-keyframes spinner-fade-out{0%{opacity:1}to{opacity:0}}@keyframes spinner-fade-out{0%{opacity:1}to{opacity:0}}@-webkit-keyframes spinner-scale-out{0%{-webkit-transform:scale(1);transform:scale(1)}to{-webkit-transform:scale(0);transform:scale(0)}}@keyframes spinner-scale-out{0%{-webkit-transform:scale(1);transform:scale(1)}to{-webkit-transform:scale(0);transform:scale(0)}}@-webkit-keyframes spinner-rotate{0%{-webkit-transform:rotate(0deg);transform:rotate(0deg)}to{-webkit-transform:rotate(1turn);transform:rotate(1turn)}}@keyframes spinner-rotate{0%{-webkit-transform:rotate(0deg);transform:rotate(0deg)}to{-webkit-transform:rotate(1turn);transform:rotate(1turn)}}@-webkit-keyframes spinner-dots{0%{-webkit-transform:scale(1);transform:scale(1);opacity:.9}50%{-webkit-transform:scale(.4);transform:scale(.4);opacity:.3}to{-webkit-transform:scale(1);transform:scale(1);opacity:.9}}@keyframes spinner-dots{0%{-webkit-transform:scale(1);transform:scale(1);opacity:.9}50%{-webkit-transform:scale(.4);transform:scale(.4);opacity:.3}to{-webkit-transform:scale(1);transform:scale(1);opacity:.9}}@-webkit-keyframes spinner-circular{to{-webkit-transform:rotate(1turn);transform:rotate(1turn)}}@keyframes spinner-circular{to{-webkit-transform:rotate(1turn);transform:rotate(1turn)}}@-webkit-keyframes spinner-circular-inner{0%{stroke-dasharray:1px,200px;stroke-dashoffset:0px}50%{stroke-dasharray:100px,200px;stroke-dashoffset:-15px}to{stroke-dasharray:100px,200px;stroke-dashoffset:-125px}}@keyframes spinner-circular-inner{0%{stroke-dasharray:1px,200px;stroke-dashoffset:0px}50%{stroke-dasharray:100px,200px;stroke-dashoffset:-15px}to{stroke-dasharray:100px,200px;stroke-dashoffset:-125px}}"
-                },
-                enumerable: !0,
-                configurable: !0
-            }),
-            t
-        }()
-          , c = function(t, r, e, i) {
-            var s = t.fn(r, e, i);
-            return s.style["animation-duration"] = r + "ms",
-            Object(n.i)("svg", {
-                viewBox: s.viewBox || "0 0 64 64",
-                style: s.style
-            }, Object(n.i)("circle", {
-                transform: s.transform || "translate(32,32)",
-                cx: s.cx,
-                cy: s.cy,
-                r: s.r,
-                style: t.elmDuration ? {
-                    animationDuration: r + "ms"
-                } : {}
-            }))
+
+        } else {
+            history.push(`/`);
         }
-          , l = function(t, r, e, i) {
-            var s = t.fn(r, e, i);
-            return s.style["animation-duration"] = r + "ms",
-            Object(n.i)("svg", {
-                viewBox: s.viewBox || "0 0 64 64",
-                style: s.style
-            }, Object(n.i)("line", {
-                transform: "translate(32,32)",
-                y1: s.y1,
-                y2: s.y2
-            }))
+    };
+
+    useEffect(() => {
+        // const gameId = atob(gamePath.split('-')[gamePath.split('-').length - 5]);
+        // const gameCode = atob(gamePath.split('-')[gamePath.split('-').length - 4]);
+        // const provider = atob(gamePath.split('-')[gamePath.split('-').length - 3]);
+        // const subProvider = atob(
+        //   gamePath.split('-')[gamePath.split('-').length - 2]
+        // );
+        // const superProvider = atob(
+        //   gamePath.split('-')[gamePath.split('-').length - 1]
+        // );
+
+        // const gameName = locationState?.gameName;
+        // saveLastPlayedGameDetails({
+        //   gameId,
+        //   gameName,
+        //   gameCode,
+        //   provider,
+        //   subProvider,
+        //   superProvider,
+        // });
+        // getGameUrl(gameId, gameCode, provider, subProvider, superProvider);
+
+        if (!gamePath) return;
+
+        const pathParts = gamePath.split('-');
+        const encodedGameId = pathParts[pathParts.length - 1];
+
+        const gameId = atob(encodedGameId);
+        const gameName = locationState?.gameName || '';
+        const provider = locationState?.provider || '';
+
+        saveLastPlayedGameDetails({
+            gameId,
+            gameName,
+            provider
+        });
+
+        getGameUrl(gameId, gameName, provider);
+
+    }, []);
+
+    const saveLastPlayedGameDetails = (newGame) => {
+        const existingGames =
+            JSON.parse(localStorage.getItem('recent_games')) || [];
+        if (
+            existingGames.length > 0 &&
+            existingGames[0].gameId === newGame.gameId
+        ) {
+            return;
         }
-    },
-    325: function(t, r, e) {
-        "use strict";
-        e.d(r, "a", (function() {
-            return s
-        }
-        )),
-        e.d(r, "b", (function() {
-            return a
-        }
-        )),
-        e.d(r, "c", (function() {
-            return i
-        }
-        )),
-        e.d(r, "d", (function() {
-            return c
-        }
-        ));
-        var n = e(8)
-          , i = function(t, r) {
-            return null !== r.closest(t)
-        }
-          , s = function(t) {
-            var r;
-            return "string" === typeof t && t.length > 0 ? ((r = {
-                "ion-color": !0
-            })["ion-color-" + t] = !0,
-            r) : void 0
-        }
-          , a = function(t) {
-            var r = {};
-            return function(t) {
-                return void 0 !== t ? (Array.isArray(t) ? t : t.split(" ")).filter((function(t) {
-                    return null != t
-                }
-                )).map((function(t) {
-                    return t.trim()
-                }
-                )).filter((function(t) {
-                    return "" !== t
-                }
-                )) : []
-            }(t).forEach((function(t) {
-                return r[t] = !0
-            }
-            )),
-            r
-        }
-          , o = /^[a-z][a-z0-9+\-.]*:/
-          , c = function(t, r, e) {
-            return Object(n.a)(void 0, void 0, void 0, (function() {
-                var i;
-                return Object(n.c)(this, (function(n) {
-                    return null != t && "#" !== t[0] && !o.test(t) && (i = document.querySelector("ion-router")) ? (null != r && r.preventDefault(),
-                    [2, i.push(t, e)]) : [2, !1]
-                }
-                ))
-            }
-            ))
-        }
-    },
-    574: function(t, r, e) {
-        "use strict";
-        e.d(r, "a", (function() {
-            return n
-        }
-        ));
-        var n = {
-            bubbles: {
-                dur: 1e3,
-                circles: 9,
-                fn: function(t, r, e) {
-                    var n = t * r / e - t + "ms"
-                      , i = 2 * Math.PI * r / e;
-                    return {
-                        r: 5,
-                        style: {
-                            top: 9 * Math.sin(i) + "px",
-                            left: 9 * Math.cos(i) + "px",
-                            "animation-delay": n
-                        }
-                    }
-                }
-            },
-            circles: {
-                dur: 1e3,
-                circles: 8,
-                fn: function(t, r, e) {
-                    var n = r / e
-                      , i = t * n - t + "ms"
-                      , s = 2 * Math.PI * n;
-                    return {
-                        r: 5,
-                        style: {
-                            top: 9 * Math.sin(s) + "px",
-                            left: 9 * Math.cos(s) + "px",
-                            "animation-delay": i
-                        }
-                    }
-                }
-            },
-            circular: {
-                dur: 1400,
-                elmDuration: !0,
-                circles: 1,
-                fn: function() {
-                    return {
-                        r: 20,
-                        cx: 48,
-                        cy: 48,
-                        fill: "none",
-                        viewBox: "24 24 48 48",
-                        transform: "translate(0,0)",
-                        style: {}
-                    }
-                }
-            },
-            crescent: {
-                dur: 750,
-                circles: 1,
-                fn: function() {
-                    return {
-                        r: 26,
-                        style: {}
-                    }
-                }
-            },
-            dots: {
-                dur: 750,
-                circles: 3,
-                fn: function(t, r) {
-                    return {
-                        r: 6,
-                        style: {
-                            left: 9 - 9 * r + "px",
-                            "animation-delay": -110 * r + "ms"
-                        }
-                    }
-                }
-            },
-            lines: {
-                dur: 1e3,
-                lines: 12,
-                fn: function(t, r, e) {
-                    return {
-                        y1: 17,
-                        y2: 29,
-                        style: {
-                            transform: "rotate(" + (30 * r + (r < 6 ? 180 : -180)) + "deg)",
-                            "animation-delay": t * r / e - t + "ms"
-                        }
-                    }
-                }
-            },
-            "lines-small": {
-                dur: 1e3,
-                lines: 12,
-                fn: function(t, r, e) {
-                    return {
-                        y1: 12,
-                        y2: 20,
-                        style: {
-                            transform: "rotate(" + (30 * r + (r < 6 ? 180 : -180)) + "deg)",
-                            "animation-delay": t * r / e - t + "ms"
-                        }
-                    }
-                }
-            }
-        }
-    }
-}]);
-//# sourceMappingURL=105.2ba420c6.chunk.js.map
+        existingGames.unshift(newGame);
+        const updatedGames = existingGames.slice(0, 3);
+        localStorage.setItem('recent_games', JSON.stringify(updatedGames));
+    };
+
+
+
+    return (
+        <div className="dc-iframe-ctn">
+            <div id="loader" className="center"></div>
+            {loading ? (
+                <LoadingPage />
+            ) : (
+                <iframe
+                    src={gameSrc}
+                    title="DC game"
+                    allowFullScreen
+                    sandbox="allow-same-origin allow-forms allow-scripts allow-top-navigation allow-popups"
+                ></iframe>
+            )}
+        </div>
+    );
+};
+
+const mapStateToProps = (state: any) => {
+   return {
+  gameUrl: state.common.dcGameUrl,
+  loggedIn: state.auth.loggedIn,
+  token: state.auth.token,
+};
+};
+
+export default connect(mapStateToProps)(CasinoIframeNew);
