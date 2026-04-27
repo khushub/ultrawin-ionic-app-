@@ -38,6 +38,7 @@ import CustomTableMob, {
 } from '../../common/CustomTableMob/CustomTableMob';
 // import { DomainConfig } from '../../models/DomainConfig';
 import TransactionDetailsCard from './TransactionDetailsCard';
+import { postAPIAuth } from '../../services/apiInstance';
 
 type LedgerProps = {
   // fetchBettingCurrency: Function;
@@ -901,13 +902,35 @@ const Ledger: React.FC<LedgerProps> = (props) => {
   const fetchData = async () => {
     try {
       // For casino transactions, we don't need to make an API call since we use main data
-      if (
-        transactionDetails.marketType === 4 ||
-        transactionDetails.marketType === 6
-      ) {
-        // Casino transactions are handled in onShowTransactionDetails
-        return;
-      }
+    
+    const response = await postAPIAuth('/getLogsAPI', {
+      action: ['BALANCE', 'AMOUNT', 'COMMISION'],
+      dateFrom: filters.fromDate.format('YYYY-MM-DD'),
+      dateTo: filters.toDate.clone().add(1, 'day').format('YYYY-MM-DD'),
+    });
+
+    const apiData = response?.data?.data || [];
+
+    const statements = apiData.map((item, index) => ({
+      srNo: index + 1,
+      transactionTime: item.createdAt,
+      amount: item.amount,
+      balanceAfter: item.newLimit,
+      balanceBefore: item.oldLimit,
+      transactionId: item.transactionId,
+      sportId: item.sportId,
+      remarks: item.remark,
+      transactionType: item.subAction,
+      eventName: item.eventName,
+      marketName: item.marketName,
+      result: item.result,
+      subAction: item.subAction,
+    }));
+
+    setRecords(statements);
+    setLoading(false);
+
+
 
       // const response = await REPORTING_API.post(
       //   '/reports/v2/account-statement-report/transaction-details',
@@ -1288,13 +1311,9 @@ const Ledger: React.FC<LedgerProps> = (props) => {
 
   useEffect(() => {
     // Only call fetchData for non-casino transactions
-    if (
-      transactionDetails &&
-      transactionDetails.marketType !== 4 &&
-      transactionDetails.marketType !== 6
-    ) {
+  
       fetchData();
-    }
+    
   }, [transactionDetails]);
 
   const nextPage = () => {

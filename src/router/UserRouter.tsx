@@ -67,7 +67,7 @@ import { fetchUserDetails } from '../store/slices/userDetailsSlice';
 // const DashboardView = lazy(
 //   () => import('../pages/DashboardView/DashboardView')
 // );
-// const Affiliate = lazy(() => import('../pages/Affiliate/Affiliate'));
+const Affiliate = lazy(() => import('../pages/Affiliate/Affiliate'));
 // const SportsProviderIframe = lazy(
 //   () => import('../pages/SportsProvider/SportsProviderIframe')
 // );
@@ -267,7 +267,7 @@ const UserRouter: React.FC<StateProps> = (props) => {
   };
 
   const [isApkAvailable, setIsApkAvailable] = useState<boolean>(false);
-  console.log('isApkAvailable: ', isApkAvailable)
+  
 
   useEffect(() => {
     setIsApkAvailable(!!domainConfig?.apkUrl);
@@ -488,7 +488,7 @@ const UserRouter: React.FC<StateProps> = (props) => {
               <div className="router-ctn">
                 <Switch>
                   <Route path="/home" component={HomePage} exact={true} />
-                  {/* <Route path="/casino" component={CasinoV2} exact={true} /> */}
+                  <Route path="/casino" component={CasinoV2} exact={true} />
                   {/* This below route is to show casino page with only our own providers(MAC88, MONK88, Fun games) */}
                   {/* <Route
                     path="/premium-casino"
@@ -595,11 +595,11 @@ const UserRouter: React.FC<StateProps> = (props) => {
                     exact={true}
                   ></Route>
 
-                  {/* <Route
+                  <Route
                     path="/affiliate_program"
                     component={Affiliate}
                     exact={true}
-                  ></Route> */}
+                  ></Route>
 
                   <Route
                     path="/pl_statement"

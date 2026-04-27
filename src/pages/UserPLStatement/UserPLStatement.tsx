@@ -18,6 +18,7 @@ import './UserPLStatement.scss';
 import SelectTemplate from '../../common/SelectTemplate/SelectTemplate';
 import { CONFIG_PERMISSIONS } from '../../constants/ConfigPermissions';
 import { connect, useSelector } from 'react-redux';
+import { postAPIAuth } from '../../services/apiInstance';
 // import { RootState } from '../../models/RootState';
 
 type Filters = {
@@ -71,160 +72,64 @@ const UserPLStatement: React.FC<Props> = (props: Props) => {
   const [nextPageToken, setNextPageToken] = useState<string>(null);
   const pageSize = 25;
 
-  const fetchPLStatement = useCallback(async () => {
-    setProgress(true);
-    setErrorMsg(null);
-    setNextPageToken(null);
-    try {
-      let response: any;
-      let pl_records;
+ const fetchPLStatement = useCallback(async () => {
+  setProgress(true);
+  setErrorMsg(null);
+  setNextPageToken(null);
 
-    //   if (filters.statementType === 'TURBO_PL') {
-    //     // Fetch cashout history
-    //     response = await SVLS_API.get('/reports/v2/cashout-history', {
-    //       headers: {
-    //         Authorization: sessionStorage.getItem('jwt_token'),
-    //         Accept: 'application/json',
-    //       },
-    //       params: {
-    //         startDate: filters.fromDate.startOf('day').toISOString(),
-    //         endDate: filters.toDate.endOf('day').toISOString(),
-    //         pageSize: pageSize,
-    //         pageToken: filters.pageToken[filters.pageToken.length - 1],
-    //         accountId: sessionStorage.getItem('aid'),
-    //       },
-    //     });
-    //     pl_records = response.data.entries;
-    //   } else if (
-    //     filters.selectedGame === 'SPORTS_BOOK' ||
-    //     filters.selectedGame === 'SPORTS'
-    //   ) {
-    //     response = await REPORTING_API.post(
-    //       '/reports/v2/profit-statement',
-    //       {
-    //         user: '',
-    //         categoryType: filters.selectedGame,
-    //         startDate: filters.fromDate.startOf('day').toISOString(),
-    //         endDate: filters.toDate.endOf('day').toISOString(),
-    //         pageSize: pageSize,
-    //         pageToken: filters.pageToken[filters.pageToken.length - 1],
-    //         acceptType: 'application/json',
-    //       },
-    //       {
-    //         headers: {
-    //           Authorization: sessionStorage.getItem('jwt_token'),
-    //         },
-    //         params: {},
-    //       }
-    //     );
-    //     pl_records = response.data.plEntries;
-    //   } else {
-    //     response = await REPORTING_API.get('/reports/v2/orders/:search', {
-    //       headers: {
-    //         Authorization: sessionStorage.getItem('jwt_token'),
-    //         Accept: 'application/json',
-    //       },
-    //       params: {
-    //         user: '',
-    //         categoryType: filters.selectedGame,
-    //         startDate: filters.fromDate.startOf('day').toISOString(),
-    //         endDate: filters.toDate.endOf('day').toISOString(),
-    //         pageSize: pageSize,
-    //         pageToken: filters.pageToken[filters.pageToken.length - 1],
-    //         acceptType: 'application/json',
-    //         reportType: 'ORDER_LIST',
-    //         status: 'Settled',
-    //       },
-    //     });
-    //     pl_records = response.data.orders;
-    //   }
+  try {
+    const payload = {
+      deleted: false,
+      dateFrom: filters.fromDate.startOf("day").format("YYYY-MM-DD"),
+      dateTo: filters.toDate.endOf("day").format("YYYY-MM-DD"),
+    };
 
-    //   setNextPageToken(response.data.nextPageToken);
+    const response: any = await postAPIAuth("/getBetsAPI", payload);
+    console.log("PL Statement Response:", response);
 
-      try {
-    if (filters.statementType === 'TURBO_PL') {
-      const dummyCashout = [
-        {
-          marketName: "Match Odds",
-          eventName: "India vs Australia",
-          cashoutAmount: 1200,
-          cashoutCommission: 50,
-          netCashoutAmount: 1150,
-          settledDate: new Date(),
-        },
-        {
-          marketName: "Fancy Bet",
-          eventName: "CSK vs MI",
-          cashoutAmount: 800,
-          cashoutCommission: 20,
-          netCashoutAmount: 780,
-          settledDate: new Date(),
-        },
-      ];
+    const pl_records = response?.data?.data || [];
 
-      setCashoutHistory(dummyCashout);
+    if (filters.statementType === "TURBO_PL") {
+      const cashoutData = pl_records.map((item: any) => ({
+        marketName: item?.marketName || "-",
+        eventName: item?.eventName || "-",
+        cashoutAmount: item?.stake || 0,
+        cashoutCommission: item?.commission || 0,
+        netCashoutAmount:
+          (item?.stake || 0) - (item?.commission || 0),
+        settledDate: item?.placedTime,
+      }));
+
+      setCashoutHistory(cashoutData);
       setplStatement([]);
     } else {
-      const dummyPL = [
-        {
-          eventName: "India vs Pakistan",
-          marketName: "Match Odds",
-          profit: 1500,
-          commission: 50,
-          settledDate: new Date(),
-        },
-        {
-          eventName: "MI vs CSK",
-          marketName: "Session Bet",
-          profit: -700,
-          commission: 0,
-          settledDate: new Date(),
-        },
-        {
-          eventName: "Barcelona vs Madrid",
-          marketName: "Over Under",
-          profit: 1200,
-          commission: 30,
-          settledDate: new Date(),
-        },
-      ];
+      const profitLossData = pl_records.map((item: any) => ({
+        eventName: item?.eventName || "-",
+        marketName: item?.marketName || "-",
+        profit:
+          item?.result === "LOST"
+            ? -(item?.stake || 0)
+            : item?.profit || 0,
+        commission: item?.commission || 0,
+        settledDate: item?.placedTime,
+      }));
 
-      setplStatement(dummyPL);
+      setplStatement(profitLossData);
       setCashoutHistory([]);
     }
-  } catch (err) {
+  } catch (err: any) {
     console.log(err);
+
+    if (err?.response?.data?.error) {
+      setErrorMsg(err.response.data.error);
+    }
+
+    setplStatement([]);
+    setCashoutHistory([]);
   }
 
-      if (filters.statementType === 'TURBO_PL') {
-        // Process cashout history data
-        for (const record of pl_records) {
-          record.cashoutAmount = record.cashoutAmount / cFactor;
-          record.cashoutCommission = record.cashoutCommission / cFactor;
-          record.netCashoutAmount = record.netCashoutAmount / cFactor;
-        }
-        setCashoutHistory(pl_records);
-        setplStatement([]);
-      } else {
-        // Process regular P&L data
-        for (const pl of pl_records) {
-          pl.profit = pl.profit / cFactor;
-          pl.commission = pl.commission ? pl.commission / cFactor : 0;
-        }
-        setplStatement(pl_records);
-        setCashoutHistory([]);
-      }
-    } catch (err) {
-      if (err.response && err.response.data) {
-        setErrorMsg(err.response.data.error);
-      }
-      console.log(err);
-      setplStatement([]);
-      setCashoutHistory([]);
-      setNextPageToken(null);
-    }
-    setProgress(false);
-  }, [filters]);
+  setProgress(false);
+}, [filters]);
 
   useEffect(() => {
     fetchPLStatement();
