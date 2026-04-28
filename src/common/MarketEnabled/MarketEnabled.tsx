@@ -1,6 +1,6 @@
 import React from 'react';
 import './MarketEnabled.scss';
-import VirtualSportsIcon  from '../../assets/images/home/tiles/egames-icon.svg';
+import VirtualSportsIcon  from '../../assets/images/home/tiles/egames-icon.svg?react';
 
 type Props = {
   marketEnabled: boolean;

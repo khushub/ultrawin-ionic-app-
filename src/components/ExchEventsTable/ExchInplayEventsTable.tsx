@@ -1,18 +1,8 @@
 import { Accordion, AccordionDetails, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Skeleton } from "@mui/material";
-// import Accordion from "@material-ui/core/Accordion";
-// import AccordionDetails from "@material-ui/core/AccordionDetails";
-// import Paper from "@material-ui/core/Paper";
-// import Table from "@material-ui/core/Table";
-// import TableBody from "@material-ui/core/TableBody";
-// import TableCell from "@material-ui/core/TableCell";
-// import TableContainer from "@material-ui/core/TableContainer";
-// import TableHead from "@material-ui/core/TableHead";
-// import TableRow from "@material-ui/core/TableRow";
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { fetchCompetitions, fetchEventsByCompetition, setCompetition, setEventType, setExchEvent } from "../../store/slices/homeMarketsSlice";
-// import { Skeleton } from "@material-ui/lab";
 import { isMobile } from "react-device-detect";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import LiveSymbol from "../../assets/images/icons/LiveSymbol.svg?react";
@@ -52,8 +42,6 @@ type StoreProps = {
         eventTypeId: string,
         competitionId: string,
     ) => string;
-    // addExchangeBet: (data: BsData) => void;
-    // bets: BsData[];
     fetchingEvents: boolean;
     loggedIn: boolean;
     topicUrls: any;
@@ -79,8 +67,6 @@ const InplayEventsTable: React.FC<StoreProps> = (props) => {
         setEventType,
         setCompetition,
         setExchEvent,
-        // addExchangeBet,
-        // bets,
         fetchingEvents,
         loggedIn,
         topicUrls,
@@ -148,75 +134,32 @@ const InplayEventsTable: React.FC<StoreProps> = (props) => {
     };
 
     const getOdds = (eventData: any, teamType: string) => {
-        const team =
-            teamType === "home"
-                ? eventData?.homeTeam
-                : teamType === "away"
-                  ? eventData?.awayTeam
-                  : teamType;
+        const runners = eventData?.marketBook?.runners ?? [];
 
-        const runners = eventData?.matchOdds?.runners ?? [];
-        for (let runner of runners) {
-            if (
-                runner?.runnerName?.toLowerCase() === team?.toLowerCase() ||
-                runner?.runnerName?.toLowerCase()?.includes(team?.toLowerCase())
-            ) {
-                return [
-                    {
-                        type: "back-odd",
-                        price: runner?.backPrices[0]?.price,
-                        size: runner?.backPrices[0]?.size,
-                        outcomeId: runner?.runnerId,
-                        outcomeName: runner.runnerName,
-                    },
-                    {
-                        type: "lay-odd",
-                        price: runner?.layPrices[0]?.price,
-                        size: runner?.layPrices[0]?.size,
-                        outcomeId: runner.runnerId,
-                        outcomeName: runner.runnerName,
-                    },
-                ];
-            }
-        }
+        const runner = teamType === 'home'
+        ? runners?.[0]
+        : teamType === 'away' 
+        ? runners?.[1]
+        : runners?.[2]
 
-        // Fallback when name matching fails (BetFair only): 1st runner → 1, 2nd → 2, 3rd → X
-        const isBetFair =
-            eventData?.providerName?.toLowerCase() ===
-            BETFAIR_PROVIDER_ID?.toLowerCase();
-        if (!isBetFair || runners.length === 0) return null;
-        const idx =
-            teamType === "home"
-                ? 0
-                : teamType === "away"
-                  ? runners.length >= 2
-                      ? 1
-                      : 0
-                  : teamType === "draw"
-                    ? runners.length >= 3
-                        ? 2
-                        : null
-                    : null;
-        if (idx !== null && runners[idx]) {
-            const runner = runners[idx];
-            return [
-                {
-                    type: "back-odd",
-                    price: runner?.backPrices[0]?.price,
-                    size: runner?.backPrices[0]?.size,
-                    outcomeId: runner?.runnerId,
-                    outcomeName: runner.runnerName,
-                },
-                {
-                    type: "lay-odd",
-                    price: runner?.layPrices[0]?.price,
-                    size: runner?.layPrices[0]?.size,
-                    outcomeId: runner.runnerId,
-                    outcomeName: runner.runnerName,
-                },
-            ];
-        }
-        return null;
+        if (!runner) return null;
+
+        return [
+            {
+                type: 'back-odd',
+                price: runner.availableToBack?.price,
+                size: runner.availableToBack?.size,
+                outcomeId: runner.selectionId,
+                outcomeName: runner.runnerName,
+            },
+            {
+                type: 'lay-odd',
+                price: runner.availableToLay?.price,
+                size: runner.availableToLay?.size,
+                outcomeId: runner.selectionId,
+                outcomeName: runner.runnerName,
+            },
+        ];
     };
 
     const handleEventChange = (iEvent: InplayEventsObj, event: any) => {
@@ -360,16 +303,12 @@ const InplayEventsTable: React.FC<StoreProps> = (props) => {
                                                                             ":eventType" ? (
                                                                                 <div className="icon-and-name">
                                                                                     <GetSportIcon
-                                                                                        sportId={
-                                                                                            iEvent.sportId
-                                                                                        }
+                                                                                        sportId={iEvent?.sportId}
                                                                                     />
                                                                                     <div className="ip-event-name">
                                                                                         {
                                                                                             langData?.[
-                                                                                                getSportLangKeyByName(
-                                                                                                    iEvent.sportName,
-                                                                                                )
+                                                                                                getSportLangKeyByName( iEvent.sportName)
                                                                                             ]
                                                                                         }{" "}
                                                                                     </div>
@@ -390,7 +329,7 @@ const InplayEventsTable: React.FC<StoreProps> = (props) => {
                                                                 ) => (
                                                                     <TableRow
                                                                         key={
-                                                                            sEvent.eventId
+                                                                            sEvent?.eventId
                                                                         }
                                                                         onClick={() =>
                                                                             handleEventChange(
@@ -402,32 +341,18 @@ const InplayEventsTable: React.FC<StoreProps> = (props) => {
                                                                     >
                                                                         <TableCell
                                                                             className="schedule-cell ipe-time-display web-view"
-                                                                            colSpan={
-                                                                                1
-                                                                            }
+                                                                            colSpan={1}
                                                                         >
                                                                             <EventDateDisplay
-                                                                                openDate={
-                                                                                    sEvent?.customOpenDate
-                                                                                        ? sEvent?.customOpenDate
-                                                                                        : sEvent?.openDate
-                                                                                }
-                                                                                forcedInplay={
-                                                                                    sEvent?.forcedInplay
-                                                                                }
-                                                                                status={
-                                                                                    sEvent?.status
-                                                                                }
-                                                                                sportId={
-                                                                                    sEvent?.sportId
-                                                                                }
+                                                                                openDate={sEvent?.openDate}
+                                                                                forcedInplay={sEvent?.forcedInplay}
+                                                                                status={sEvent?.status}
+                                                                                sportId={sEvent?.sportId}
                                                                             />
                                                                         </TableCell>
                                                                         <TableCell
                                                                             className="teams-cell mob-et-b-c"
-                                                                            colSpan={
-                                                                                8
-                                                                            }
+                                                                            colSpan={8}
                                                                         >
                                                                             <div
                                                                                 className="all-markets-nav-link"
@@ -438,109 +363,58 @@ const InplayEventsTable: React.FC<StoreProps> = (props) => {
                                                                                 //   handleEventChange(iEvent, sEvent)
                                                                                 // }
                                                                             >
-                                                                                {sEvent?.homeTeam !==
-                                                                                    "" &&
-                                                                                sEvent?.awayTeam !==
-                                                                                    "" ? (
+                                                                                {sEvent?.homeTeam !=="" &&
+                                                                                sEvent?.awayTeam !=="" ? (
                                                                                     <>
                                                                                         <div className=" team-name-ctn">
                                                                                             <div className="temas-col">
                                                                                                 <EventName
-                                                                                                    eventName={
-                                                                                                        sEvent?.customEventName
-                                                                                                            ? sEvent?.customEventName
-                                                                                                            : sEvent?.eventName
-                                                                                                    }
-                                                                                                    homeTeam={
-                                                                                                        sEvent?.homeTeam
-                                                                                                    }
-                                                                                                    awayTeam={
-                                                                                                        sEvent?.awayTeam
-                                                                                                    }
-                                                                                                    openDate={
-                                                                                                        sEvent?.customOpenDate
-                                                                                                            ? sEvent?.customOpenDate
-                                                                                                            : sEvent?.openDate
-                                                                                                    }
-                                                                                                    forcedInplay={
-                                                                                                        sEvent?.forcedInplay
-                                                                                                    }
-                                                                                                    status={
-                                                                                                        sEvent?.status
-                                                                                                    }
-                                                                                                    sportId={
-                                                                                                        sEvent?.sportId
-                                                                                                    }
+                                                                                                    eventName={sEvent?.eventName}
+                                                                                                    homeTeam={sEvent?.homeTeam}
+                                                                                                    awayTeam={sEvent?.awayTeam}
+                                                                                                    openDate={sEvent?.openDate}
+                                                                                                    forcedInplay={sEvent?.forcedInplay}
+                                                                                                    status={sEvent?.status}
+                                                                                                    sportId={sEvent?.sportId}
                                                                                                 />
                                                                                             </div>
                                                                                             <div className="enabled-markets">
-                                                                                                {sEvent.status ===
-                                                                                                "IN_PLAY" ? (
+                                                                                                {sEvent.status ==="IN_PLAY" ? (
                                                                                                     <div className="live-img">
                                                                                                         {/* TODO: make this come from langData */}
                                                                                                         <LiveSymbol />
                                                                                                     </div>
                                                                                                 ) : null}
                                                                                                 <MarketEnabled
-                                                                                                    marketEnabled={
-                                                                                                        sEvent?.catId ===
-                                                                                                        "SR VIRTUAL"
-                                                                                                    }
-                                                                                                    marketType={
-                                                                                                        "V"
-                                                                                                    }
+                                                                                                    marketEnabled={sEvent?.catId ==="SR VIRTUAL"}
+                                                                                                    marketType={"V"}
                                                                                                 />
                                                                                                 <MarketEnabled
                                                                                                     marketEnabled={
                                                                                                         sEvent?.enablePremium &&
-                                                                                                        sEvent?.catId !==
-                                                                                                            "SR VIRTUAL"
+                                                                                                        sEvent?.catId !=="SR VIRTUAL"
                                                                                                     }
-                                                                                                    marketType={
-                                                                                                        "P"
-                                                                                                    }
+                                                                                                    marketType={"P"}
                                                                                                 />
                                                                                                 <MarketEnabled
-                                                                                                    marketEnabled={
-                                                                                                        sEvent?.enableMatchOdds
-                                                                                                    }
-                                                                                                    marketType={
-                                                                                                        "MO"
-                                                                                                    }
+                                                                                                    marketEnabled={sEvent?.marketType == 'MATCH_ODDS'}
+                                                                                                    marketType={"MO"}
                                                                                                 />
                                                                                                 <MarketEnabled
-                                                                                                    marketEnabled={
-                                                                                                        sEvent?.enableBookmaker
-                                                                                                    }
-                                                                                                    marketType={
-                                                                                                        "BM"
-                                                                                                    }
+                                                                                                    marketEnabled={!!sEvent?.bm}
+                                                                                                    marketType={"BM"}
                                                                                                 />
                                                                                                 <MarketEnabled
-                                                                                                    marketEnabled={
-                                                                                                        sEvent?.enableFancy
-                                                                                                    }
-                                                                                                    marketType={
-                                                                                                        "F"
-                                                                                                    }
+                                                                                                    marketEnabled={!!sEvent?.fancy}
+                                                                                                    marketType={"F"}
                                                                                                 />
                                                                                                 <MarketEnabled
-                                                                                                    marketEnabled={
-                                                                                                        sEvent?.enableToss
-                                                                                                    }
-                                                                                                    marketType={
-                                                                                                        "T"
-                                                                                                    }
+                                                                                                    marketEnabled={sEvent?.enableToss}
+                                                                                                    marketType={"T"}
                                                                                                 />
                                                                                                 <MarketEnabled
-                                                                                                    marketEnabled={
-                                                                                                        sEvent?.virtualEvent &&
-                                                                                                        sEvent.catId !=
-                                                                                                            "VIRTUAL"
-                                                                                                    }
-                                                                                                    marketType={
-                                                                                                        "V2"
-                                                                                                    }
+                                                                                                    marketEnabled={sEvent?.marketTypeStatus != 0}
+                                                                                                    marketType={"V2"}
                                                                                                 />
                                                                                             </div>
                                                                                         </div>
@@ -549,88 +423,44 @@ const InplayEventsTable: React.FC<StoreProps> = (props) => {
                                                                                     <div className="team-name">
                                                                                         <div className="temas-col">
                                                                                             <EventName
-                                                                                                eventName={
-                                                                                                    sEvent?.customEventName
-                                                                                                        ? sEvent?.customEventName
-                                                                                                        : sEvent?.eventName
-                                                                                                }
-                                                                                                openDate={
-                                                                                                    sEvent?.customOpenDate
-                                                                                                        ? sEvent?.customOpenDate
-                                                                                                        : sEvent?.openDate
-                                                                                                }
-                                                                                                forcedInplay={
-                                                                                                    sEvent?.forcedInplay
-                                                                                                }
-                                                                                                status={
-                                                                                                    sEvent?.status
-                                                                                                }
-                                                                                                sportId={
-                                                                                                    sEvent?.sportId
-                                                                                                }
+                                                                                                eventName={sEvent?.eventName}
+                                                                                                openDate={sEvent?.openDate}
+                                                                                                forcedInplay={sEvent?.forcedInplay}
+                                                                                                status={sEvent?.status}
+                                                                                                sportId={sEvent?.sportId}
                                                                                             />
                                                                                         </div>
                                                                                         <div className="enabled-markets">
                                                                                             <MarketEnabled
-                                                                                                marketEnabled={
-                                                                                                    sEvent?.catId ===
-                                                                                                    "SR VIRTUAL"
-                                                                                                }
-                                                                                                marketType={
-                                                                                                    "V"
-                                                                                                }
+                                                                                                marketEnabled={sEvent?.catId ==="SR VIRTUAL"}
+                                                                                                marketType={"V"}
                                                                                             />
                                                                                             <MarketEnabled
                                                                                                 marketEnabled={
                                                                                                     sEvent?.enablePremium &&
-                                                                                                    sEvent?.catId !==
-                                                                                                        "SR VIRTUAL"
+                                                                                                    sEvent?.catId !=="SR VIRTUAL"
                                                                                                 }
-                                                                                                marketType={
-                                                                                                    "P"
-                                                                                                }
+                                                                                                marketType={"P"}
                                                                                             />
                                                                                             <MarketEnabled
-                                                                                                marketEnabled={
-                                                                                                    sEvent?.enableMatchOdds
-                                                                                                }
-                                                                                                marketType={
-                                                                                                    "MO"
-                                                                                                }
+                                                                                                marketEnabled={sEvent?.marketType == 'MATCH_ODDS'}
+                                                                                                marketType={"MO"}
                                                                                             />
                                                                                             <MarketEnabled
-                                                                                                marketEnabled={
-                                                                                                    sEvent?.enableBookmaker
-                                                                                                }
-                                                                                                marketType={
-                                                                                                    "BM"
-                                                                                                }
+                                                                                                marketEnabled={!!sEvent?.bm}
+                                                                                                marketType={"BM"}
                                                                                             />
                                                                                             <MarketEnabled
-                                                                                                marketEnabled={
-                                                                                                    sEvent?.enableFancy
-                                                                                                }
-                                                                                                marketType={
-                                                                                                    "F"
-                                                                                                }
+                                                                                                marketEnabled={!!sEvent?.fancy}
+                                                                                                marketType={"F"}
                                                                                             />
                                                                                             <MarketEnabled
-                                                                                                marketEnabled={
-                                                                                                    sEvent?.enableToss
-                                                                                                }
-                                                                                                marketType={
-                                                                                                    "T"
-                                                                                                }
+                                                                                                marketEnabled={sEvent?.enableToss}
+                                                                                                marketType={"T"}
                                                                                             />
                                                                                             <MarketEnabled
-                                                                                                marketEnabled={
-                                                                                                    sEvent?.virtualEvent &&
-                                                                                                    sEvent.catId !=
-                                                                                                        "VIRTUAL"
-                                                                                                }
-                                                                                                marketType={
-                                                                                                    "V2"
-                                                                                                }
+                                                                                                marketEnabled={sEvent?.marketTypeStatus != 0}
+                                                                                                marketType={"V2"}
                                                                                             />
                                                                                         </div>
                                                                                     </div>
@@ -638,80 +468,41 @@ const InplayEventsTable: React.FC<StoreProps> = (props) => {
                                                                                 {isMobile && (
                                                                                     <div className="mob-odds-row new-odds-row">
                                                                                         <EventDateDisplay
-                                                                                            openDate={
-                                                                                                sEvent?.customOpenDate
-                                                                                                    ? sEvent?.customOpenDate
-                                                                                                    : sEvent?.openDate
-                                                                                            }
-                                                                                            forcedInplay={
-                                                                                                sEvent?.forcedInplay
-                                                                                            }
-                                                                                            status={
-                                                                                                sEvent?.status
-                                                                                            }
-                                                                                            sportId={
-                                                                                                sEvent?.sportId
-                                                                                            }
+                                                                                            openDate={sEvent?.openDate}
+                                                                                            forcedInplay={sEvent?.forcedInplay}
+                                                                                            status={sEvent?.status}
+                                                                                            sportId={sEvent?.sportId}
                                                                                         />
-                                                                                        {teamTypes.map(
-                                                                                            (
-                                                                                                teamType,
-                                                                                                index,
-                                                                                            ) => (
+                                                                                        {teamTypes.map((teamType, index) => (
                                                                                                 <div
                                                                                                     className="mob-odds-block"
-                                                                                                    key={
-                                                                                                        teamType +
-                                                                                                        index
-                                                                                                    }
+                                                                                                    key={ teamType + index }
                                                                                                 >
                                                                                                     <div className="mob-exchange-btn-odd-row">
-                                                                                                        {sEvent.matchOdds ? (
-                                                                                                            getOdds(
-                                                                                                                sEvent,
-                                                                                                                teamType,
-                                                                                                            ) ? (
+                                                                                                        {sEvent?.marketBook?.runners?.length ? (
+                                                                                                            getOdds( sEvent, teamType) ? (
                                                                                                                 <>
-                                                                                                                    {getOdds(
-                                                                                                                        sEvent,
-                                                                                                                        teamType,
-                                                                                                                    ).map(
-                                                                                                                        (
-                                                                                                                            odd,
-                                                                                                                        ) => (
+                                                                                                                    {getOdds( sEvent, teamType ).map((odd) => (
                                                                                                                             <ExchMobOddView
-                                                                                                                                mainValue={
-                                                                                                                                    odd.price
+                                                                                                                                mainValue={odd?.price
                                                                                                                                 }
-                                                                                                                                subValue={
-                                                                                                                                    odd.size
-                                                                                                                                }
+                                                                                                                                subValue={odd?.size}
                                                                                                                                 oddType={
-                                                                                                                                    !sEvent.enableMatchOdds &&
-                                                                                                                                    sEvent.enablePremium
-                                                                                                                                        ? odd.type ===
-                                                                                                                                          "back-odd"
-                                                                                                                                            ? "premium-odd"
-                                                                                                                                            : "lay-odd"
-                                                                                                                                        : odd.type ===
-                                                                                                                                            "back-odd"
-                                                                                                                                          ? "back-odd"
-                                                                                                                                          : "lay-odd"
+                                                                                                                                    !sEvent.enableMatchOdds && sEvent.enablePremium
+                                                                                                                                    ? odd.type === "back-odd"? "premium-odd" : "lay-odd"
+                                                                                                                                    : odd.type === "back-odd"? "back-odd" : "lay-odd"
                                                                                                                                 }
-                                                                                                                                disable={sEvent.matchOdds.status
-                                                                                                                                    .toLowerCase()
-                                                                                                                                    .includes(
-                                                                                                                                        "suspended",
-                                                                                                                                    )}
+                                                                                                                                disable={
+                                                                                                                                    sEvent?.marketBook?.status?.toLowerCase().includes('suspended') ||
+                                                                                                                                    sEvent?.marketBook?.status?.toLowerCase().includes('closed')
+                                                                                                                                }
                                                                                                                                 valueType={
                                                                                                                                     !sEvent.enableMatchOdds &&
                                                                                                                                     sEvent.enablePremium
                                                                                                                                         ? "premiumOdds"
                                                                                                                                         : "matchOdds"
                                                                                                                                 }
-                                                                                                                                showSubValueinKformat={
-                                                                                                                                    true
-                                                                                                                                }
+                                                                                                                                showSubValueinKformat={true}
                                                                                                                                 // onClick={() => null}
                                                                                                                             />
                                                                                                                         ),
@@ -720,44 +511,28 @@ const InplayEventsTable: React.FC<StoreProps> = (props) => {
                                                                                                             ) : (
                                                                                                                 <>
                                                                                                                     <ExchMobOddView
-                                                                                                                        mainValue={
-                                                                                                                            null
-                                                                                                                        }
+                                                                                                                        mainValue={null}
                                                                                                                         oddType="back-odd"
-                                                                                                                        disable={
-                                                                                                                            true
-                                                                                                                        }
+                                                                                                                        disable={true}
                                                                                                                     />
                                                                                                                     <ExchMobOddView
-                                                                                                                        mainValue={
-                                                                                                                            null
-                                                                                                                        }
+                                                                                                                        mainValue={null}
                                                                                                                         oddType="lay-odd"
-                                                                                                                        disable={
-                                                                                                                            true
-                                                                                                                        }
+                                                                                                                        disable={true}
                                                                                                                     />
                                                                                                                 </>
                                                                                                             )
                                                                                                         ) : (
                                                                                                             <>
                                                                                                                 <ExchMobOddView
-                                                                                                                    mainValue={
-                                                                                                                        null
-                                                                                                                    }
+                                                                                                                    mainValue={null}
                                                                                                                     oddType="back-odd"
-                                                                                                                    disable={
-                                                                                                                        true
-                                                                                                                    }
+                                                                                                                    disable={true}
                                                                                                                 />
                                                                                                                 <ExchMobOddView
-                                                                                                                    mainValue={
-                                                                                                                        null
-                                                                                                                    }
+                                                                                                                    mainValue={null}
                                                                                                                     oddType="lay-odd"
-                                                                                                                    disable={
-                                                                                                                        true
-                                                                                                                    }
+                                                                                                                    disable={true}
                                                                                                                 />
                                                                                                             </>
                                                                                                         )}
@@ -771,59 +546,28 @@ const InplayEventsTable: React.FC<StoreProps> = (props) => {
                                                                         </TableCell>
                                                                         {!isMobile &&
                                                                             teamTypes.map(
-                                                                                (
-                                                                                    teamType,
-                                                                                    index,
-                                                                                ) => (
+                                                                                ( teamType, index ) => (
                                                                                     <TableCell
                                                                                         className="odds-cell"
                                                                                         align="center"
-                                                                                        colSpan={
-                                                                                            1
-                                                                                        }
-                                                                                        key={
-                                                                                            teamType +
-                                                                                            index
-                                                                                        }
+                                                                                        colSpan={1}
+                                                                                        key={ teamType + index }
                                                                                     >
-                                                                                        {sEvent?.matchOdds ? (
-                                                                                            getOdds(
-                                                                                                sEvent,
-                                                                                                teamType,
-                                                                                            ) ? (
+                                                                                        {sEvent?.marketBook?.runners?.length ? (
+                                                                                            getOdds( sEvent, teamType) ? (
                                                                                                 <div className="odds-block">
-                                                                                                    {getOdds(
-                                                                                                        sEvent,
-                                                                                                        teamType,
-                                                                                                    ).map(
-                                                                                                        (
-                                                                                                            odd,
-                                                                                                        ) => (
+                                                                                                    {getOdds(sEvent, teamType).map((odd) => (
                                                                                                             <ExchOddBtn
-                                                                                                                mainValue={
-                                                                                                                    odd.price
+                                                                                                                mainValue={odd?.price}
+                                                                                                                subValue={odd?.size}
+                                                                                                                oddType={odd.type ==="back-odd"? "back-odd" : "lay-odd"}
+                                                                                                                disable={
+                                                                                                                    sEvent?.marketBook?.status?.toLowerCase().includes('suspended') ||
+                                                                                                                    sEvent?.marketBook?.status?.toLowerCase().includes('closed')
                                                                                                                 }
-                                                                                                                subValue={
-                                                                                                                    odd.size
-                                                                                                                }
-                                                                                                                oddType={
-                                                                                                                    odd.type ===
-                                                                                                                    "back-odd"
-                                                                                                                        ? "back-odd"
-                                                                                                                        : "lay-odd"
-                                                                                                                }
-                                                                                                                disable={sEvent.matchOdds.status
-                                                                                                                    .toLowerCase()
-                                                                                                                    .includes(
-                                                                                                                        "suspended",
-                                                                                                                    )}
                                                                                                                 valueType="matchOdds"
-                                                                                                                showSubValueinKformat={
-                                                                                                                    true
-                                                                                                                }
-                                                                                                                onClick={() =>
-                                                                                                                    null
-                                                                                                                }
+                                                                                                                showSubValueinKformat={true}
+                                                                                                                onClick={() =>null}
                                                                                                             />
                                                                                                         ),
                                                                                                     )}
@@ -870,11 +614,11 @@ const InplayEventsTable: React.FC<StoreProps> = (props) => {
 
 const mapStateToProps = (state: any) => {
     return {
-        // bets: state.exchBetslip.bets,
+        // bets: state.exchBetSlip.bets,
         allowedConfig: state.common.allowedConfig,
         loggedIn: state.auth.loggedIn,
-        fetchingEvents: state.exchangeSports.fetchingEvents,
-        topicUrls: state?.exchangeSports?.topicUrls,
+        fetchingEvents: state.homeMarkets.fetchingEvents,
+        topicUrls: state?.homeMarkets?.topicUrls,
         // betFairWSConnected: state.exchangeSports.betFairWSConnected,
         langData: state.common.langData,
     };

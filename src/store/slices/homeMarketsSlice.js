@@ -33,6 +33,51 @@ export const fetchCompetitions = createAsyncThunk(
 );
 
 
+export const fetchEventsBySport = createAsyncThunk(
+    "homeMarkets/fetchEventsBySport",
+    async (
+        /** @type {{ eventTypeId: string }} */
+        {eventTypeId}, 
+        { getState, rejectWithValue }
+    ) => {
+
+        if(!eventTypeId) {
+            return rejectWithValue("SportId not defined!");
+        }
+
+        const state = getState();
+        const apiInstance = state.auth?.loggedIn? postAPIAuth : postAPI;
+        const endpoint = state.auth?.loggedIn ? '/getHomeMarketsAPI' : '/getFreeHomeMarketsAPI';
+    
+        try {
+            const response = await apiInstance(endpoint, { eventTypeId: [eventTypeId] });
+            
+            if (response?.data?.success && Array.isArray(response?.data?.data)) {
+                const processedEvents = response.data.data.map((event) => {
+                    const safeCompId = event.competitionId?.split(':').join('_');
+                    const safeEventId = event.eventId?.split(':').join('_');
+
+                    return {
+                        ...event,
+                        sportId: event.eventTypeId,
+                        competitionId: safeCompId,
+                        eventId: safeEventId,
+                        status: event?.marketBook?.inplay ? 'IN_PLAY' : 'UPCOMING',
+                    };
+                });
+                return processedEvents;
+            } else {
+                return rejectWithValue("No events found");
+            }
+
+        } catch (error) {
+            const errorMessage = error?.response?.data?.message || error.message || "Failed to fetch events";
+            return rejectWithValue(errorMessage);
+        }
+    },
+);
+
+
 export const fetchEventsByCompetition = createAsyncThunk(
     "homeMarkets/fetchEventsByCompetition",
     async (
@@ -40,21 +85,36 @@ export const fetchEventsByCompetition = createAsyncThunk(
         { eventTypeId, competitionId, events, track }, 
         { getState, rejectWithValue }
     ) => {
-        const state = getState();
-        if (!state.auth?.loggedIn) {
-            return rejectWithValue("User is not logged in. Aborting request.");
+
+        if(!eventTypeId || !competitionId) {
+            return rejectWithValue("SportId or CompetitionId not defined!");
         }
 
-        try {
-            const response = await postAPIAuth('/getHomeAllEventsAPI', { eventTypeId, competitionId });
-            console.log('fetchEventsByCompetition response: ', response);
+        const state = getState();
+        const apiInstance = state.auth?.loggedIn? postAPIAuth : postAPI;
+        const endpoint = state.auth?.loggedIn ? '/getHomeMarketsAPI' : '/getFreeHomeMarketsAPI';
 
-            // if (response?.data?.success) {
-            //     return response.data.response || [];
-            // } else {
-            //     const errorMessage = response?.data?.message || "Failed to fetch events";
-            //     return rejectWithValue(errorMessage);
-            // }
+        try {
+            const response = await apiInstance(endpoint, { eventTypeId: [eventTypeId] });
+
+            if (response?.data?.success && Array.isArray(response?.data?.data)) {
+                const requiredData = response.data.data.filter(item => item?.competitionId == competitionId);
+                const processedEvents = requiredData.map((event) => {
+                    const safeCompId = event.competitionId?.split(':').join('_');
+                    const safeEventId = event.eventId?.split(':').join('_');
+
+                    return {
+                        ...event,
+                        sportId: event.eventTypeId,
+                        competitionId: safeCompId,
+                        eventId: safeEventId,
+                        status: event?.marketBook?.inplay ? 'IN_PLAY' : 'UPCOMING',
+                    };
+                });
+                return processedEvents;
+            } else {
+                return rejectWithValue("No events found");
+            }
         } catch (error) {
             const errorMessage = error?.response?.data?.message || error.message || "Failed to fetch events";
             return rejectWithValue(errorMessage);
@@ -67,20 +127,32 @@ export const fetchInplayEvents = createAsyncThunk(
     "homeMarkets/fetchInplayEvents",
     async (_, { getState, rejectWithValue }) => {
         const state = getState();
-        if (!state.auth?.loggedIn) {
-            return rejectWithValue("User is not logged in. Aborting request.");
-        }
+        const apiInstance = state.auth?.loggedIn? postAPIAuth : postAPI;
+        const endpoint = state.auth?.loggedIn ? '/getHomeMarketsAPI' : '/getFreeHomeMarketsAPI';
+
 
         try {
-            const response = await postAPIAuth('/getInplyEventsAPI', {});
-            console.log('fetchInplayEvents response: ', response);
+            const response = await apiInstance(endpoint, {});
 
-            // if (response?.data?.success) {
-            //     return response.data.response || [];
-            // } else {
-            //     const errorMessage = response?.data?.message || "Failed to fetch inplay events";
-            //     return rejectWithValue(errorMessage);
-            // }
+            if (response?.data?.success && Array.isArray(response?.data?.data)) {
+                const requiredData = response.data.data.filter(item => !!item?.marketBook?.inplay);
+
+                const processedEvents = requiredData.map((event) => {
+                    const safeCompId = event.competitionId?.split(':').join('_');
+                    const safeEventId = event.eventId?.split(':').join('_');
+
+                    return {
+                        ...event,
+                        sportId: event.eventTypeId,
+                        competitionId: safeCompId,
+                        eventId: safeEventId,
+                        status: event?.marketBook?.inplay ? 'IN_PLAY' : 'UPCOMING',
+                    };
+                });
+                return processedEvents;
+            } else {
+                return rejectWithValue("No events found");
+            }
         } catch (error) {
             const errorMessage = error?.response?.data?.message || error.message || "Failed to fetch inplay events";
             return rejectWithValue(errorMessage);
@@ -115,159 +187,7 @@ export const fetchEventsInDateRange = createAsyncThunk(
 );
 
 
-export const fetchEventsBySport = createAsyncThunk(
-    "homeMarkets/fetchEventsBySport",
-    async (
-        /** @type {{ eventTypeId: string, events: any[] }} */
-        {eventTypeId, events}, 
-        { getState, rejectWithValue }
-    ) => {
-        const state = getState();
-        const apiInstance = state.auth?.loggedIn? postAPIAuth : postAPI;
-        const endpoint = state.auth?.loggedIn ? '/getHomeMarketsAPI' : '/getFreeHomeMarketsAPI';
-        
 
-        try {
-            const response = await apiInstance(endpoint, { eventTypeId: [eventTypeId] });
-            console.log('fetching events by sport response: ', response);
-
-                //     let newList = [];
-                //     let eventsList = [];
-
-
-                //     if (result && response?.data?.data?.length > 0) {
-                //         for (let eventData of response?.data?.data) {
-                //             try {
-                //                 if (eventData?.eventId) {
-                //                     newList.push(eventData?.eventId);
-                                    
-                //                     const eData = {
-                //                         // enabled: eventData?.enabled,
-                //                         status: eventData?.marketBook?.status,
-                //                         openDate: eventData?.openDate,
-                //                         // customOpenDate: eventData?.customOpenDate,
-                //                         sportId: eventData?.eventTypeId.includes(':')
-                //                             ? SPToBFIdMap[eventData?.eventTypeId]
-                //                             : eventData?.eventTypeId,
-                //                         competitionId: eventData?.competitionId,
-                //                         competitionName: eventData?.competitionName
-                //                             ? eventData?.competitionName
-                //                             : 'Other',
-                //                         eventId: eventData?.eventId,
-                //                         eventName: eventData?.eventName,
-                //                         // customEventName: eventData?.customEventName,
-                //                         marketId: eventData?.marketBook?.marketId,
-                //                         // providerName: eventData?.providerName,
-                //                         enableFancy: !!eventData?.fancy || false,
-                //                         enableMatchOdds: eventData?.marketType === 'MATCH_ODDS' ||  false,
-                //                         enableBookmaker: !!eventData?.bm || false,
-                //                         // bookMakerProvider: eventData?.markets
-                //                         //     ? eventData?.markets?.bookMakerProvider
-                //                         //     : '',
-                //                         // fancyProvider: eventData?.markets
-                //                         //     ? eventData?.markets?.fancyProvider
-                //                         //     : '',
-                //                         enablePremium: eventData?.markets
-                //                             ? eventData?.markets?.enablePremium
-                //                             : false,
-                //                         enableToss: eventData?.markets
-                //                             ? eventData?.markets?.enableToss
-                //                             : false,
-                //                         // catId: eventData?.catId,
-                //                         // virtualEvent: eventData?.virtualEvent,
-                //                         // macPremiumEnabled: eventData?.macPremiumEnabled,
-                //                     };
-
-                //                     eventsList.push({
-                //                         ...eData,
-                //                         sportId: eData.eventTypeId,
-                //                         competitionId: eData.competitionId,
-                //                         matchOddsData:
-                //                             eventData?.markets && eventData?.markets?.matchOdds
-                //                             ? eventData?.markets?.matchOdds?.find(
-                //                                 (mo) =>
-                //                                     mo.marketName === 'Match Odds' ||
-                //                                     mo?.marketName?.toLowerCase() === 'moneyline' ||
-                //                                     eventData?.providerName?.toLowerCase() ===
-                //                                     'sportradar'
-                //                                 )
-                //                             : null,
-                //                         raceMarkets:
-                //                             eventData.markets && eventData.markets.matchOdds
-                //                             ? eventData.markets.matchOdds
-                //                             : [],
-                //                     });
-
-                //                     // if (eData.sportId === '1') {
-                //                     //     if (eventData?.markets?.matchOdds?.length > 0) {
-                //                     //         for (let mo of eventData.markets.matchOdds) {
-                //                     //             if (
-                //                     //                 mo.marketName !== 'Match Odds' &&
-                //                     //                 mo.marketName.toLowerCase() !== 'moneyline'
-                //                     //             ) {
-                //                     //                 const secMOPayload = {
-                //                     //                     eventId: eData.eventId,
-                //                     //                     marketId: mo.marketId,
-                //                     //                     matchOddsData: mo,
-                //                     //                 };
-                //                     //                 dispatch(updateSecondaryMatchOdds(secMOPayload));
-                //                     //             }
-                //                     //         }
-                //                     //     }
-                //                     // }
-                //                 }
-                //             } catch (err) {
-                //             console.log(err);
-                //             }
-                //         }
-
-                //         // Dispatch a single action with all events
-                //         dispatch(fetchEventByCompetitionSuccess({ events: eventsList }));
-
-                //         if (events && events.length > 0) {
-                //             for (let ie of events) {
-                //                 //todo : revisit this piece of code
-                //                 if (!newList.includes(ie.eventId.split('_').join(':'))) {
-                //                     const payload = {
-                //                         sportId: ie.sportId,
-                //                         competitionId: ie.competitionId,
-                //                         eventId: ie.eventId,
-                //                         disableEvent: false,
-                //                     };
-                //                     dispatch(disableEventData(payload));
-                //                 }
-                //             }
-                //         }
-                // } else {
-                //     if (events) {
-                //         for (let ie of events) {
-                //             const payload = {
-                //                 sportId: ie.sportId,
-                //                 competitionId: ie.competitionId,
-                //                 eventId: ie.eventId,
-                //                 disableEvent: false,
-                //             };
-                //             dispatch(disableEventData(payload));
-                //         }
-                //     }
-                // }
-                // dispatch(setLoading(false));
-
-
-
-
-            // if (response?.data?.success) {
-            //     return response.data.response || [];
-            // } else {
-            //     const errorMessage = response?.data?.message || "Failed to fetch events";
-            //     return rejectWithValue(errorMessage);
-            // }
-        } catch (error) {
-            const errorMessage = error?.response?.data?.message || error.message || "Failed to fetch events";
-            return rejectWithValue(errorMessage);
-        }
-    },
-);
 
 
 
@@ -305,6 +225,7 @@ const homeMarketsSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
+            // fetchCompetitions
             .addCase(fetchCompetitions.fulfilled, (state, action) => {             
                 const eventTypeId = action.meta.arg;
                 const rawCompetitions = action.payload;
@@ -328,6 +249,84 @@ const homeMarketsSlice = createSlice({
 
                 state.competitions[eventTypeId] = processedCompetitions;
             })
+
+            // fetchEventsBySport
+            .addCase(fetchEventsBySport.pending, (state) => {
+                state.fetchingEvents = true;
+            })
+            .addCase(fetchEventsBySport.fulfilled, (state, action) => {
+                state.fetchingEvents = false;
+                const eventsList = action.payload;
+
+                eventsList.forEach(eData => {
+                    const eId = eData.sportId;
+                    const cId = eData.competitionId;
+                    const eventId = eData.eventId;
+
+                    if (!state.events[eId]) {
+                        state.events[eId] = {};
+                    }
+                    if (!state.events[eId][cId]) {
+                        state.events[eId][cId] = {};
+                    }
+                    state.events[eId][cId][eventId] = eData;
+                });
+            })
+            .addCase(fetchEventsBySport.rejected, (state, action) => {
+                state.fetchingEvents = false;
+            })
+
+            // fetchEventsByCompetition
+            .addCase(fetchEventsByCompetition.pending, (state) => {
+                state.fetchingEvents = true;
+            })
+            .addCase(fetchEventsByCompetition.fulfilled, (state, action) => {
+                state.fetchingEvents = false;
+                const eventsList = action.payload;
+
+                eventsList.forEach(eData => {
+                    const eId = eData.sportId;
+                    const cId = eData.competitionId;
+                    const eventId = eData.eventId;
+
+                    if (!state.events[eId]) {
+                        state.events[eId] = {};
+                    }
+                    if (!state.events[eId][cId]) {
+                        state.events[eId][cId] = {};
+                    }
+                    state.events[eId][cId][eventId] = eData;
+                });
+            })
+            .addCase(fetchEventsByCompetition.rejected, (state, action) => {
+                state.fetchingEvents = false;
+            })
+
+            // fetchEventsByCompetition
+            .addCase(fetchInplayEvents.pending, (state) => {
+                state.fetchingEvents = true;
+            })
+            .addCase(fetchInplayEvents.fulfilled, (state, action) => {
+                state.fetchingEvents = false;
+                const eventsList = action.payload;
+
+                eventsList.forEach(eData => {
+                    const eId = eData.sportId;
+                    const cId = eData.competitionId;
+                    const eventId = eData.eventId;
+
+                    if (!state.events[eId]) {
+                        state.events[eId] = {};
+                    }
+                    if (!state.events[eId][cId]) {
+                        state.events[eId][cId] = {};
+                    }
+                    state.events[eId][cId][eventId] = eData;
+                });
+            })
+            .addCase(fetchInplayEvents.rejected, (state, action) => {
+                state.fetchingEvents = false;
+            });
     }
 });
 

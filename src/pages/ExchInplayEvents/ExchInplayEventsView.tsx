@@ -34,10 +34,13 @@ import { sideHeaderTabs } from "../../components/SideHeader/SideHeaderUtil";
 import { BFToSRIdMap, SPToBFIdMap } from "../../util/stringUtil";
 import NotificationsIcon from "../../assets/images/icons/notification_icon.svg?react";
 import { setCompetition, setExchEvent } from "../../store/slices/homeMarketsSlice";
+import { CONFIG } from "../../config/config";
+import { postAPI, postAPIAuth } from "../../services/apiInstance";
 // import {
 //     fetchFavEvents,
 //     setEventType,
 // } from "../../store/exchangeSports/exchangeSportsActions";
+
 
 type InplayEventsObj = {
     sportId: string;
@@ -113,15 +116,14 @@ const ExchInplayEventsView: React.FC<StoreProps> = (props) => {
     const isMobile = window.innerWidth > 1120 ? false : true;
 
     const fetchNotifications = async () => {
-        // const response = await SVLS_API.get("/catalog/v2/notifications/", {
-        //     headers: {
-        //         Authorization: sessionStorage.getItem("jwt_token"),
-        //     },
-        //     params: {
-        //         type: "ACTIVE",
-        //     },
-        // });
-        // setNotifications(response.data);
+        const msgRes = await postAPIAuth('getMessagesAPI', { siteurl: CONFIG?.siteurl });
+        const supportRes = await postAPIAuth('getUserWpNumberAPI', {});
+
+        let requiredMsgs = [
+            ...(!!msgRes?.data?.data?.message? [{ message: msgRes?.data?.data?.message }] : [{}]),
+            ...(!!supportRes?.data?.data?.message? [{ message: supportRes?.data?.data?.message }] : [{}]),
+        ]
+        setNotifications(requiredMsgs);
     };
 
     const fetchUpcomingEvents = () => {
@@ -139,11 +141,17 @@ const ExchInplayEventsView: React.FC<StoreProps> = (props) => {
         updateEvents(statusNew);
     }, [statusNew]);
 
-    // useEffect(() => {
-    //     fetchFavEvents().then((favEvents) => {
-    //         setFavouriteEvents(favEvents);
-    //     });
-    // }, [loggedIn]);
+    useEffect(() => {
+        const fetchFavoruiteEvents = async () => {
+          try {
+            const inplay = await postAPI('/getFreeInplyEventsAPI', {});
+            setFavouriteEvents(inplay.data.result);
+          } catch (error) {
+            console.log(error);
+          }
+        };
+        fetchFavoruiteEvents();
+      }, [loggedIn]);
 
     useEffect(() => {
         loggedIn && fetchNotifications();
@@ -397,7 +405,7 @@ const ExchInplayEventsView: React.FC<StoreProps> = (props) => {
     return (
         <div>
             <SEO
-                title={BRAND_NAME}
+                title={CONFIG.title}
                 name={"Inplay events page"}
                 description={"Inplay events page"}
                 type={"Inplay events page"}
@@ -606,23 +614,23 @@ const ExchInplayEventsView: React.FC<StoreProps> = (props) => {
 };
 
 const mapStateToProps = (state: any) => {
-    const eventType = state.exchangeSports.selectedEventType;
-    const competition = state.exchangeSports.selectedCompetition;
+    const eventType = state?.homeMarkets?.selectedEventType;
+    const competition = state?.homeMarkets?.selectedCompetition;
     return {
         inplayEvents: getInplayEvents(
-            state.exchangeSports.events,
+            state?.homeMarkets?.events,
             state.common.contentConfig,
         ),
         upcomingEvents: getUpcomingEvents(
-            state.exchangeSports.events,
+            state.homeMarkets.events,
             state.common.contentConfig,
         ),
         cupWinnerEvents: getCupWinnerEvents(
-            state.exchangeSports.events,
+            state.homeMarkets.events,
             state.common.contentConfig,
         ),
         events: getExchangeEvents(
-            state.exchangeSports.events,
+            state.homeMarkets.events,
             SPToBFIdMap[eventType.id]
                 ? SPToBFIdMap[eventType.id]
                 : eventType.id,

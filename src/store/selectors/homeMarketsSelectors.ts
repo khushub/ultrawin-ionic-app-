@@ -72,8 +72,7 @@ export const getExchangeEvents = (
                 for (let eventId of Object.keys(
                     allEvents[eventTypeId][competitionId],
                 )) {
-                    const eData =
-                        allEvents[eventTypeId][competitionId][eventId];
+                    const eData = allEvents[eventTypeId][competitionId][eventId];
                     const dateDiff = moment(eData.openDate).diff(
                         moment(),
                         "days",
@@ -83,8 +82,8 @@ export const getExchangeEvents = (
                         "seconds",
                     );
                     if (
-                        eData.matchOdds &&
-                        eData.matchOdds.status.toLowerCase() !== "closed" &&
+                        eData?.marketBook &&
+                        eData?.marketBook?.status?.toLowerCase() !== "closed" &&
                         (dateDiff >= 0 || eData.status === "IN_PLAY") &&
                         !(dateDiffinSecs < 0 && eData.status !== "IN_PLAY")
                     ) {
@@ -173,13 +172,14 @@ export const getEventsListByCompetition = (
 };
 
 export const getInplayEvents = (allEvents: any, contentConfig: any) => {
-    for (let key in allEvents) {
-        if (key == "7" || key == "4339") {
-            delete allEvents[key];
-        }
-    }
     let inplayEvents: InplayEventsObj[] = [];
+
     for (let etId of Object.keys(allEvents)) {
+        // SKIP these sports instead of trying to delete them from the Redux state
+        if (etId === "7" || etId === "4339") {
+            continue; 
+        }
+
         let events: any[] = [];
         var sport = contentConfig?.sports?.filter(
             (item) =>
@@ -226,13 +226,13 @@ export const getInplayEvents = (allEvents: any, contentConfig: any) => {
 };
 
 export const getUpcomingEvents = (allEvents: any, contentConfig: any) => {
-    for (let key in allEvents) {
-        if (key == "7" || key == "4339") {
-            delete allEvents[key];
-        }
-    }
     let upcomingEvents: InplayEventsObj[] = [];
     for (let etId of Object.keys(allEvents)) {
+        // Safely skip these keys without mutating the Redux state
+        if (etId === "7" || etId === "4339") {
+            continue;
+        }
+
         let events: any[] = [];
         var sport = contentConfig?.sports?.filter(
             (item) =>
@@ -279,17 +279,14 @@ export const getUpcomingEvents = (allEvents: any, contentConfig: any) => {
     return upcomingEvents;
 };
 
-export const getCupWinnerEvents = (
-    allEvents: any,
-    contentConfig: any,
-) => {
-    for (let key in allEvents) {
-        if (key == "7" || key == "4339") {
-            delete allEvents[key];
-        }
-    }
+export const getCupWinnerEvents = (allEvents: any, contentConfig: any) => {
     let cupWinnerMarkets: InplayEventsObj[] = [];
     for (let etId of Object.keys(allEvents)) {
+        // SKIP these sports instead of trying to delete them from the Redux state
+        if (etId === "7" || etId === "4339") {
+            continue; 
+        }
+
         let events: any[] = [];
         var sport = contentConfig?.sports?.filter(
             (item) =>
