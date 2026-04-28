@@ -118,7 +118,7 @@ export const useCasinoHook = () => {
     const navigationMethod = replace ? history.replace : history.push;
     navigationMethod({
       pathname: '/casino',
-      search: `?provider=${provider}&category=`,
+      search: `?provider=${provider}`,
     });
   };
 
