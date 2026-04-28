@@ -13,7 +13,7 @@ export const fetchButtonVariables = createAsyncThunk(
 
         try {
             const response = await postAPIAuth('/getStackButtonAPI', {});
-            console.log('resposne from getStackButtonAPI: ', response);
+            // console.log('resposne from getStackButtonAPI: ', response);
 
             // if (response?.data?.success) {
             //     return response.data.response || [];

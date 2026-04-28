@@ -21,6 +21,7 @@ import MidnightAqua from '../../assets/images/home/tiles/midnight_aqua.svg';
 import DarkFluralIcon from '../../assets/images/home/tiles/darkflural_icon.svg';
 import RoyalSunshine from '../../assets/images/home/tiles/royal_sunshine.svg';
 import { useTheme } from '../../context/ThemeContext';
+import { storageManager } from '../../util/storageManager';
 
 
 type Props = {
@@ -78,10 +79,22 @@ const SideHeader = (props: Props) => {
   };
 
   const getUserShortName = () => {
-    const name: string = demoUser()
+    const user = storageManager.getUser()
+    const isDemo = user?.isDemo || false;
+
+    const name: string = isDemo
       ? 'Demo User'
-      : getFieldFromToken(JwtToken.SUBJECT_NAME);
+      : user?.fullname || user?.username;
     return name ? name[0].toUpperCase() : '';
+  };
+
+  const getUsername = () => {
+    const user = storageManager.getUser();
+    const isDemo = user?.isDemo || false;
+
+    return isDemo
+    ? langData?.["demo_user"]
+    : user?.fullname || user?.username;
   };
 
   const handleImgClick = () => {
@@ -109,13 +122,11 @@ const SideHeader = (props: Props) => {
         </button>
       </div>
       <div className="sh-menu">
-        {sessionStorage.getItem('username') && (
+        {loggedIn && (
           <div className="sh-username-img">
             <div className="short-name">{getUserShortName()}</div>
             <div className="sh-username">
-              {demoUser()
-                ? langData?.['demo_user']
-                : sessionStorage.getItem('username')}
+              {getUsername()}
             </div>
           </div>
         )}

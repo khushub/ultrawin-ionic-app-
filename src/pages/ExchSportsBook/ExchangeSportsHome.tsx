@@ -17,7 +17,7 @@ type StoreProps = {
 
 const ExchSportsHome: React.FC<StoreProps> = (props) => {
   const { loggedIn, selectedEventType, langData } = props;
-  console.log('Choota');
+
   return (
     <div>
       <IonRow className="sports-home-view">

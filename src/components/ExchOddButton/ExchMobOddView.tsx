@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './ExchOddButton.scss';
-import lockIcon from '../../assets/images/sportsbook/lock.png';
+// import lockIcon from '../../assets/images/sportsbook/lock.svg';
+const lockIcon = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAQCAYAAAAiYZ4HAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAGQSURBVHgBlZGxSwJxFMd/Z+apCZ5aapmoNWhR5OAW5EENNQQSQg1CRWOz4BCp/REtDik0OIktQmR0YkNLYA0iNnSFxElSd3nqqXiXN5xcCkofePD7vd/3y3u/9yAgwuFArasbOxcwLHeOwzD4+iwns9lUGC9guKAZE4vdW7t3Gq3eSlHfMZZtv5lm5zx2h3Pvg6rESAJn/hjWt49CBoN5s4jnF+KRQPzxIZWEYe21Zd4RkEGyZv45g/E6iWBQTahXajSFJaOhXvmb1HmuTJRyk1MzTiEnFf+BYRqgH7bTIbuhFu6Q13eCanTT+wiiQ9utJsJxUFJskMGyXr748nQF+YPx1xr9g7BshwRDkCuUSIthgLRer1qJcimcuDwLDTN4fachvdEclIB/Iu1PCMvjz7fpxKF4aTwDFZZcawcWmx3lY3nR5el/HzAQxDtGVynAh9Fowka2dJ+OYpUSbusOhMRxjBxp4Cn09S0GOvZHOMABDAIgA4bQYBpuWK5ApbUqGVaqkCAHADrM0BUDmibDv2wQpIpCmcgxAAAAAElFTkSuQmCC'
 
 type PropType = {
   mainValue?: any;

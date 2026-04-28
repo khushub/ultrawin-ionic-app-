@@ -34,6 +34,8 @@ import {
 import { Button, Tabs } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
 import { Check } from '@mui/icons-material';
+import { CONFIG } from '../../config/config';
+import { postAPI } from '../../services/apiInstance';
 
 type StoreProps = {
   events: any[];
@@ -46,7 +48,7 @@ type StoreProps = {
   ) => void;
   setExchEvent: (event: any) => void;
   setCompetition: (competition: any) => void;
-  fetchEventsBySport: (sportId: string, events: any[]) => void;
+  fetchEventsBySport: (sportId: string) => void;
   fetchingEvents: boolean;
   allowedConfig: number;
   loggedIn: boolean;
@@ -90,117 +92,34 @@ const EventsTable: React.FC<StoreProps> = (props) => {
   const [eventFilter, setEventFilter] = useState<Status>();
   const [favouriteEvents, setFavouriteEvents] = useState<any[]>([]);
 
-  const tableFields = [
-    {
-      key: 'schedle',
-      Label: 'Match Schedule',
-      langKey: 'match_schedule',
-      className: 'schedule-cell-header br-inplay-start',
-      align: 'left',
-      colSpan: 1,
-    },
-    // {
-    //   key: 'teams',
-    //   Label: '',
-    //   className: 'odds-cell-head teams-cell',
-    //   align: 'left',
-    // },
-    {
-      key: 'homeTeamOdds',
-      Label: '1',
-      className: 'odds-cell-head schedule-cell br-inplay-middle',
-      align: 'center',
-      colSpan: 2,
-    },
-    {
-      key: 'drawOdds',
-      Label: 'X',
-      className: 'odds-cell-head br-inplay-middle',
-      align: 'center',
-      colSpan: 2,
-    },
-    {
-      key: 'awayTeamOdds',
-      Label: '2',
-      className: 'odds-cell-head br-inplay-end',
-      align: 'center',
-      colSpan: 2,
-    },
-    // {
-    //   key: 'more',
-    //   Label: '',
-    //   className: 'odds-cell-head all-markets-link-cell',
-    //   align: 'center',
-    // },
-  ];
+  
   const getOdds = (eventData: any, teamType: string) => {
-    const team =
-      teamType === 'home'
-        ? eventData?.homeTeam
-        : teamType === 'away'
-          ? eventData?.awayTeam
-          : teamType;
+    const runners = eventData?.marketBook?.runners ?? [];
 
-    const runners = eventData?.matchOdds?.runners ?? [];
-    for (let runner of runners) {
-      if (
-        runner?.runnerName?.toLowerCase() === team?.toLowerCase() ||
-        runner?.runnerName?.toLowerCase()?.includes(team?.toLowerCase())
-      ) {
-        return [
-          {
-            type: 'back-odd',
-            price: runner?.backPrices[0]?.price,
-            size: runner?.backPrices[0]?.size,
-            outcomeId: runner?.runnerId,
-            outcomeName: runner?.runnerName,
-          },
-          {
-            type: 'lay-odd',
-            price: runner?.layPrices[0]?.price,
-            size: runner?.layPrices[0]?.size,
-            outcomeId: runner?.runnerId,
-            outcomeName: runner?.runnerName,
-          },
-        ];
-      }
-    }
+    const runner = teamType === 'home'
+    ? runners?.[0]
+    : teamType === 'away' 
+    ? runners?.[1]
+    : runners?.[2]
 
-    // Fallback when name matching fails (BetFair only): 1st runner → 1, 2nd → 2, 3rd → X
-    const isBetFair = eventData?.providerName?.toLowerCase() === BETFAIR_PROVIDER_ID?.toLowerCase();
-    if (!isBetFair || runners.length === 0) return null;
-    const idx =
-      teamType === 'home'
-        ? 0
-        : teamType === 'away'
-          ? runners.length >= 2
-            ? 1
-            : 0
-          : teamType === 'draw'
-            ? runners.length >= 3
-              ? 2
-              : null
-            : null;
-    if (idx !== null && runners[idx]) {
-      const runner = runners[idx];
-      return [
-        {
-          type: 'back-odd',
-          price: runner?.backPrices[0]?.price,
-          size: runner?.backPrices[0]?.size,
-          outcomeId: runner?.runnerId,
-          outcomeName: runner?.runnerName,
-        },
-        {
-          type: 'lay-odd',
-          price: runner?.layPrices[0]?.price,
-          size: runner?.layPrices[0]?.size,
-          outcomeId: runner?.runnerId,
-          outcomeName: runner?.runnerName,
-        },
-      ];
-    }
-    return null;
+    if (!runner) return null;
+
+    return [
+      {
+        type: 'back-odd',
+        price: runner.availableToBack?.price,
+        size: runner.availableToBack?.size,
+        outcomeId: runner.selectionId,
+        outcomeName: runner.runnerName,
+      },
+      {
+        type: 'lay-odd',
+        price: runner.availableToLay?.price,
+        size: runner.availableToLay?.size,
+        outcomeId: runner.selectionId,
+        outcomeName: runner.runnerName,
+      },
+    ];
   };
 
   useEffect(() => {
@@ -213,19 +132,6 @@ const EventsTable: React.FC<StoreProps> = (props) => {
     setEventFilter(null);
   }, [pathLocation?.pathname]);
 
-  const updateMatchOddsTopic = (
-    currentTopic: string,
-    currentBaseUrl: string
-  ) => {
-    if (
-      matchOddsTopic !== currentTopic ||
-      matchOddsBaseUrl !== currentBaseUrl
-    ) {
-    //   disconnectToWS();
-      setMatchOddsTopic(currentTopic);
-      setMatchOddsBaseUrl(currentBaseUrl);
-    }
-  };
 
   const searchEvent = async (val) => {
     // console.log(val);
@@ -255,8 +161,7 @@ const EventsTable: React.FC<StoreProps> = (props) => {
       fetchEventsBySport(
         SPToBFIdMap[selectedEventType.id]
           ? SPToBFIdMap[selectedEventType.id]
-          : selectedEventType.id,
-        events
+          : selectedEventType.id
       );
     } else {
       fetchEventsByCompetition(
@@ -274,8 +179,7 @@ const EventsTable: React.FC<StoreProps> = (props) => {
       fetchEventsBySport(
         SPToBFIdMap[selectedEventType.id]
           ? SPToBFIdMap[selectedEventType.id]
-          : selectedEventType.id,
-        events
+          : selectedEventType.id
       );
     }
   }, [selectedEventType]);
@@ -305,46 +209,6 @@ const EventsTable: React.FC<StoreProps> = (props) => {
     };
   }, [selectedEventType]);
 
-  // Unsubscribe Web socket messages
-  useEffect(() => {
-    // unsubscribeAllWsforEvents();
-    setWsChannels([]);
-  }, [selectedEventType]);
-
-  useEffect(() => {
-    if (pathParams['competition']) {
-    //   unsubscribeAllWsforEvents();
-      setWsChannels([]);
-    }
-  }, [selectedCompetition, pathParams]);
-
-  // useEffect(() => {
-  //   if (loggedIn && topicUrls?.matchOddsTopic) {
-  //     if (selectedEventType.id === '4' && events) {
-  //       updateMatchOddsTopic(
-  //         topicUrls?.matchOddsTopic,
-  //         topicUrls?.matchOddsBaseUrl
-  //       );
-  //       let subs = [...wsChannels];
-  //       for (let event of events) {
-  //         if (
-  //           event.status === 'IN_PLAY' &&
-  //           !wsChannels.includes(event.eventId)
-  //         ) {
-  //           subs.push(event.eventId);
-  //           // subscribeWsForEventOdds(
-  //           //   topicUrls?.matchOddsTopic,
-  //           //   event.sportId,
-  //           //   event.competitionId,
-  //           //   event.eventId,
-  //           //   event.matchOdds?.marketId
-  //           // );
-  //         }
-  //       }
-  //       setWsChannels(subs);
-  //     }
-  //   }
-  // }, [betFairWSConnected, events, selectedEventType, loggedIn]);
 
   const getCompetitionSlug = (competitionName: string) => {
     return competitionName
@@ -408,21 +272,20 @@ const EventsTable: React.FC<StoreProps> = (props) => {
           (event) =>
             ((event?.sportId != '2' &&
               moment(event?.openDate).diff(moment(), 'seconds') <= 0) ||
-              event?.forcedInplay ||
               event?.status == 'IN_PLAY' ||
               (event?.sportId === '2' &&
                 moment(event?.openDate).diff(moment(), 'minutes') <= 5)) &&
-            !event.virtualEvent
+            event.marketTypeStatus == 0
         );
         break;
       case Status.UPCOMING:
         return events.filter(
-          (event) => event.status === 'UPCOMING' && !event.virtualEvent
+          (event) => moment(event?.openDate).isAfter(moment()) && event.marketTypeStatus == 0
         );
         break;
       case Status.VIRTUAL:
         return events?.filter(
-          (event) => event.catId === 'SR VIRTUAL' || event.virtualEvent
+          (event) => event.catId === 'SR VIRTUAL' || event.marketTypeStatus != 0
         );
         break;
       default:
@@ -431,11 +294,17 @@ const EventsTable: React.FC<StoreProps> = (props) => {
     }
   };
 
-//   useEffect(() => {
-//     fetchFavEvents().then((favEvents) => {
-//       setFavouriteEvents(favEvents);
-//     });
-//   }, [loggedIn]);
+  useEffect(() => {
+    const fetchFavoruiteEvents = async () => {
+      try {
+        const inplay = await postAPI('/getFreeInplyEventsAPI', {});
+        setFavouriteEvents(inplay.data.result);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchFavoruiteEvents();
+  }, [loggedIn]);
 
   const GetSportIcon = ({ sportId }) => {
     const IconComponent = SportIconMapInplay[sportId];
@@ -454,7 +323,7 @@ const EventsTable: React.FC<StoreProps> = (props) => {
   return (
     <div className="events-table-ctn">
       <SEO
-        title={`${BRAND_NAME}`}
+        title={CONFIG.title}
         description={'Sports list'}
         name={`Sports list`}
         type={'Sports List'}
@@ -595,24 +464,16 @@ const EventsTable: React.FC<StoreProps> = (props) => {
                               <div className="web-view team-name-ctn">
                                 <div className="temas-col">
                                   <EventDateDisplay
-                                    openDate={
-                                      sEvent?.customOpenDate
-                                        ? sEvent?.customOpenDate
-                                        : sEvent?.openDate
-                                    }
+                                    openDate={ sEvent?.openDate}
                                     forcedInplay={sEvent?.forcedInplay}
                                     status={sEvent?.status}
                                     sportId={sEvent?.sportId}
                                   />
                                   <EventName
-                                    eventName={sEvent?.customEventName}
+                                    eventName={sEvent?.eventName}
                                     homeTeam={sEvent.homeTeam}
                                     awayTeam={sEvent?.awayTeam}
-                                    openDate={
-                                      sEvent?.customOpenDate
-                                        ? sEvent?.customOpenDate
-                                        : sEvent?.openDate
-                                    }
+                                    openDate={sEvent?.openDate}
                                     forcedInplay={sEvent?.forcedInplay}
                                     status={sEvent?.status}
                                     sportId={sEvent?.sportId}
@@ -620,9 +481,7 @@ const EventsTable: React.FC<StoreProps> = (props) => {
                                 </div>
                                 <div className="enabled-markets">
                                   <MarketEnabled
-                                    marketEnabled={
-                                      sEvent?.catId === 'SR VIRTUAL'
-                                    }
+                                    marketEnabled={ sEvent?.catId === 'SR VIRTUAL' }
                                     marketType={'V'}
                                   />
                                   <MarketEnabled
@@ -633,15 +492,15 @@ const EventsTable: React.FC<StoreProps> = (props) => {
                                     marketType={'P'}
                                   />
                                   <MarketEnabled
-                                    marketEnabled={sEvent?.enableMatchOdds}
+                                    marketEnabled={sEvent?.marketType == 'MATCH_ODDS'}
                                     marketType={'MO'}
                                   />
                                   <MarketEnabled
-                                    marketEnabled={sEvent?.enableBookmaker}
+                                    marketEnabled={!!sEvent?.bm}
                                     marketType={'BM'}
                                   />
                                   <MarketEnabled
-                                    marketEnabled={sEvent?.enableFancy}
+                                    marketEnabled={!!sEvent?.fancy}
                                     marketType={'F'}
                                   />
                                   <MarketEnabled
@@ -649,10 +508,7 @@ const EventsTable: React.FC<StoreProps> = (props) => {
                                     marketType={'T'}
                                   />
                                   <MarketEnabled
-                                    marketEnabled={
-                                      sEvent?.virtualEvent &&
-                                      sEvent.catId != 'VIRTUAL'
-                                    }
+                                    marketEnabled={ sEvent?.marketTypeStatus != 0 }
                                     marketType={'V2'}
                                   />
                                 </div>
@@ -664,16 +520,8 @@ const EventsTable: React.FC<StoreProps> = (props) => {
                                   <div className="event-name mob-event-name">
                                     <div className="event-name-and-link">
                                       <EventName
-                                        eventName={
-                                          sEvent?.customEventName
-                                            ? sEvent?.customEventName
-                                            : sEvent?.eventName
-                                        }
-                                        openDate={
-                                          sEvent?.customOpenDate
-                                            ? sEvent?.customOpenDate
-                                            : sEvent?.openDate
-                                        }
+                                        eventName={ sEvent?.eventName }
+                                        openDate={ sEvent?.openDate }
                                         forcedInplay={sEvent?.forcedInplay}
                                         status={sEvent?.status}
                                         sportId={sEvent?.sportId}
@@ -683,9 +531,7 @@ const EventsTable: React.FC<StoreProps> = (props) => {
 
                                   <div className="enabled-markets">
                                     <MarketEnabled
-                                      marketEnabled={
-                                        sEvent?.catId === 'SR VIRTUAL'
-                                      }
+                                      marketEnabled={ sEvent?.catId === 'SR VIRTUAL' }
                                       marketType={'V'}
                                     />
                                     <MarketEnabled
@@ -696,15 +542,15 @@ const EventsTable: React.FC<StoreProps> = (props) => {
                                       marketType={'P'}
                                     />
                                     <MarketEnabled
-                                      marketEnabled={sEvent?.enableMatchOdds}
+                                      marketEnabled={sEvent?.marketType == 'MATCH_ODDS'}
                                       marketType={'MO'}
                                     />
                                     <MarketEnabled
-                                      marketEnabled={sEvent?.enableBookmaker}
+                                      marketEnabled={!!sEvent?.bm}
                                       marketType={'BM'}
                                     />
                                     <MarketEnabled
-                                      marketEnabled={sEvent?.enableFancy}
+                                      marketEnabled={!!sEvent?.fancy}
                                       marketType={'F'}
                                     />
                                     <MarketEnabled
@@ -712,10 +558,7 @@ const EventsTable: React.FC<StoreProps> = (props) => {
                                       marketType={'T'}
                                     />
                                     <MarketEnabled
-                                      marketEnabled={
-                                        sEvent?.virtualEvent &&
-                                        sEvent.catId != 'VIRTUAL'
-                                      }
+                                      marketEnabled={ sEvent?.marketTypeStatus != 0 }
                                       marketType={'V2'}
                                     />
                                   </div>
@@ -727,11 +570,7 @@ const EventsTable: React.FC<StoreProps> = (props) => {
                           <div className="team-name">
                             <div className="temas-col">
                               <EventDateDisplay
-                                openDate={
-                                  sEvent?.customOpenDate
-                                    ? sEvent?.customOpenDate
-                                    : sEvent?.openDate
-                                }
+                                openDate={ sEvent?.openDate }
                                 forcedInplay={sEvent.forcedInplay}
                                 status={sEvent?.status}
                                 sportId={sEvent?.sportId}
@@ -753,15 +592,15 @@ const EventsTable: React.FC<StoreProps> = (props) => {
                                 marketType={'P'}
                               />
                               <MarketEnabled
-                                marketEnabled={sEvent?.enableMatchOdds}
+                                marketEnabled={sEvent?.marketType == 'MATCH_ODDS'}
                                 marketType={'MO'}
                               />
                               <MarketEnabled
-                                marketEnabled={sEvent?.enableBookmaker}
+                                marketEnabled={!!sEvent?.bm}
                                 marketType={'BM'}
                               />
                               <MarketEnabled
-                                marketEnabled={sEvent?.enableFancy}
+                                marketEnabled={!!sEvent?.fancy}
                                 marketType={'F'}
                               />
                               <MarketEnabled
@@ -769,10 +608,7 @@ const EventsTable: React.FC<StoreProps> = (props) => {
                                 marketType={'T'}
                               />
                               <MarketEnabled
-                                marketEnabled={
-                                  sEvent?.virtualEvent &&
-                                  sEvent.catId != 'VIRTUAL'
-                                }
+                                marketEnabled={ sEvent?.marketTypeStatus != 0 }
                                 marketType={'V2'}
                               />
                             </div>
@@ -781,40 +617,30 @@ const EventsTable: React.FC<StoreProps> = (props) => {
                         {isMobile && (
                           <div className="mob-odds-row new-odds-row">
                             <EventDateDisplay
-                              openDate={
-                                sEvent?.customOpenDate
-                                  ? sEvent?.customOpenDate
-                                  : sEvent?.openDate
-                              }
+                              openDate={ sEvent?.openDate }
                               forcedInplay={sEvent?.forcedInplay}
                               status={sEvent?.status}
                               sportId={sEvent?.sportId}
                             />
+
                             {teamTypes.map((teamType, index) => (
                               <div
                                 className="mob-odds-block"
                                 key={teamType + index}
                               >
                                 <div className="mob-exchange-btn-odd-row">
-                                  {sEvent.matchOdds ? (
+                                  {sEvent?.marketBook?.runners?.length ? (
                                     getOdds(sEvent, teamType) ? (
                                       <>
                                         {getOdds(sEvent, teamType).map(
                                           (odd) => (
                                             <ExchMobOddView
                                               mainValue={odd.price}
-                                              oddType={
-                                                odd.type === 'back-odd'
-                                                  ? 'back-odd'
-                                                  : 'lay-odd'
-                                              }
+                                              oddType={odd.type === 'back-odd'? 'back-odd' : 'lay-odd'}
                                               disable={
-                                                sEvent.matchOdds.status
-                                                  .toLowerCase()
-                                                  .includes('suspended') ||
-                                                disableFutureEvents(
-                                                  sEvent.openDate
-                                                )
+                                                sEvent?.marketBook?.status?.toLowerCase().includes('suspended') ||
+                                                sEvent?.marketBook?.status?.toLowerCase().includes('closed') ||
+                                                disableFutureEvents(sEvent?.openDate)
                                               }
                                             />
                                           )
@@ -863,7 +689,7 @@ const EventsTable: React.FC<StoreProps> = (props) => {
                         colSpan={2}
                         key={teamType + index}
                       >
-                        {sEvent.matchOdds ? (
+                        {sEvent?.marketBook?.runners?.length ? (
                           getOdds(sEvent, teamType) ? (
                             <div className="odds-block">
                               {getOdds(sEvent, teamType).map((odd, idx) => (
@@ -871,18 +697,13 @@ const EventsTable: React.FC<StoreProps> = (props) => {
                                   key={idx}
                                   mainValue={odd.price}
                                   subValue={odd.size}
-                                  oddType={
-                                    odd.type === 'back-odd'
-                                      ? 'back-odd'
-                                      : 'lay-odd'
-                                  }
+                                  oddType={odd.type === 'back-odd'? 'back-odd' : 'lay-odd'}
                                   valueType="matchOdds"
                                   showSubValueinKformat={true}
                                   disable={
-                                    sEvent.matchOdds.status
-                                      .toLowerCase()
-                                      .includes('suspended') ||
-                                    disableFutureEvents(sEvent.openDate)
+                                    sEvent?.marketBook?.status?.toLowerCase().includes('suspended') ||
+                                    sEvent?.marketBook?.status?.toLowerCase().includes('closed') ||
+                                    disableFutureEvents(sEvent?.openDate)
                                   }
                                   onClick={() => null}
                                 />
@@ -972,7 +793,7 @@ const mapDispatchToProps = (dispatch: Function) => {
     setExchEvent: (event: any) => dispatch(setExchEvent(event)),
     setCompetition: (competition: any) => dispatch(setCompetition(competition)),
     // addExchangeBet: (data: BsData) => dispatch(addExchangeBet(data)),
-    fetchEventsBySport: (sportId: string, events: any[]) => dispatch(fetchEventsBySport({eventTypeId: sportId, events})),
+    fetchEventsBySport: (sportId: string) => dispatch(fetchEventsBySport({eventTypeId: sportId})),
   };
 };
 

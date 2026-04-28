@@ -30,15 +30,13 @@ const ExchSportsView: React.FC<SportViewProps> = (props) => {
     const history = useHistory();
     const pathName = history.location.pathname;
 
-    console.log('eventType', eventType, selectedEventType);
-
 
     useEffect(() => {
         if (browseAll && contentConfig) {
             var sports = contentConfig.sports.filter(
-                (sport) => !sport.disabled,
+                (sport: any) => !sport.disabled,
             );
-            sports.sort((a, b) => a.priority - b.priority);
+            sports.sort((a: any, b: any) => a.priority - b.priority);
             return history.push(
                 `/exchange_sports/${SPORTS_MAP.get(sports[0].name).slug}`,
             );
