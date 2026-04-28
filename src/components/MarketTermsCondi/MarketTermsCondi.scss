@@ -45,7 +45,7 @@
     .MuiAccordionSummary-root {
       display: flex;
       justify-content: flex-start;
-      position: relative;
+      position: relative !important;
       border-radius: 20px !important;
 
       &.Mui-expanded {
@@ -53,16 +53,19 @@
         border-bottom-right-radius: 20px !important;
       }
 
-      .MuiIconButton-root {
+      .MuiAccordionSummary-expandIconWrapper{
         position: absolute;
         left: 5px !important;
-        background: var(--accordian-arrow-bg);
+        background: var(--accordian-arrow-bg) !important;
         padding: 3px;
         width: 27px;
         height: 27px;
+        border-radius: 20px; 
 
         .MuiSvgIcon-root {
-          color: var(--accordian-arrow-text);
+          color: var(--accordian-arrow-text) !important;
+          position: relative;
+          right: 2px;
         }
       }
 
@@ -76,8 +79,9 @@
       width: 100%;
 
       .MuiAccordionSummary-content {
-        width: 20%;
-      }
+   margin: 0;
+   align-items: center;
+}
     }
   }
 }

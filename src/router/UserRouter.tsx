@@ -60,9 +60,9 @@ import { isIOS } from 'react-device-detect';
 import { enableCommission, setAllowedConfig, setDomainConfig } from '../store/slices/commonSlice';
 import { fetchUserDetails } from '../store/slices/userDetailsSlice';
 
-// const MarketTermsCondi = lazy(
-//   () => import('../components/MarketTermsCondi/MarketTermsCondi')
-// );
+const MarketTermsCondi = lazy(
+  () => import('../components/MarketTermsCondi/MarketTermsCondi')
+);
 // const CasinoNew = lazy(() => import('../pages/Casino/CasinoNew/CasinoNew'));
 // const DashboardView = lazy(
 //   () => import('../pages/DashboardView/DashboardView')
@@ -115,9 +115,9 @@ const ExchangeSportsBook = lazy(
 // const ResponsibleGambling = lazy(
 //   () => import('../pages/ResponsibleGambling/ResponsibleGambling')
 // );
-// const RulesAndRegulations = lazy(
-//   () => import('../pages/RulesAndRegulations/RulesAndRegulations')
-// );
+const RulesAndRegulations = lazy(
+  () => import('../pages/RulesAndRegulations/RulesAndRegulations')
+);
 // const Sitemap = lazy(() => import('../pages/Sitemap/Sitemap'));
 
 // const TransactionRequest = lazy(
@@ -635,9 +635,9 @@ const UserRouter: React.FC<StateProps> = (props) => {
                     render={() => <Redirect to="/home" />}
                   />
                    <Route path="/game-rules" render={() => <GameRules />} />
-                  {/* <Route path="/rules" render={() => <RulesAndRegulations />} />
+                  <Route path="/rules" render={() => <RulesAndRegulations />} />
                   <Route path="/game-rules" render={() => <GameRules />} />
-                  <Route
+                  {/* <Route
                     path="/responsible-gambling"
                     render={() => <ResponsibleGambling />}
                   />
@@ -771,7 +771,7 @@ const UserRouter: React.FC<StateProps> = (props) => {
                 </DialogTitle>
 
                 <DialogContent className="stl-dialog-content">
-                  {/* {<MarketTermsCondi />} */}
+                  {<MarketTermsCondi />}
                 </DialogContent>
               </Dialog>
             </IonContent>

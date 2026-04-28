@@ -10,7 +10,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import './MarketTermsCondi.scss';
 import { connect } from 'react-redux';
 
-import rulesData from '../../assets/lang-rules/lang-rules.json';
+// import rulesData from '../../assets/lang-rules/lang-rules.json';
 
 type MarketTermsProps = {
   langSelected: string;
@@ -20,9 +20,14 @@ type MarketTermsProps = {
 const MarketTermsCondi: React.FC<MarketTermsProps> = () => {
   const [rules, setRules] = useState<any[]>([]);
 
-  useEffect(() => {
-    setRules(rulesData);
-  }, []);
+useEffect(() => {
+  const loadRules = async () => {
+    const data = await import('../../assets/lang-rules/lang-rules.json');
+    setRules(data.default);
+  };
+
+  loadRules();
+}, []);
 
   return (
     <div className="odds-terms-condi-ctn">

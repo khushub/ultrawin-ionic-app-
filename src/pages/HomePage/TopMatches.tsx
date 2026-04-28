@@ -42,11 +42,11 @@ const TopMatches: React.FC<Props> = ({
 
     return [];
   }
-  console.log('favouriteEvents in TopMatches:', favouriteEvents);
+  // console.log('favouriteEvents in TopMatches:', favouriteEvents);
 
   const getOdds = (eventData: any, teamType: string) => {
 
-    console.log('Getting odds for teamType:', teamType, eventData.eventName);
+    // console.log('Getting odds for teamType:', teamType, eventData.eventName);
     const runners = eventData?.marketBook?.runners || [];
 
     let runner = null;
