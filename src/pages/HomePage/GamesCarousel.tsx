@@ -117,6 +117,8 @@ const GamesCarousel: React.FC<StoreProps> = ({
   setDialogShow,
 }) => {
 
+  // console.log('trendingGames: ', trendingGames);
+
   const settings = {
   responsive: [
     {
@@ -166,6 +168,7 @@ const GamesCarousel: React.FC<StoreProps> = ({
     subProvider: string,
     superProvider: string
   ) => {
+    console.log('Game clicked:', { gameId, gameName, gameCode, provider, subProvider, superProvider });
     if (loggedIn) {
       // status check
       if (loggedInUserStatus === 0 || loggedInUserStatus === 3) {

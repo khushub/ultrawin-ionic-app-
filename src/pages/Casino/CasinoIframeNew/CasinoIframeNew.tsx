@@ -6,12 +6,13 @@ import { useParams } from 'react-router-dom';
 import './CasinoIframeNew.scss';
 import { isMobile, isIOS } from 'react-device-detect';
 import LoadingPage from '../../LoadingPage/index';
+import { postAPIAuth } from '../../../services/apiInstance';
 // import SVLS_API from '../../../svls-api';
 
 type StoreProps = {
-  gameUrl: string;
-  loggedIn: boolean;
-  token: string;
+    gameUrl: string;
+    loggedIn: boolean;
+    token: string;
 };
 
 type RouteParams = {
@@ -22,15 +23,16 @@ const CasinoIframeNew: React.FC<StoreProps> = (props) => {
     const [gameSrc, setGameSrc] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
 
-   const { loggedIn, token } = props;
+    const { loggedIn, token } = props;
 
     const { gamePath } = useParams<RouteParams>();
 
-    console.log('Received gamePath:', gamePath);
+    // console.log('Received gamePath:', gamePath);
     const history = useHistory();
 
     const locationState: any = useLocation().state;
-
+    
+    
 
 
     useEffect(() => {
@@ -45,19 +47,23 @@ const CasinoIframeNew: React.FC<StoreProps> = (props) => {
         // superProvider: string
         gameId: string,
         gameName: string,
-        provider: string
+        provider: string,
+        gameCode: string,
+        subProvider: string,
+        superProvider: string,
+        launchUrl: string
     ) => {
         if (loggedIn) {
             setLoading(true);
             // const claims = sessionStorage.getItem('jwt_token').split('.')[1];
             // const userStatus = JSON.parse(window.atob(claims)).status;
             if (!token) {
-  history.replace('/login');
-  return;
-}
+                history.replace('/login');
+                return;
+            }
 
-const claims = token.split('.')[1];
-const userStatus = JSON.parse(window.atob(claims)).status;
+            const claims = token.split('.')[1];
+            const userStatus = JSON.parse(window.atob(claims)).status;
 
             if (userStatus === 0 || userStatus === 3) {
                 return history.push(`/home`);
@@ -85,7 +91,7 @@ const userStatus = JSON.parse(window.atob(claims)).status;
                 //   }
                 // );
 
-                const launchUrl = locationState?.launchUrl;
+                // const launchUrl = locationState?.launchUrl;
                 if (isMobile && isIOS) {
                     window.location.href = launchUrl;
                 } else {
@@ -102,46 +108,76 @@ const userStatus = JSON.parse(window.atob(claims)).status;
         }
     };
 
-    useEffect(() => {
-        // const gameId = atob(gamePath.split('-')[gamePath.split('-').length - 5]);
-        // const gameCode = atob(gamePath.split('-')[gamePath.split('-').length - 4]);
-        // const provider = atob(gamePath.split('-')[gamePath.split('-').length - 3]);
-        // const subProvider = atob(
-        //   gamePath.split('-')[gamePath.split('-').length - 2]
-        // );
-        // const superProvider = atob(
-        //   gamePath.split('-')[gamePath.split('-').length - 1]
-        // );
+ useEffect(() => {
+  const loadGame = async () => {
+    if (!gamePath) return;
 
-        // const gameName = locationState?.gameName;
-        // saveLastPlayedGameDetails({
-        //   gameId,
-        //   gameName,
-        //   gameCode,
-        //   provider,
-        //   subProvider,
-        //   superProvider,
-        // });
-        // getGameUrl(gameId, gameCode, provider, subProvider, superProvider);
+   const pathParts = gamePath.split("-");
 
-        if (!gamePath) return;
+const superProvider = atob(pathParts.pop() || "");
+const subProvider = atob(pathParts.pop() || "");
+const provider = atob(pathParts.pop() || "");
+const gameCode = atob(pathParts.pop() || "");
+const gameId = atob(pathParts.pop() || "");
 
-        const pathParts = gamePath.split('-');
-        const encodedGameId = pathParts[pathParts.length - 1];
+const gameName =
+  locationState?.gameName || pathParts.join("-");
 
-        const gameId = atob(encodedGameId);
-        const gameName = locationState?.gameName || '';
-        const provider = locationState?.provider || '';
+    console.log("Decoded params:", {
+      gameId,
+      gameCode,
+      provider,
+      subProvider,
+      superProvider
+    });
 
-        saveLastPlayedGameDetails({
+    let launchUrl = locationState?.launchUrl || "";
+
+    // agar refresh hua aur state missing hai to API se url lao
+    if (!launchUrl || gameName === "cockfight") {
+     
+        const response = await postAPIAuth(
+          "UserloginToGapApi",
+          {
             gameId,
-            gameName,
-            provider
-        });
+            providerName: provider,
+          }
+        );
 
-        getGameUrl(gameId, gameName, provider);
+        console.log("API response:", response); 
 
-    }, []);
+
+
+        launchUrl =
+          response?.data?.data?.url || "";
+
+          console.log("launchUrl", launchUrl)
+     
+    }
+
+    saveLastPlayedGameDetails({
+      gameId,
+      gameName,
+      provider,
+      gameCode,
+      subProvider,
+      superProvider,
+      launchUrl,
+    });
+
+    getGameUrl(
+      gameId,
+      gameName,
+      provider,
+      gameCode,
+      subProvider,
+      superProvider,
+      launchUrl
+    );
+  };
+
+  loadGame();
+}, []);
 
     const saveLastPlayedGameDetails = (newGame) => {
         const existingGames =
@@ -177,11 +213,11 @@ const userStatus = JSON.parse(window.atob(claims)).status;
 };
 
 const mapStateToProps = (state: any) => {
-   return {
-  gameUrl: state.common.dcGameUrl,
-  loggedIn: state.auth.loggedIn,
-  token: state.auth.token,
-};
+    return {
+        gameUrl: state.common.dcGameUrl,
+        loggedIn: state.auth.loggedIn,
+        token: state.auth.token,
+    };
 };
 
 export default connect(mapStateToProps)(CasinoIframeNew);

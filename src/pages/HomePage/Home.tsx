@@ -68,6 +68,8 @@ const HomePage: React.FC<StoreProps> = (props) => {
     setExchEvent,
   } = props;
 
+  // console.log('Trending Games from Redux:', trendingGames);
+
   const cricketBattlePath =
     'dc/gamev1.1/cricket-battle-MTUxMTg1-TUFDODgtWENSQjEwMQ==-TUFDODg=-TWFjODggR2FtaW5nIFZpcnR1YWw=-TUFDSFVC';
   const [macGames, setMacGames] = useState<any[]>();

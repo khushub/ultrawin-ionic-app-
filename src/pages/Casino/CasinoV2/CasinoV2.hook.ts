@@ -15,25 +15,17 @@ export const useCasinoHook = () => {
   const history = useHistory();
   const loggedIn = useSelector((state: any) => state.auth.loggedIn);
   let loggedInUserStatus = 0;
-
   const { langData } = useSelector((state: any) => state.common);
   const [searchTerm, setSearchTerm] = useState('');
   const { pathname } = useLocation();
   const searchParams = useQuery();
   let providerRefs = useRef<Record<string, HTMLElement | null>>({});
   let categoryRefs = useRef({});
-
   const categoryFromParams = searchParams?.get('category');
   let providerFromParams = searchParams?.get('provider');
-
   const [dialogShow, setDialogShow] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-
-
-
   const [categoryMap, setCategoryMap] = useState<Record<string, string[]>>({});
-
-
   const [gameInfo, setGameInfo] = useState<Record<string, Record<string, any[]>>>({});
   const [recentGames, setRecentGames] = useState<any[]>([]);
 
@@ -55,7 +47,7 @@ export const useCasinoHook = () => {
     'EZUGI',
     'GAPLOBBY',
     'JACKTOP',
-    'JILI',
+    'JiLi',
     'MACAW',
     'MARBLES',
     'PINKY',
@@ -67,39 +59,40 @@ export const useCasinoHook = () => {
   ];
 
 
-  const categoryList: string[] =
+  // const categoryList: string[] =
+  //   providerFromParams === 'Recent'
+  //     ? []
+  //     : providerFromParams === 'All'
+  //       ? [...new Set(Object.values(categoryMap).flat())]
+  //       : categoryMap[providerFromParams] ?? [];
+
+  const categoryList =
     providerFromParams === 'Recent'
       ? []
-      : providerFromParams === 'All'
-        ? [...new Set(Object.values(categoryMap).flat())]
-        : categoryMap[providerFromParams] ?? [];
-
+      : ['All', ...(categoryMap[providerFromParams] ?? [])];
 
   const filteredGames: any[] =
-    providerFromParams === 'Recent'
-      ? recentGames
-      : providerFromParams === 'All'
-        ? Object.values(gameInfo).flatMap((provider: any) =>
-          provider?.[categoryFromParams] || []
-        )
-        : gameInfo?.[providerFromParams]?.[categoryFromParams] ?? [];
+  providerFromParams === 'Recent'
+    ? recentGames
+    : gameInfo?.[providerFromParams]?.[categoryFromParams] ?? [];
 
 
-  const gameListDisplay = filteredGames
-    .filter((game) =>
-      (game?.gameName || game?.game_name || '')
-        .toLowerCase()
-        .includes(searchTerm?.toLowerCase())
-    )
-    .filter(
-      (game, index, self) =>
-        index ===
-        self.findIndex(
-          (g) =>
-            (g.gameId || g.game_id) ===
-            (game.gameId || game.game_id)
-        )
-    );
+ const gameListDisplay = filteredGames.filter(
+  (game, index, self) => {
+    const gameName = (game?.gameName || game?.game_name || '').toLowerCase();
+    const gameId = game?.gameId || game?.game_id;
+
+    const matchSearch = gameName.includes(searchTerm.toLowerCase());
+
+    const uniqueGame =
+      index === self.findIndex(
+        (item) =>
+          (item?.gameId || item?.game_id) === gameId
+      );
+
+    return matchSearch && uniqueGame;
+  }
+);
 
   const setCategoryParam = (
     category: string,
@@ -124,41 +117,20 @@ export const useCasinoHook = () => {
 
   const fetchCategories = async (provider: string) => {
 
-    if (provider === 'All') {
-      try {
-        setLoading(true);
-
-        const response = await postAPIAuth('getGapCategoryAPI', {});
-       
-
-        const categories: string[] = response?.data?.data ?? [];
-
-        setCategoryMap((prev) => ({
-          ...prev,
-          [provider]: categories,
-        }));
-
-
-        if (categories.length > 0) {
-          setCategoryParam(categories[0], 'All', true);
-        } else {
-          setCategoryParam('All', 'All', true);
-        }
-
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-
+    if (!loggedIn) {
+      history.replace("/login");
       return;
     }
+  if (categoryMap[provider]) {
+  const validCategory = categoryMap[provider]?.includes(categoryFromParams);
 
-    if (categoryMap[provider]) {
-      const firstCategory = categoryMap[provider][0];
-      setCategoryParam(firstCategory, provider, true);
-      return;
-    }
+  setCategoryParam(
+    validCategory ? categoryFromParams : 'All',
+    provider,
+    true
+  );
+  return;
+}
 
     try {
       setLoading(true);
@@ -168,17 +140,29 @@ export const useCasinoHook = () => {
       });
 
       const categories: string[] = response?.data?.data ?? [];
-
       setCategoryMap((prev) => ({
         ...prev,
         [provider]: categories,
       }));
 
-      if (categories.length > 0) {
-        setCategoryParam(categories[0], provider, true);
-      } else {
-        setCategoryParam('', provider, true);
-      }
+      // if (categories.length > 0) {
+      //   setCategoryParam(categories[0], provider, true);
+      // } else {
+      //   setCategoryParam('', provider, true);
+      // }
+      // setCategoryParam('All', provider, true);
+
+      const normalize = (str) => str?.toLowerCase().trim();
+
+const matchedCategory = categories.find(
+  (cat) => normalize(cat) === normalize(categoryFromParams)
+);
+
+setCategoryParam(
+  matchedCategory || 'All',
+  provider,
+  true
+);
     } catch (err) {
       console.error(err);
     } finally {
@@ -186,46 +170,53 @@ export const useCasinoHook = () => {
     }
   };
 
-  const fetchGames = async (provider: string, category: string) => {
+ const fetchGames = async (provider: string, category: string) => {
+  if (!loggedIn) {
+    history.replace('/login');
+    return;
+  }
 
+  if (gameInfo?.[provider]?.[category]) {
+    setCategoryParam(category, provider);
+    return;
+  }
 
-  
-    if (gameInfo?.[provider]?.[category]) {
-      setCategoryParam(category, provider);
-      return;
-    }
+  try {
+    setLoading(true);
 
-    try {
-      setLoading(true);
+    const payload =
+      category === 'All' ? {
+           providerName: provider,
+            page: 1,
+            limit: 2000,
+          } : {
+            providerName: provider,
+            category,
+            page: 1,
+            limit: 2000,
+          };
 
-      const response = await postAPIAuth('getGapGamesAPI', {
-        provider,
-        category,
-      });
+    const response = await postAPIAuth('getGapGamesAPI', payload);
 
-      const games: any[] = response?.data?.data ?? [];
+    const games: any[] = response?.data?.data ?? [];
 
-      setGameInfo((prev) => ({
-        ...prev,
-        [provider]: {
-          ...(prev?.[provider] ?? {}),
-          [category]: games,
-        },
-      }));
+    setGameInfo((prev) => ({
+      ...prev,
+      [provider]: {
+        ...(prev?.[provider] ?? {}),
+        [category]: games,
+      },
+    }));
 
-      setCategoryParam(category, provider);
+    setCategoryParam(category, provider);
+  } catch (err) {
+    console.error('fetchGames error:', err);
+  } finally {
+    setLoading(false);
+  }
+};
 
-    } catch (err) {
-      console.error('fetchGames error:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleCasinoSubProviderBlockClick = (
-    subProviderName: string
-  ) => {
-
+  const handleCasinoSubProviderBlockClick = (subProviderName: string) => {
 
     if (subProviderName === 'Recent') {
       const savedRecent =
@@ -309,23 +300,73 @@ export const useCasinoHook = () => {
   // };
 
 
+  // const getGameUrl = async (
+  //   gameId,
+  //   gameName,
+  //   provider,
+  //   gameCode,
+  //     subProvider,
+  //     superProvider,
+  // ) => {
+  //   if (!loggedIn) {
+  //     history.replace('/login');
+  //     return;
+  //   }
+
+  //   try {
+  //     const providerName = provider
+
+  //     const response = await postAPIAuth("UserloginToGapApi", {
+  //       gameId,
+  //       providerName,
+  //     });
+
+  //     const launchUrl = response?.data?.data?.url;
+
+  //     const slug = gameName
+  //       ?.toLowerCase()
+  //       .replace(/\s+/g, "-");
+
+  //     history.push({
+  //       pathname: `/dc/gamev1.1/${slug}-${btoa(gameId)}`,
+  //       state: {
+  //         gameId,
+  //         gameName,
+  //          provider, 
+  //         launchUrl,
+  //          gameCode,
+  //     subProvider,
+  //     superProvider,
+  //       },
+  //     });
+
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
   const getGameUrl = async (
     gameId,
     gameName,
     provider,
+    gameCode,
+    subProvider,
+    superProvider
   ) => {
     if (!loggedIn) {
-      history.replace('/login');
+      history.replace("/login");
       return;
     }
 
     try {
-      const providerName = provider
+      const providerName = provider;
 
       const response = await postAPIAuth("UserloginToGapApi", {
         gameId,
         providerName,
       });
+
+      console.log("API response:", response);
 
       const launchUrl = response?.data?.data?.url;
 
@@ -334,13 +375,17 @@ export const useCasinoHook = () => {
         .replace(/\s+/g, "-");
 
       history.push({
-        pathname: `/dc/gamev1.1/${slug}-${btoa(gameId)}`,
+        pathname: `/dc/gamev1.1/${slug}-${btoa(gameId)}-${btoa(
+          gameCode || ""
+        )}-${btoa(providerName || "")}-${btoa(
+          subProvider || ""
+        )}-${btoa(superProvider || "")}`,
+
         state: {
           gameName,
-          launchUrl,
+          launchUrl
         },
       });
-
     } catch (error) {
       console.log(error);
     }
@@ -355,12 +400,17 @@ export const useCasinoHook = () => {
     subProvider: string,
     provider?: string,
     superProvider?: string
+
   ) => {
+  
     getGameUrl(
       gameId,
       gameName,
       provider,
-    
+      gameCode,
+      subProvider,
+      superProvider
+
     );
   };
 
@@ -384,7 +434,7 @@ export const useCasinoHook = () => {
       urlThumb: url_thumb || '',
     };
 
-    
+
     const oldRecent = JSON.parse(localStorage.getItem('recentCasinoGames') || '[]');
     const updatedRecent = [
       clickedGame,
@@ -410,7 +460,7 @@ export const useCasinoHook = () => {
       return;
     }
 
-    const defaultProvider = providerFromParams || 'All';
+    const defaultProvider = providerFromParams || 'MAC88';
     fetchCategories(defaultProvider);
   }, [pathname, loggedIn]);
 

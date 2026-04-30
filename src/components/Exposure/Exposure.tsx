@@ -4,6 +4,7 @@ import { SportIdByName } from "../../util/stringUtil";
 import { connect, useDispatch, useSelector } from "react-redux";
 import "./Exposure.scss";
 import { useHistory } from "react-router";
+import { postAPIAuth } from "../../services/apiInstance";
 // import { setCompetition, setEventType, setExchEvent } from "../../store";
 // import REPORTING_API from "../../reporting-api";
 
@@ -35,22 +36,22 @@ const ExposureTable: React.FC<ExposureTableProps> = ({
     const handleEventChange = (event: ExpDTO) => {
         const competitionSlug = event.competitionName
             ? event.competitionName
-                  .toLocaleLowerCase()
-                  .replace(/[^a-z0-9]/g, " ")
-                  .replace(/ +/g, " ")
-                  .trim()
-                  .split(" ")
-                  .join("-")
+                .toLocaleLowerCase()
+                .replace(/[^a-z0-9]/g, " ")
+                .replace(/ +/g, " ")
+                .trim()
+                .split(" ")
+                .join("-")
             : "league";
 
         let eventSlug = event.eventName
             ? event.eventName
-                  .toLowerCase()
-                  .replace(/[^a-z0-9]/g, " ")
-                  .replace(/ +/g, " ")
-                  .trim()
-                  .split(" ")
-                  .join("-")
+                .toLowerCase()
+                .replace(/[^a-z0-9]/g, " ")
+                .replace(/ +/g, " ")
+                .trim()
+                .split(" ")
+                .join("-")
             : "";
 
         // dispatch(
@@ -103,7 +104,55 @@ const ExposureTable: React.FC<ExposureTableProps> = ({
             //         sum += response?.data[i]?.exposure;
             //     }
             //     setTotalExp(sum);
-            // }
+            // } 
+
+            const response = await postAPIAuth("getBetsAPI", { deleted: false, result: 'ACTIVE' });
+            console.log(response.data?.data);
+            // setExpData(response.data?.data)
+
+            const apiData = response.data?.data || [];
+
+            const groupedObj = apiData.reduce((acc: any, item: any) => {
+
+                const key = item.eventId;
+                console.log("acc[key]:", acc[key]);
+
+                if (!acc[key]) {
+                    acc[key] = {
+                        eventId: item.eventId,
+                        eventName: item.eventName,
+                        eventTypeId: item.eventTypeId,
+                        eventTypeName: item.eventTypeName,
+                        exposure: 0,
+                    };
+                }
+
+                acc[key].exposure += Number(item.stake || 0);
+
+                return acc;
+            }, {});
+
+
+            const finalData = Object.values(groupedObj);
+            setExpData(finalData);
+
+
+            const total = finalData.reduce(
+                (sum: number, item: any) => sum + item.exposure,
+                0
+            );
+
+            setTotalExp(total);
+
+            console.log("Header Exposure:", exposure);
+            console.log("Grouped Total:", total);
+
+            if (Math.abs(Number(exposure)) !== Number(total)) {
+                console.log("Mismatch ");
+            } else {
+                console.log("yes match");
+            }
+
         } catch (err) {
             console.log(err);
         }
@@ -126,8 +175,8 @@ const ExposureTable: React.FC<ExposureTableProps> = ({
 
                 <TableBody>
                     {expData?.map((row) => (
-                        <TableRow>
-                            <TableCell>{SportIdByName[row.sportId]}</TableCell>
+                        <TableRow key={row?.eventId}>
+                            <TableCell>{row?.eventTypeName ?? SportIdByName[row.eventTypeId]}</TableCell>
                             <TableCell>
                                 <button
                                     className="exp-btn"
@@ -139,12 +188,12 @@ const ExposureTable: React.FC<ExposureTableProps> = ({
                             <TableCell>{row.exposure}</TableCell>
                         </TableRow>
                     ))}
-                    {exposure !== totalExp ? (
+                    {Math.abs(Number(exposure)) !== Number(totalExp) ? (
                         <TableRow>
                             <TableCell>{langData?.["others"]}</TableCell>
                             <TableCell></TableCell>
                             <TableCell>
-                                {-(exposure + totalExp).toFixed(2)}
+                                {Math.abs(-(Number(exposure) + Number(totalExp))).toFixed(2)}
                             </TableCell>
                         </TableRow>
                     ) : null}
@@ -156,7 +205,7 @@ const ExposureTable: React.FC<ExposureTableProps> = ({
 
 const mapStateToProps = (state: any) => {
     return {
-        exposure: state.auth.balanceSummary.exposure,
+        exposure: state.userDetails.exposure ?? 0,
     };
 };
 
