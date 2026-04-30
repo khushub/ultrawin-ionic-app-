@@ -15,6 +15,7 @@ import BetGames from '../../assets/images/provider_img/betgamestv.webp';
 import MacExcite from '../../assets/images/provider_img/mac_excite.webp';
 import Popok from '../../assets/images/provider_img/popok.webp';
 import King from '../../assets/images/provider_img/kingmaker.webp';
+
 import RG from '../../assets/images/provider_img/royal-gaming.webp';
 
 
