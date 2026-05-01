@@ -70,7 +70,7 @@ const CasinoGameCard: React.FC<CasinoGameCardProps> = ({
     game.gameCode || game.game_code || '',
     game.subProviderName || game.sub_provider_name || '',
     game.providerName || game.provider_name || '',
-    game.superProviderName || game.super_provider_name || '',
+    game.superProviderName || game.provider_name || '',
     game.urlThumb || game.url_thumb || ''
   )
 }

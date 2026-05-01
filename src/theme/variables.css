@@ -980,6 +980,7 @@ ion-item {
     --tab-passive-border: #ffffff;
 
     --tab-active-bg: linear-gradient(104.86deg, #cd4295 10.48%, #8f05bd 81.99%);
+    /* --tab-active-bg: #8f05bd; */
     --tab-active-text: #ffffff;
     --tab-active-border: #ffffff;
 

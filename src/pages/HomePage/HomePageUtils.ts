@@ -38,45 +38,82 @@ import rugby from '../../assets/images/home_page/sport_icons/rugby.webp';
 
 /* ---------------- PROVIDERS ---------------- */
 
+// export const HomeProvidersIcons = [
+//   { icon: Mac88, subProviderName: 'MAC88 LIVE' },
+//   { icon: FunGames, subProviderName: 'MAC88 FUN GAMES' },
+//   { icon: Mac88Virtual, subProviderName: 'MAC88 VIRTUALS' },
+//   { icon: Spribe, subProviderName: 'SPRIBE' },
+//   { icon: Evolution, subProviderName: 'Evolution' },
+//   { icon: Turbo, subProviderName: 'TURBO GAMES' },
+//   { icon: Smartsoft, subProviderName: 'SMARTSOFT' },
+//   { icon: Ezugi, subProviderName: 'Ezugi' },
+//   { icon: Jili, subProviderName: 'JILI' },
+//   { icon: AeSexy, subProviderName: 'AE SEXY' },
+//   { icon: Betsoft, subProviderName: 'BETSOFT' },
+//   { icon: Gamzix, subProviderName: 'GAMZIX' },
+//   { icon: BetGames, subProviderName: 'BetGames_TV' },
+//   { icon: MacExcite, subProviderName: 'MAC EXCITE' },
+//   { icon: Popok, subProviderName: 'POPOK' },
+//   // { icon: King, subProviderName: 'KINGMAKER' },
+// ];
+
 export const HomeProvidersIcons = [
-  { icon: Mac88, subProviderName: 'MAC88 LIVE' },
-  { icon: FunGames, subProviderName: 'MAC88 FUN GAMES' },
-  { icon: Mac88Virtual, subProviderName: 'MAC88 VIRTUALS' },
+  { icon: Mac88, subProviderName: 'MAC88' },
+  { icon: FunGames, subProviderName: 'MAC88' },
+  { icon: Mac88Virtual, subProviderName: 'MAC88' },
   { icon: Spribe, subProviderName: 'SPRIBE' },
-  { icon: Evolution, subProviderName: 'Evolution' },
-  { icon: Turbo, subProviderName: 'TURBO GAMES' },
-  { icon: Smartsoft, subProviderName: 'SMARTSOFT' },
-  { icon: Ezugi, subProviderName: 'Ezugi' },
-  { icon: Jili, subProviderName: 'JILI' },
-  { icon: AeSexy, subProviderName: 'AE SEXY' },
-  { icon: Betsoft, subProviderName: 'BETSOFT' },
-  { icon: Gamzix, subProviderName: 'GAMZIX' },
-  { icon: BetGames, subProviderName: 'BetGames_TV' },
-  { icon: MacExcite, subProviderName: 'MAC EXCITE' },
+  { icon: Evolution, subProviderName: 'EZUGI' },
+  { icon: Turbo, subProviderName: 'TURBO' },
+  { icon: Smartsoft, subProviderName: 'CREED' },
+  { icon: Ezugi, subProviderName: 'EZUGI' },
+  { icon: Jili, subProviderName: 'JiLi' },
+  { icon: AeSexy, subProviderName: 'RG' },
+  { icon: Betsoft, subProviderName: 'BETCORE' },
+  { icon: Gamzix, subProviderName: 'BETGAMES' },
+  { icon: BetGames, subProviderName: 'BETGAMES' },
+  { icon: MacExcite, subProviderName: 'MAC88' },
   { icon: Popok, subProviderName: 'POPOK' },
-  // { icon: King, subProviderName: 'KINGMAKER' },
+  { icon: King, subProviderName: 'AWC' },
 ];
 
 /* ---------------- MOBILE ---------------- */
 
-export const HomeMobProvidersIcons = [
-  { icon: Mac88, subProviderName: 'MAC88 LIVE' },
-  { icon: Evolution, subProviderName: 'Evolution' },
-  { icon: Turbo, subProviderName: 'TURBO GAMES' },
-  { icon: Smartsoft, subProviderName: 'SMARTSOFT' },
-  { icon: Jili, subProviderName: 'JILI' },
-  { icon: FunGames, subProviderName: 'MAC88 FUN GAMES' },
-  { icon: Spribe, subProviderName: 'SPRIBE' },
-  { icon: AeSexy, subProviderName: 'AE SEXY' },
-  { icon: MacExcite, subProviderName: 'MAC EXCITE' },
-  { icon: Gamzix, subProviderName: 'GAMZIX' },
-  { icon: BetGames, subProviderName: 'BetGames_TV' },
-  { icon: Mac88Virtual, subProviderName: 'MAC88 VIRTUALS' },
-  { icon: Ezugi, subProviderName: 'Ezugi' },
-  { icon: Betsoft, subProviderName: 'BETSOFT' },
-  { icon: Popok, subProviderName: 'POPOK' },
-];
+// export const HomeMobProvidersIcons = [
+//   { icon: Mac88, subProviderName: 'MAC88 LIVE' },
+//   { icon: Evolution, subProviderName: 'Evolution' },
+//   { icon: Turbo, subProviderName: 'TURBO GAMES' },
+//   { icon: Smartsoft, subProviderName: 'SMARTSOFT' },
+//   { icon: Jili, subProviderName: 'JILI' },
+//   { icon: FunGames, subProviderName: 'MAC88 FUN GAMES' },
+//   { icon: Spribe, subProviderName: 'SPRIBE' },
+//   { icon: AeSexy, subProviderName: 'AE SEXY' },
+//   { icon: MacExcite, subProviderName: 'MAC EXCITE' },
+//   { icon: Gamzix, subProviderName: 'GAMZIX' },
+//   { icon: BetGames, subProviderName: 'BetGames_TV' },
+//   { icon: Mac88Virtual, subProviderName: 'MAC88 VIRTUALS' },
+//   { icon: Ezugi, subProviderName: 'Ezugi' },
+//   { icon: Betsoft, subProviderName: 'BETSOFT' },
+//   { icon: Popok, subProviderName: 'POPOK' },
+// ];
 
+export const HomeMobProvidersIcons = [
+  { icon: Mac88, subProviderName: 'MAC88' },
+  { icon: FunGames, subProviderName: 'MAC88' },
+  { icon: Mac88Virtual, subProviderName: 'MAC88' },
+  { icon: Spribe, subProviderName: 'SPRIBE' },
+  { icon: Evolution, subProviderName: 'EZUGI' },
+  { icon: Turbo, subProviderName: 'TURBO' },
+  { icon: Smartsoft, subProviderName: 'CREED' },
+  { icon: Ezugi, subProviderName: 'EZUGI' },
+  { icon: Jili, subProviderName: 'JiLi' },
+  { icon: AeSexy, subProviderName: 'RG' },
+  { icon: Betsoft, subProviderName: 'BETCORE' },
+  { icon: Gamzix, subProviderName: 'BETGAMES' },
+  { icon: BetGames, subProviderName: 'BETGAMES' },
+  { icon: MacExcite, subProviderName: 'MAC88' },
+  { icon: Popok, subProviderName: 'POPOK' },
+  { icon: King, subProviderName: 'AWC' },
+];
 /* ---------------- SPORT ICON MAP ---------------- */
 
 export const sportIconsMap = {

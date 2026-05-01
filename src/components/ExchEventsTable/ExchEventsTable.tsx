@@ -380,24 +380,29 @@ const EventsTable: React.FC<StoreProps> = (props) => {
                         }}
                       >
                         <Button
-                          className={
-                            eventFilter === Status.LIVE
-                              ? 'active status-btn'
-                              : 'status-btn'
-                          }
-                          onClick={() =>
-                            setEventFilter(
-                              eventFilter === Status.LIVE ? null : Status.LIVE
-                            )
-                          }
-                        >
-                          {eventFilter === Status.LIVE ? (
-                            <Check style={{ height: '16px' }} />
-                          ) : (
-                            <AddIcon style={{ height: '16px' }} />
-                          )}
-                          Live
-                        </Button>
+  className={
+    eventFilter === Status.LIVE
+      ? 'active status-btn'
+      : 'status-btn'
+  }
+  onClick={() =>
+    setEventFilter(
+      eventFilter === Status.LIVE ? null : Status.LIVE
+    )
+  }
+  disableRipple={false}
+>
+  <span className="MuiButton-label">
+    {eventFilter === Status.LIVE ? (
+      <Check style={{ height: '13px',  position: 'relative',
+        top: '2px' }} />
+    ) : (
+      <AddIcon style={{ height: '13px',  position: 'relative',
+        top: '2px' }} />
+    )}
+    Live
+  </span>
+</Button>
                         <Button
                           className={
                             eventFilter === Status.VIRTUAL
@@ -412,13 +417,16 @@ const EventsTable: React.FC<StoreProps> = (props) => {
                             )
                           }
                         >
-                          {eventFilter === Status.VIRTUAL ? (
-                            <Check style={{ height: '16px' }} />
-                          ) : (
-                            <AddIcon style={{ height: '16px' }} />
-                          )}
+                         <span className="MuiButton-label">
+    {eventFilter === Status.VIRTUAL ? (
+      <Check style={{ height: '13px',  position: 'relative',
+        top: '2px' }} />
+    ) : (
+      <AddIcon style={{ height: '13px',  position: 'relative',
+        top: '2px' }} />
+    )}
                           Virtual
-                        </Button>
+                      </span>  </Button>
                         <Button
                           className={
                             eventFilter === Status.UPCOMING
@@ -433,12 +441,31 @@ const EventsTable: React.FC<StoreProps> = (props) => {
                             )
                           }
                         >
-                          {eventFilter === Status.UPCOMING ? (
-                            <Check style={{ height: '16px' }} />
-                          ) : (
-                            <AddIcon style={{ height: '16px' }} />
-                          )}
+                           <span className="MuiButton-label">
+    {eventFilter === Status.UPCOMING ? (
+      <Check
+      style={{
+        height: '14px',
+        width: '14px',
+        marginRight: '4px',
+        position: 'relative',
+        top: '2px'
+      }}
+    />
+  ) : (
+    <AddIcon
+      style={{
+        fontSize: '10px',
+        height: '14px',
+        width: '14px',
+        marginRight: '4px',
+        position: 'relative',
+        top: '2px'
+      }}
+    />
+    )}
                           Upcoming
+                        </span>
                         </Button>
                       </div>
                     </div>

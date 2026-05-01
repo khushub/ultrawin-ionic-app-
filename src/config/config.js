@@ -41,7 +41,8 @@ const hosts = {
         ],
 
         managerId: '68ce8fe00363531b35841293',
-        siteurl: 'getid.vip',
+        // siteurl: 'getid.vip',
+        siteurl: 'spbook.com',
     }
 }
 

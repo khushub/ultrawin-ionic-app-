@@ -11,6 +11,8 @@ import mines from '../../assets/lottie_json//minws.json';
 import chickenGames from '../../assets/lottie_json/chicken_game.json';
 import colorPrediction from '../../assets/lottie_json/color_prediction.json';
 import livePrediction from '../../assets/lottie_json/live_prediction.json';
+import { useDispatch, useSelector } from "react-redux";
+import { setAlertMsg } from "../../store/slices/commonSlice";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -38,6 +40,11 @@ function SitesInfo({
   const [gifs, setGifs] = useState<any>();
   const classes = useStyles();
   const history = useHistory();
+  const dispatch = useDispatch();
+
+const { availableEventTypes } = useSelector(
+  (state: any) => state.userDetails
+);
 
   const sections = [
     {
@@ -46,7 +53,8 @@ function SitesInfo({
 
       gameInfo: {
         gameId: '151027',
-        providerName: 'MAC88',
+        providerName: 'AVIATOR',
+        // providerName: 'MAC88',
         subProviderName: 'Monk88',
         superProviderName: 'MACHUB',
         platformId: 'desktop',
@@ -56,7 +64,7 @@ function SitesInfo({
       bannerInfo: {
         loop: true,
         path: '/casino',
-        category: 'Aviator',
+        category: 'All',
         autoplay: true,
         animationData: gifs?.aviator,
         rendererSettings: {
@@ -190,7 +198,7 @@ function SitesInfo({
 
       gameInfo: {
         gameId: '230250',
-        providerName: 'DC',
+        providerName: 'TURBO',
         subProviderName: 'Turbogames',
         superProviderName: 'GAP',
         platformId: 'desktop',
@@ -200,7 +208,7 @@ function SitesInfo({
       bannerInfo: {
         loop: true,
         path: '/casino',
-        category: 'mines',
+        category: 'Slot Games',
         autoplay: true,
         animationData: gifs?.mines,
         rendererSettings: {
@@ -218,6 +226,17 @@ function SitesInfo({
     subProvider: string,
     superProvider: string
   ) => {
+
+     if (!availableEventTypes?.['m1']) {
+    dispatch(
+      setAlertMsg({
+        type: "error",
+        message: "Game is locked. Please Contact Upper Level",
+      })
+    );
+    return; // 🚨 yahi rokega navigation
+  }
+    
     if (loggedIn) {
       // status check
       if (loggedInUserStatus === 0 || loggedInUserStatus === 3) {
@@ -267,18 +286,23 @@ const fetchJson = async () => {
                 if (
                   ['Aviator X', 'Mines'].includes(section.gameInfo.gameName)
                 ) {
-                  history.push({
-                    pathname: section.bannerInfo.path,
-                    search: `?provider=ALL&category=${encodeURIComponent(section.bannerInfo.category)?.toLowerCase()}`,
-                  });
+                  getGameUrl(
+                    section?.gameInfo?.gameId,
+                    section?.gameInfo?.gameName,
+                    section?.gameInfo?.gameCode,
+                    section?.gameInfo?.providerName,
+                    section?.gameInfo?.subProviderName,
+                    section?.gameInfo?.superProviderName
+                  );
                 } else if (section.bannerInfo.category === 'live_prediction') {
                   history.push(
-                    '/casino?provider=MAC88%20LIVE%20PREDICTION&category=ALL'
+                    '/casino?provider=MAC88%20&category=Casual%20Games'
                   );
                 } else if (section.gameInfo.gameName === 'color game') {
-                  history.push(
-                    '/casino?provider=COLOR%20AND%20CHICKEN%20GAMES&category=ALL'
-                  );
+                 history.push({
+  pathname: '/casino',
+  search: `?provider=TURBO&category=${encodeURIComponent('Casual Games')}`,
+});
                 } else if (section.bannerInfo.category === 'mac_excite') {
                   history.push('/casino?provider=MAC%20EXCITE&category=ALL');
                 } else {
@@ -343,16 +367,18 @@ const fetchJson = async () => {
                 ) {
                   history.push({
                     pathname: section.bannerInfo.path,
-                    search: `?provider=ALL&category=${encodeURIComponent(section.bannerInfo.category)?.toLowerCase()}`,
+                    search: `?provider=${section.gameInfo.providerName}&category=${encodeURIComponent(section.bannerInfo.category)?.toLowerCase()}`,
                   });
                 } else if (section.bannerInfo.category === 'live_prediction') {
-                  history.push(
-                    '/casino?provider=MAC88%20LIVE%20PREDICTION&category=ALL'
-                  );
+                 history.push({
+  pathname: '/casino',
+  search: `?provider=${encodeURIComponent('MAC88')}&category=${encodeURIComponent('Casual Games')}`,
+});
                 } else if (section.gameInfo.gameName === 'color game') {
-                  history.push(
-                    '/casino?provider=COLOR%20AND%20CHICKEN%20GAMES&category=ALL'
-                  );
+                 history.push({
+  pathname: '/casino',
+  search: `?provider=MAC88&category=${encodeURIComponent('Color Game')}`,
+});
                 } else if (section.bannerInfo.category === 'mac_excite') {
                   history.push('/casino?provider=MAC%20EXCITE&category=ALL');
                 } else {

@@ -34,14 +34,16 @@ const TopMatches: React.FC<Props> = ({
   setExchEvent,
 }) => {
   const history = useHistory();
-  const getTeamTypes = (event: any) => {
-    const count = event?.marketBook?.runners?.length || 0;
 
-    if (count === 2) return ['home', 'away'];
-    if (count === 3) return ['home', 'draw', 'away'];
+  // console.log('Rendering TopMatches with favouriteEvents:', favouriteEvents);
+  // const getTeamTypes = (event: any) => {
+  //   const count = event?.marketBook?.runners?.length || 0;
 
-    return [];
-  }
+  //   if (count === 2) return ['home', 'away'];
+  //   if (count === 3) return ['home', 'draw', 'away'];
+
+  //   return [];
+  // }
   // console.log('favouriteEvents in TopMatches:', favouriteEvents);
 
   const getOdds = (eventData: any, teamType: string) => {

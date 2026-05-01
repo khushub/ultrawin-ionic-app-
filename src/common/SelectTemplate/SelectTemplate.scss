@@ -5,13 +5,14 @@
 
   .st-label {
     text-wrap: nowrap;
-    color: var(--reports-header-color);
-    font-family: var(--headers-font-family);
+    color: var(--reports-header-color) !important;
+    font-family: var(--headers-font-family) !important;
 
     font-size: 12px;
     font-weight: 400;
     line-height: 16.2px;
     text-align: center;
+  
 
     @media screen and (max-width: 720px) {
       font-family: var(--headers-font-family);
