@@ -16,23 +16,24 @@ import { setAlertMsg } from '../../store/slices/commonSlice';
   {
     id: 1,
     publicUrl: "https://cdn.uvwin2024.co/dd5b2847-bc9e-4069-befe-a70aed09c801",
-    imageContent: `
-      <div>
-        <h2>WELCOME BONUS</h2>
-        <p>GET Bonus 500% Upto ₹2,500</p>
-      </div>
-    `,
+   imageContent: `
+  <div class="promo-text">
+    <span class="small">GET</span>
+    <h1>Bonus 500%</h1>
+    <p>Upto ₹2,500</p>
+  </div>
+`,
     displayContent: "<h2>Welcome Bonus Details</h2><p>Get 500% bonus...</p>"
   },
   {
     id: 2,
     publicUrl: "https://cdn.uvwin2024.co/8f22f4bf-5fea-439b-a714-e4f576f2a3c1",
-    imageContent: `
-      <div>
-        <h2>AFFILIATE MARKETING</h2>
-        <p>Join Our Affiliate Program</p>
-      </div>
-    `,
+   imageContent: `
+  <div class="promo-text">
+    <h2>Join Our <span class="highlight">Affiliate</span></h2>
+    <p>Program</p>
+  </div>
+`,
     displayContent: "<h2>Affiliate Program</h2><p>Earn by referring...</p>"
   }
 ];

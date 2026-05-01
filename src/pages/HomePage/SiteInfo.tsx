@@ -11,6 +11,8 @@ import mines from '../../assets/lottie_json//minws.json';
 import chickenGames from '../../assets/lottie_json/chicken_game.json';
 import colorPrediction from '../../assets/lottie_json/color_prediction.json';
 import livePrediction from '../../assets/lottie_json/live_prediction.json';
+import { useDispatch, useSelector } from "react-redux";
+import { setAlertMsg } from "../../store/slices/commonSlice";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -38,6 +40,11 @@ function SitesInfo({
   const [gifs, setGifs] = useState<any>();
   const classes = useStyles();
   const history = useHistory();
+  const dispatch = useDispatch();
+
+const { availableEventTypes } = useSelector(
+  (state: any) => state.userDetails
+);
 
   const sections = [
     {
@@ -219,6 +226,17 @@ function SitesInfo({
     subProvider: string,
     superProvider: string
   ) => {
+
+     if (!availableEventTypes?.['m1']) {
+    dispatch(
+      setAlertMsg({
+        type: "error",
+        message: "Game is locked. Please Contact Upper Level",
+      })
+    );
+    return; // 🚨 yahi rokega navigation
+  }
+    
     if (loggedIn) {
       // status check
       if (loggedInUserStatus === 0 || loggedInUserStatus === 3) {

@@ -13,14 +13,55 @@
 
 .banner-display-content {
   position: absolute;
-  right: 0;
-  top: 0;
-  height: 85%;
+  right: -33px;
+  top: 35%;
+  transform: translateY(-50%);
   width: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  color: #fff;
+  z-index: 2;
 }
+
+/* TEXT GROUP */
+.promo-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* GET */
+.promo-text .small {
+  font-size: 20px;
+  font-weight: 500;
+  color: #fff;
+}
+
+/* BONUS 500% */
+.promo-text h1 {
+  font-size: 30px;
+  font-weight: 800;
+  color: #ff7a2f;
+  line-height: 1;
+  margin: 0;
+}
+
+/* UPTO */
+.promo-text p {
+  font-size: 24px;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+}
+.promo-text h2 {
+  font-size: 25px;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+}
+
+.highlight {
+  color: #ff7a2f;
+  font-weight: 700;
+} 
 
 .know-more-btn-div {
   display: flex;
@@ -28,20 +69,20 @@
   padding: 5px;
 }
 
-@media (max-width: 768px) {
-  .banner-display-content {
-    transform: scale(0.8);
-  }
-}
+// @media (max-width: 768px) {
+//   .banner-display-content {
+//     transform: scale(0.8);
+//   }
+// }
 
-@media (max-width: 510px) {
-  .banner-display-content {
-    transform: scale(0.6);
-  }
-}
+// @media (max-width: 510px) {
+//   .banner-display-content {
+//     transform: scale(0.6);
+//   }
+// }
 
-@media (max-width: 380px) {
-  .banner-display-content {
-    transform: scale(0.5);
-  }
-}
+// @media (max-width: 380px) {
+//   .banner-display-content {
+//     transform: scale(0.5);
+//   }
+// }

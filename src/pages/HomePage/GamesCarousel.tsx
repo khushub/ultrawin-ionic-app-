@@ -8,6 +8,8 @@ import { useHistory } from 'react-router';
 import { isMobile } from 'react-device-detect';
 import CarouselComponent from '../../common/CarouselComponent/CarouselComponent';
 import Slider from 'react-slick';
+import { useDispatch, useSelector } from "react-redux";
+import { setAlertMsg } from "../../store/slices/commonSlice"; // path adjust kar lena
 
 // const useStyles = makeStyles((theme) => ({
 //   buttonContainer: {
@@ -117,7 +119,12 @@ const GamesCarousel: React.FC<StoreProps> = ({
   setDialogShow,
 }) => {
 
+  const { availableEventTypes } = useSelector(
+  (state: any) => state.userDetails
+);
   // console.log('trendingGames: ', trendingGames);
+const dispatch = useDispatch();
+
 
   const settings = {
   responsive: [
@@ -168,6 +175,16 @@ const GamesCarousel: React.FC<StoreProps> = ({
     subProvider: string,
     superProvider: string
   ) => {
+
+      if (!availableEventTypes?.['m1']) {
+    dispatch(
+      setAlertMsg({
+        type: "error",
+        message: "Game is locked. Please Contact Upper Level",
+      })
+    );
+    return; // 🚨 navigation yahi ruk jayega
+  }
     console.log('Game clicked:', { gameId, gameName, gameCode, provider, subProvider, superProvider });
     if (loggedIn) {
       // status check

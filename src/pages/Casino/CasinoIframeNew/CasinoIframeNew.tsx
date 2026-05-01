@@ -8,6 +8,10 @@ import { isMobile, isIOS } from 'react-device-detect';
 import LoadingPage from '../../LoadingPage/index';
 import { postAPIAuth } from '../../../services/apiInstance';
 // import SVLS_API from '../../../svls-api';
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { setAlertMsg } from "../../../store/slices/commonSlice"; // path adjust kar lena
 
 type StoreProps = {
     gameUrl: string;
@@ -29,11 +33,15 @@ const CasinoIframeNew: React.FC<StoreProps> = (props) => {
 
     // console.log('Received gamePath:', gamePath);
     const history = useHistory();
+    const dispatch = useDispatch();
 
     const locationState: any = useLocation().state;
-    
-    
+    const { availableEventTypes } = useSelector(
+  (state: any) => state.userDetails
+);
 
+    
+    
 
     useEffect(() => {
         document.getElementsByClassName('router-ctn')[0].scrollIntoView();
@@ -109,8 +117,19 @@ const CasinoIframeNew: React.FC<StoreProps> = (props) => {
     };
 
  useEffect(() => {
+    
   const loadGame = async () => {
     if (!gamePath) return;
+
+    if (!availableEventTypes?.['m1']) {
+  dispatch(
+    setAlertMsg({
+      type: "error",
+      message: "Game is locked. Please Contact Upper Level",
+    })
+  );
+  return;
+}
 
    const pathParts = gamePath.split("-");
 

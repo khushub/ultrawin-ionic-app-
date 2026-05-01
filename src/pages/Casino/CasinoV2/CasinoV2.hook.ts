@@ -1,8 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
+// import { useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router';
 import { DcGameNew } from '../../../models/dc/DcGame';
 import { postAPIAuth } from '../../../services/apiInstance';
+import { useSelector } from "react-redux";
+// import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { setAlertMsg } from "../../../store/slices/commonSlice"; // path adjust kar lena
 
 
 function useQuery() {
@@ -27,7 +31,16 @@ export const useCasinoHook = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [categoryMap, setCategoryMap] = useState<Record<string, string[]>>({});
   const [gameInfo, setGameInfo] = useState<Record<string, Record<string, any[]>>>({});
+  const dispatch = useDispatch();
   const [recentGames, setRecentGames] = useState<any[]>([]);
+
+  const { availableEventTypes } = useSelector(
+  (state: any) => state.userDetails
+);
+
+console.log('Available Event Types:', availableEventTypes);
+
+  
 
   const subProviderList = [
     'All',
@@ -402,6 +415,7 @@ setCategoryParam(
     superProvider?: string
 
   ) => {
+
   
     getGameUrl(
       gameId,
@@ -423,6 +437,16 @@ setCategoryParam(
     superProvider?: string,
     url_thumb?: string
   ) => {
+
+    
+      if (!availableEventTypes?.['m1']) {
+      dispatch(
+        setAlertMsg({
+          type: "error",
+          message: "Game is locked. Please Contact Upper Level",
+        })
+      );
+    }
 
     const clickedGame = {
       gameId: gameId || '',
