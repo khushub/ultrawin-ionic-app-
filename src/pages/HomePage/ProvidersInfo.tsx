@@ -164,9 +164,9 @@ const Providers = ({ langData }) => {
       {isMobile ? (
         <div className="mob-casino-lobby">
           {(isMobile ? HomeMobProvidersIcons : HomeProvidersIcons)?.map(
-            (provider) => (
+            (provider ,index) => (
               <div
-                key={provider.subProviderName}
+                key={index}
                 onClick={() => {
                   history.push({
                     pathname: '/casino',

@@ -52,6 +52,7 @@ type StoreProps = {
   domainConfig: any;
   setCompetition: Function;
   setExchEvent: Function;
+  avaalableEventTypes: any;
 };
 
 const HomePage: React.FC<StoreProps> = (props) => {
@@ -66,8 +67,10 @@ const HomePage: React.FC<StoreProps> = (props) => {
     domainConfig,
     setCompetition,
     setExchEvent,
+    availableEventTypes
+    
   } = props;
-
+console.log('Available Event Types in HomePage:', availableEventTypes); 
   // console.log('Trending Games from Redux:', trendingGames);
 
   const cricketBattlePath =
@@ -294,6 +297,7 @@ const mapStateToProps = (state: any) => {
     loggedInUserStatus: status,
     langData: state.common.langData,
     domainConfig: state.common.domainConfig,
+    availableEventTypes: state.userDetails.availableEventTypes
   };
 };
 

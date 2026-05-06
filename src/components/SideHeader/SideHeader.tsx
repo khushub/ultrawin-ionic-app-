@@ -311,9 +311,10 @@ const SHTab = (props: {
 
   return (
     <>
-      {tabs.map((indv) =>
+      {tabs.map((indv, index) =>
           shouldShow(indv) && (
-            <>
+            
+            <React.Fragment key={indv.id}>
               <button
                 className={`${
                   isRouteActive(indv.route, indv.id) ? 'active-sh-btn' : ''
@@ -350,6 +351,7 @@ const SHTab = (props: {
                     {languages.map((language) => {
                       return (
                         <div
+                         key={language} 
                           className="sh-btn"
                           onClick={() => handleLangChange(language)}
                         >
@@ -360,14 +362,15 @@ const SHTab = (props: {
                   </div>
                 </div>
               )}
-            </>
+              </React.Fragment>
+            
           )
       )}
 
       {showThemeMenu &&
         CONFIG?.showThemes && 
         themes.map((theme, index) => (
-          <React.Fragment key={index}>
+          <React.Fragment key={theme.themeName}>
             <div
               className="sh-btn"
               onClick={() => {
@@ -437,9 +440,10 @@ const SHSportsTab = (props: {
   return (
     <>
       {tabs.map(
-        (indv) =>
+        (indv, index) =>
           (indv.showWithoutLogin || loggedIn) &&
           indv.langKey !== 'cock_fight' && (
+            <React.Fragment key={index}>
             <>
               <button
                 className={`${
@@ -472,6 +476,7 @@ const SHSportsTab = (props: {
                     )
                 )}
             </>
+            </React.Fragment>
           )
       )}
     </>

@@ -66,7 +66,7 @@ const SportsProviderIframe: React.FC<StoreProps> = (props) => {
                     //   setGameSrc(
                     //     response.data.url +
                     //       +callBackUrl +
-                    //       '&primary=ED1B24&secondary=fff&background=fff&background1=231f20&textColor=000'
+                    //       '&primary=ED1B24&secondary=fff&background=fff&background1=231f20&tex'
                     //   );
                     // }
                 }
