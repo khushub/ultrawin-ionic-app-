@@ -35,7 +35,7 @@ const TopMatches: React.FC<Props> = ({
 }) => {
   const history = useHistory();
 
-  // console.log('Rendering TopMatches with favouriteEvents:', favouriteEvents);
+  console.log('Rendering TopMatches with favouriteEvents:', favouriteEvents);
   // const getTeamTypes = (event: any) => {
   //   const count = event?.marketBook?.runners?.length || 0;
 
@@ -145,9 +145,9 @@ const TopMatches: React.FC<Props> = ({
         isInfinite={false}
       // dependencies={[adaptedEvents]}
       >
-        {adaptedEvents.map((event) => (
+        {adaptedEvents.map((event ,index) => (
           <div
-            key={event.eventId}
+           key={event.eventId || `${event.eventName}-${index}`}
             className="top-match-card"
           // onClick={() => handleEventChange(event)}
           >
@@ -240,11 +240,12 @@ const TopMatches: React.FC<Props> = ({
                     ? ['home', 'draw', 'away']
                     : []
               ).map((teamType, index) => (
-                <div key={teamType + index} className="team-odds">
+                <div key={index} className="team-odds">
                   {event?.marketBook?.runners?.length ? (
                     getOdds(event, teamType) ? (
-                      getOdds(event, teamType).map((odd) => (
+                      getOdds(event, teamType).map((odd, i) => (
                         <ExchOddBtn
+                         key={`${odd.outcomeId}-${odd.type}-${i}`}
                           mainValue={odd.price}
                           subValue={odd.size}
                           oddType={

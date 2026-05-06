@@ -138,6 +138,7 @@ const subProvider = atob(pathParts.pop() || "");
 const provider = atob(pathParts.pop() || "");
 const gameCode = atob(pathParts.pop() || "");
 const gameId = atob(pathParts.pop() || "");
+// const eventTypeId = atob(pathParts.pop() || "");     //m1 | c9
 
 const gameName =
   locationState?.gameName || pathParts.join("-");

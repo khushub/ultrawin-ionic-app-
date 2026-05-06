@@ -19,7 +19,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": -80,
-        "providerTag": "MAC88 VIRTUALS"
+        "providerTag": "MAC88 VIRTUALS",
+        "QtechGames":{
+            "gameId": "77G-cricketbattle"
+        }
     },
     {
         "houseId": 16,
@@ -41,7 +44,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": -79,
-        "providerTag": "MAC88 FUN GAMES"
+        "providerTag": "MAC88 FUN GAMES",
+        "QtechGames":{
+            "gameId": "YGG-777voltgigablox"
+        }
     },
     {
         "houseId": 16,
@@ -63,7 +69,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": -40,
-        "providerTag": "MAC88 FUN GAMES"
+        "providerTag": "MAC88 FUN GAMES",
+         "QtechGames":{
+            "gameId": "77G-fencing"
+        }
     },
     {
         "houseId": 16,
@@ -85,7 +94,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": -39,
-        "providerTag": "MAC88 FUN GAMES"
+        "providerTag": "MAC88 FUN GAMES",
+        "QtechGames":{
+            "gameId": "RFX-powerpack"
+        }
     },
     {
         "houseId": 16,
@@ -107,7 +119,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": -31,
-        "providerTag": "MAC88 FUN GAMES"
+        "providerTag": "MAC88 FUN GAMES",
+        "QtechGames":{
+            "gameId": "KAG-naughtywitches"
+        }
     },
     {
         "houseId": 16,
@@ -129,7 +144,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": -30,
-        "providerTag": "MAC88 VIRTUALS"
+        "providerTag": "MAC88 VIRTUALS",
+            "QtechGames":{
+                "gameId": "BTV-instantroulette"
+            }
     },
     {
         "houseId": 16,
@@ -151,7 +169,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": -29,
-        "providerTag": "MAC88 FUN GAMES"
+        "providerTag": "MAC88 FUN GAMES",
+         "QtechGames":{
+            "gameId": "JIL-jhandimunda"
+        }
     },
     {
         "houseId": 16,
@@ -173,7 +194,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": -20,
-        "providerTag": "MAC88 FUN GAMES"
+        "providerTag": "MAC88 FUN GAMES",
+         "QtechGames":{
+            "gameId": "PTL-hybridblackjack2"
+        }
     },
     {
         "houseId": 16,
@@ -195,7 +219,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": -19,
-        "providerTag": "MAC88 FUN GAMES"
+        "providerTag": "MAC88 FUN GAMES",
+         "QtechGames":{
+            "gameId": "AMG-jokerstwist"
+        }
     },
     {
         "houseId": 16,
@@ -217,7 +244,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": -12,
-        "providerTag": "MAC88 FUN GAMES"
+        "providerTag": "MAC88 FUN GAMES",
+         "QtechGames":{
+            "gameId": "BTL-takedealorriskblackjack"
+        }
     },
     {
         "houseId": 16,
@@ -239,7 +269,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": -11,
-        "providerTag": "MAC88 FUN GAMES"
+        "providerTag": "MAC88 FUN GAMES",
+         "QtechGames":{
+            "gameId": "RTG-snakesfortunehun"
+        }
     },
     {
         "houseId": 16,
@@ -261,7 +294,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": 7,
-        "providerTag": "MAC88 FUN GAMES"
+        "providerTag": "MAC88 FUN GAMES",
+         "QtechGames":{
+            "gameId": "NAG-pumpkinnight"
+        }
     },
     {
         "houseId": 16,
@@ -283,7 +319,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": 19,
-        "providerTag": "MAC88 LIVE"
+        "providerTag": "MAC88 LIVE",
+            "QtechGames":{
+                "gameId": "NAG-pumpkinnight"
+            }
     },
     {
         "houseId": 16,
@@ -305,7 +344,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": 22,
-        "providerTag": "MAC88 LIVE"
+        "providerTag": "MAC88 LIVE",
+            "QtechGames":{
+                "gameId": "SAG-ddragontiger"
+            }
     },
     {
         "houseId": 16,
@@ -327,7 +369,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": 23,
-        "providerTag": "MAC88 LIVE"
+        "providerTag": "MAC88 LIVE",
+         "QtechGames":{
+            "gameId": "BRG-dragontigers"
+        }
     },
     {
         "houseId": 16,
@@ -349,7 +394,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": 24,
-        "providerTag": "MAC88 LIVE"
+        "providerTag": "MAC88 LIVE",
+            "QtechGames":{
+                "gameId": "BRG-baccarat1v"
+            }
     },
     {
         "houseId": 16,
@@ -371,7 +419,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": 27,
-        "providerTag": "MAC88 LIVE"
+        "providerTag": "MAC88 LIVE",
+            "QtechGames":{
+                "gameId": "TAD-sicbo"
+            }
     },
     {
         "houseId": 16,
@@ -393,7 +444,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": 30,
-        "providerTag": "MAC88 LIVE"
+        "providerTag": "MAC88 LIVE",
+            "QtechGames":{
+                "gameId": "BGG-roulette1"
+            }
     },
     {
         "houseId": 16,
@@ -415,7 +469,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": 34,
-        "providerTag": "MAC88 LIVE"
+        "providerTag": "MAC88 LIVE",
+            "QtechGames":{
+                "gameId": "RLT-lucky7"
+            }
     },
     {
         "houseId": 16,
@@ -437,7 +494,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": 42,
-        "providerTag": "MAC88 LIVE"
+        "providerTag": "MAC88 LIVE",
+            "QtechGames":{
+                "gameId": "TAD-pokerking"
+            }
     },
     {
         "houseId": 16,
@@ -459,7 +519,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": 45,
-        "providerTag": "MAC88 LIVE"
+        "providerTag": "MAC88 LIVE",
+            "QtechGames":{
+                "gameId": "EVO-racetrack"
+            }
     },
     {
         "houseId": 16,
@@ -481,7 +544,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": 54,
-        "providerTag": "MAC88 LIVE"
+        "providerTag": "MAC88 LIVE",
+            "QtechGames":{
+                "gameId": "SLG-teenpatti"
+            }
     },
     {
         "houseId": 16,
@@ -503,7 +569,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": 55,
-        "providerTag": "MAC88 LIVE"
+        "providerTag": "MAC88 LIVE",
+            "QtechGames":{
+                "gameId": "KAG-cricketwinner"
+            }
     },
     {
         "houseId": 16,
@@ -525,7 +594,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": null,
-        "providerTag": "MAC88 LIVE"
+        "providerTag": "MAC88 LIVE",
+            "QtechGames":{
+                "gameId": "JIL-teenpatti2020"
+            }
     },
     {
         "houseId": 16,
@@ -547,7 +619,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": null,
-        "providerTag": "MAC88 LIVE"
+        "providerTag": "MAC88 LIVE",    
+            "QtechGames":{
+                "gameId": "JIL-teenpatti2020"
+            }
     },
     {
         "houseId": 16,
@@ -569,7 +644,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": null,
-        "providerTag": "MAC88 LIVE"
+        "providerTag": "MAC88 LIVE",
+            "QtechGames":{
+                "gameId": "JIL-teenpattijoker"
+            }
     },
     {
         "houseId": 16,
@@ -591,7 +669,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": null,
-        "providerTag": "Jili"
+        "providerTag": "Jili",
+            "QtechGames":{
+                "gameId": "JIL-3potdragons"
+            }
     },
     {
         "houseId": 16,
@@ -613,7 +694,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": null,
-        "providerTag": "MAC88 LIVE"
+        "providerTag": "MAC88 LIVE",
+            "QtechGames":{
+                "gameId": "BRG-amarakbaranthonyt"
+            }
     },
     {
         "houseId": 16,
@@ -635,7 +719,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": null,
-        "providerTag": "MAC88 LIVE"
+        "providerTag": "MAC88 LIVE",
+            "QtechGames":{
+                "gameId": "BRG-andarbahart"
+            }   
     },
     {
         "houseId": 16,
@@ -657,7 +744,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": null,
-        "providerTag": "Jili"
+        "providerTag": "Jili",
+            "QtechGames":{
+                "gameId": "TAD-arenafighter"
+            }
     },
     {
         "houseId": 16,
@@ -679,7 +769,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": null,
-        "providerTag": "DC"
+        "providerTag": "DC",
+            "QtechGames":{
+                "gameId": "EVO-bacboaovivo"
+            }   
     },
     {
         "houseId": 16,
@@ -701,7 +794,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": null,
-        "providerTag": "Evolution"
+        "providerTag": "Evolution",
+            "QtechGames":{
+                "gameId": "EVO-betstackerblackjack1"
+            }
     },
     {
         "houseId": 16,
@@ -723,7 +819,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": null,
-        "providerTag": "Evolution"
+        "providerTag": "Evolution",
+            "QtechGames":{
+                "gameId": "L88-blackjackportugus1"
+            }
     },
     {
         "houseId": 16,
@@ -745,7 +844,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": null,
-        "providerTag": "MAC88 LIVE"
+        "providerTag": "MAC88 LIVE",
+            "QtechGames":{
+                "gameId": "L88-bollywoodstars1"
+            }
     },
     {
         "houseId": 16,
@@ -767,7 +869,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": null,
-        "providerTag": "Jili"
+        "providerTag": "Jili",
+            "QtechGames":{
+                "gameId": "TAD-bookofgold"
+            }
     },
     {
         "houseId": 16,
@@ -789,7 +894,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": null,
-        "providerTag": "KINGMAKER"
+        "providerTag": "KINGMAKER",
+            "QtechGames":{
+                "gameId": "KM-cointoss"
+            }
     },
     {
         "houseId": 16,
@@ -811,7 +919,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": null,
-        "providerTag": "Jili"
+        "providerTag": "Jili",
+            "QtechGames":{
+                "gameId": "JIL-crashcricket"
+            }   
     },
     {
         "houseId": 16,
@@ -833,7 +944,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": null,
-        "providerTag": "Evolution"
+        "providerTag": "Evolution",
+            "QtechGames":{
+                "gameId": "JIL-dragontiger"
+            }
     },
     {
         "houseId": 16,
@@ -855,7 +969,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": null,
-        "providerTag": "MAC88 LIVE"
+        "providerTag": "MAC88 LIVE",
+            "QtechGames":{
+                "gameId": "RVP-888dreamdragon"
+            }
     },
     {
         "houseId": 16,
@@ -877,7 +994,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": null,
-        "providerTag": "Jili"
+        "providerTag": "Jili",
+            "QtechGames":{
+                "gameId": "JIL-dropball"
+            }
     },
     {
         "houseId": 16,
@@ -899,7 +1019,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": null,
-        "providerTag": "Jili"
+        "providerTag": "Jili",
+            "QtechGames":{
+                "gameId": "TAD-fortunegems"
+            }
     },
     {
         "houseId": 16,
@@ -921,7 +1044,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": null,
-        "providerTag": "Jili"
+        "providerTag": "Jili",
+            "QtechGames":{
+                "gameId": "JIL-gemparty"
+            }   
     },
     {
         "houseId": 16,
@@ -943,7 +1069,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": null,
-        "providerTag": "Jili"
+        "providerTag": "Jili",
+            "QtechGames":{
+                "gameId": "JIL-godofmartial"
+            }
     },
     {
         "houseId": 16,
@@ -965,7 +1094,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": null,
-        "providerTag": "MAC88 LIVE"
+        "providerTag": "MAC88 LIVE",
+            "QtechGames":{
+                "gameId": "BRG-muflisteenpattiv"
+            }
     },
     {
         "houseId": 16,
@@ -987,7 +1119,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": null,
-        "providerTag": "Jili"
+        "providerTag": "Jili",
+            "QtechGames":{
+                "gameId": "KM-jhandimunda"
+            }
     },
     {
         "houseId": 16,
@@ -1009,7 +1144,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": null,
-        "providerTag": "Jili"
+        "providerTag": "Jili",
+            "QtechGames":{
+                "gameId": "TAD-jungleking"
+            }
     },
     {
         "houseId": 16,
@@ -1031,7 +1169,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": null,
-        "providerTag": "Evolution"
+        "providerTag": "Evolution",
+            "QtechGames":{
+                "gameId": "EVO-lightningblackjack"
+            }
     },
     {
         "houseId": 16,
@@ -1053,7 +1194,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": null,
-        "providerTag": "Evolution"
+        "providerTag": "Evolution",
+            "QtechGames":{
+                "gameId": "EVO-lightningblackjack"
+            }
     },
     {
         "houseId": 16,
@@ -1075,7 +1219,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": null,
-        "providerTag": "Evolution"
+        "providerTag": "Evolution",
+            "QtechGames":{
+                "gameId": "KAG-lightningstorm"
+            }
     },
     {
         "houseId": 16,
@@ -1097,7 +1244,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": null,
-        "providerTag": "Evolution"
+        "providerTag": "Evolution",
+            "QtechGames":{
+                "gameId": "EVO-marblerace"
+            }
     },
     {
         "houseId": 16,
@@ -1119,7 +1269,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": null,
-        "providerTag": "Jili"
+        "providerTag": "Jili",
+            "QtechGames":{
+                "gameId": "JIL-megaace"
+            }
     },
     {
         "houseId": 16,
@@ -1141,7 +1294,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": null,
-        "providerTag": "MAC88 LIVE"
+        "providerTag": "MAC88 LIVE",
+            "QtechGames":{
+                "gameId": "BRG-muflisteenpattit"
+            }
     },
     {
         "houseId": 16,
@@ -1163,7 +1319,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": null,
-        "providerTag": "Jili"
+        "providerTag": "Jili",
+            "QtechGames":{
+                "gameId": "TAD-nightfallhunting"
+            }
     },
     {
         "houseId": 16,
@@ -1185,7 +1344,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": null,
-        "providerTag": "Jili"
+        "providerTag": "Jili",
+            "QtechGames":{
+                "gameId": "TAD-partynight"
+            }
     },
     {
         "houseId": 16,
@@ -1207,7 +1369,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": null,
-        "providerTag": "GAMZIX"
+        "providerTag": "GAMZIX",
+            "QtechGames":{
+                "gameId": "77G-pilot"
+            }
     },
     {
         "houseId": 16,
@@ -1229,7 +1394,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": null,
-        "providerTag": "Jili"
+        "providerTag": "Jili",
+            "QtechGames":{
+                "gameId": "TAD-pokerking"
+            }
     },
     {
         "houseId": 16,
@@ -1251,7 +1419,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": null,
-        "providerTag": "Evolution"
+        "providerTag": "Evolution",
+            "QtechGames":{
+                "gameId": "EVO-reddoorroulette"
+            }
     },
     {
         "houseId": 16,
@@ -1273,7 +1444,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": null,
-        "providerTag": "Evolution"
+        "providerTag": "Evolution",
+            "QtechGames":{
+                "gameId": "EVO-thaispeedbaccarata"
+            }
     },
     {
         "houseId": 16,
@@ -1295,7 +1469,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": null,
-        "providerTag": "MAC88 LIVE"
+        "providerTag": "MAC88 LIVE",
+            "QtechGames":{
+                "gameId": "JIL-superace"
+            }
     },
     {
         "houseId": 16,
@@ -1317,7 +1494,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": null,
-        "providerTag": "Jili"
+        "providerTag": "Jili",
+            "QtechGames":{
+                "gameId": "JIL-superrich"
+            }
     },
     {
         "houseId": 16,
@@ -1339,7 +1519,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": null,
-        "providerTag": "Evolution"
+        "providerTag": "Evolution",
+            "QtechGames":{
+                "gameId": "EVO-japanesesupersicbo"
+            }
     },
     {
         "houseId": 16,
@@ -1361,7 +1544,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": null,
-        "providerTag": "Jili"
+        "providerTag": "Jili",
+            "QtechGames":{
+                "gameId": "JJIL-thaihilo"
+            }
     },
     {
         "houseId": 16,
@@ -1383,6 +1569,9 @@
         "state": "ENABLED",
         "trending": true,
         "priority": null,
-        "providerTag": "Evolution"
+        "providerTag": "Evolution",
+            "QtechGames":{
+                "gameId": "ENE-wildminingxxxtreme"
+            }
     }
 ]

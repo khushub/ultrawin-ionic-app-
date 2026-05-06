@@ -787,7 +787,7 @@ const SubHeader: React.FC<StoreProps> = (props) => {
                 onClose={() => setShowExpDetail(false)}
                 aria-labelledby="form-dialog-title"
                 maxWidth="lg"
-                fullWidth
+                fullWidth={true}
                 className="login-alert"
             >
                 <DialogTitle id="form-dialog-title">
