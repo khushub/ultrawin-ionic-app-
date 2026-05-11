@@ -19,7 +19,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": -44,
-        "providerTag": "MAC88 FUN GAMES"
+        "providerTag": "MAC88 FUN GAMES",
+        "QtechGames":{
+            "gameId": "REE-professorclankscombinator"
+        }
     },
     {
         "houseId": 16,
@@ -41,7 +44,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": -40,
-        "providerTag": "MAC88 FUN GAMES"
+        "providerTag": "MAC88 FUN GAMES",
+        "QtechGames":{
+            "gameId": "PLA-piedradelsol"
+        }
     },
     {
         "houseId": 16,
@@ -63,7 +69,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": -39,
-        "providerTag": "MAC88 FUN GAMES"
+        "providerTag": "MAC88 FUN GAMES",
+        "QtechGames":{
+            "gameId": "RFX-powerpack"
+        }
     },
     {
         "houseId": 16,
@@ -85,7 +94,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": -35,
-        "providerTag": "MAC88 VIRTUALS"
+        "providerTag": "MAC88 VIRTUALS",
+        "QtechGames":{
+            "gameId": "JIL-goldentreasurelightning"
+        }
     },
     {
         "houseId": 16,
@@ -107,7 +119,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": -31,
-        "providerTag": "MAC88 FUN GAMES"
+        "providerTag": "MAC88 FUN GAMES",
+        "QtechGames":{
+            "gameId": "KAG-naughtywitches"
+        }
     },
     {
         "houseId": 16,
@@ -129,7 +144,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": -30,
-        "providerTag": "MAC88 VIRTUALS"
+        "providerTag": "MAC88 VIRTUALS",
+        "QtechGames":{
+            "gameId": "JIL-rummy"
+        }
     },
     {
         "houseId": 16,
@@ -151,7 +169,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": -29,
-        "providerTag": "MAC88 FUN GAMES"
+        "providerTag": "MAC88 FUN GAMES",
+        "QtechGames":{
+            "gameId": "JIL-jhandimunda"
+        }
     },
     {
         "houseId": 16,
@@ -173,7 +194,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": -27,
-        "providerTag": "MAC88 FUN GAMES"
+        "providerTag": "MAC88 FUN GAMES",
+        "QtechGames":{
+            "gameId": "RAW-twistedtoytales"
+        }
     },
     {
         "houseId": 16,
@@ -195,7 +219,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": -20,
-        "providerTag": "MAC88 FUN GAMES"
+        "providerTag": "MAC88 FUN GAMES",
+        "QtechGames":{
+            "gameId": "YGG-777voltgigablox"
+        }
     },
     {
         "houseId": 16,
@@ -217,7 +244,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": -12,
-        "providerTag": "MAC88 FUN GAMES"
+        "providerTag": "MAC88 FUN GAMES",
+        "QtechGames":{
+            "gameId": "7ML-777xgoldclubautoroulette"
+        }
     },
     {
         "houseId": 16,
@@ -239,7 +269,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": -11,
-        "providerTag": "MAC88 FUN GAMES"
+        "providerTag": "MAC88 FUN GAMES",
+        "QtechGames":{
+            "gameId": "RTG-snakesfortunehunt"
+        }
     },
     {
         "houseId": 16,
@@ -261,7 +294,10 @@
         "state": "ENABLED",
         "trending": true,
         "priority": 7,
-        "providerTag": "MAC88 FUN GAMES"
+        "providerTag": "MAC88 FUN GAMES",
+        "QtechGames":{
+            "gameId": "RTG-snakesfortunehunt"
+        }
     },
     {
         "houseId": 16,

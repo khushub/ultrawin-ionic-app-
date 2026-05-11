@@ -1,13 +1,13 @@
-import React from 'react';
-import { makeStyles } from '@mui/styles';
+import React from "react";
+import { makeStyles } from "@mui/styles";
 // import { DcGameNew } from '../../models/dc/DcGame';
-import { ArrowBackIosNew, ArrowForwardIos } from '@mui/icons-material';
-import { Box, IconButton } from '@mui/material';
-import { useHistory } from 'react-router';
+import { ArrowBackIosNew, ArrowForwardIos } from "@mui/icons-material";
+import { Box, IconButton } from "@mui/material";
+import { useHistory } from "react-router";
 // import { CasinoGameDTO } from '../../models/IndianCasinoState';
-import { isMobile } from 'react-device-detect';
-import CarouselComponent from '../../common/CarouselComponent/CarouselComponent';
-import Slider from 'react-slick';
+import { isMobile } from "react-device-detect";
+import CarouselComponent from "../../common/CarouselComponent/CarouselComponent";
+import Slider from "react-slick";
 import { useDispatch, useSelector } from "react-redux";
 import { setAlertMsg } from "../../store/slices/commonSlice"; // path adjust kar lena
 
@@ -53,296 +53,263 @@ import { setAlertMsg } from "../../store/slices/commonSlice"; // path adjust kar
 // }));
 
 export const SamplePrevArrow = ({ onClick }: any) => {
-  return (
-    <Box
-      onClick={onClick}
-      sx={{
-        position: 'absolute',
-        top: { xs: '-48px', sm: '-58px' },
-        right: { xs: '36px', sm: '45px' },
-        width: { xs: '32px', sm: '40px' },
-        height: { xs: '32px', sm: '40px' },
-        borderRadius: '9px',
-        background: 'var(--carousel-arrow-btn)',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-    >
-      <IconButton sx={{ color: '#fff' }}>
-        <ArrowBackIosNew sx={{ height: '12px' }} />
-      </IconButton>
-    </Box>
-  );
+    return (
+        <Box
+            onClick={onClick}
+            sx={{
+                position: "absolute",
+                top: { xs: "-48px", sm: "-58px" },
+                right: { xs: "36px", sm: "45px" },
+                width: { xs: "32px", sm: "40px" },
+                height: { xs: "32px", sm: "40px" },
+                borderRadius: "9px",
+                background: "var(--carousel-arrow-btn)",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+            }}
+        >
+            <IconButton sx={{ color: "#fff" }}>
+                <ArrowBackIosNew sx={{ height: "12px" }} />
+            </IconButton>
+        </Box>
+    );
 };
 
 export const SampleNextArrow = ({ onClick }: any) => {
-  return (
-    <Box
-      onClick={onClick}
-      sx={{
-        position: 'absolute',
-        top: { xs: '-48px', sm: '-58px' },
-        right: 0,
-        width: { xs: '32px', sm: '40px' },
-        height: { xs: '32px', sm: '40px' },
-        borderRadius: '9px',
-        background: 'var(--carousel-arrow-btn)',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-    >
-      <IconButton sx={{ color: '#fff' }}>
-        <ArrowForwardIos sx={{ height: '12px' }} />
-      </IconButton>
-    </Box>
-  );
+    return (
+        <Box
+            onClick={onClick}
+            sx={{
+                position: "absolute",
+                top: { xs: "-48px", sm: "-58px" },
+                right: 0,
+                width: { xs: "32px", sm: "40px" },
+                height: { xs: "32px", sm: "40px" },
+                borderRadius: "9px",
+                background: "var(--carousel-arrow-btn)",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+            }}
+        >
+            <IconButton sx={{ color: "#fff" }}>
+                <ArrowForwardIos sx={{ height: "12px" }} />
+            </IconButton>
+        </Box>
+    );
 };
 
 type StoreProps = {
-  heading: string;
-  displayHeader: string;
-  trendingGames: any[];
-  loggedIn: boolean;
-  loggedInUserStatus: any;
-  setCasinoGame: (cGame: any) => void;
-  setDialogShow: Function;
+    heading: string;
+    displayHeader: string;
+    trendingGames: any[];
+    loggedIn: boolean;
+    loggedInUserStatus: any;
+    setCasinoGame: (cGame: any) => void;
+    setDialogShow: Function;
+    availableEventTypes: any;
 };
 const GamesCarousel: React.FC<StoreProps> = ({
-  trendingGames,
-  heading,
-  displayHeader,
-  loggedIn,
-  loggedInUserStatus,
-  setCasinoGame,
-  setDialogShow,
+    trendingGames,
+    heading,
+    displayHeader,
+    loggedIn,
+    loggedInUserStatus,
+    setCasinoGame,
+    setDialogShow,
+    availableEventTypes,
 }) => {
+    //   const { availableEventTypes } = useSelector(
+    //   (state: any) => state.userDetails
+    // );
+    // console.log('trendingGames: ', trendingGames);
+    const dispatch = useDispatch();
 
-  const { availableEventTypes } = useSelector(
-  (state: any) => state.userDetails
-);
-  console.log('trendingGames: ', trendingGames);
-  console.log('availableEventTypes in GamesCarousel: ', availableEventTypes);
-const dispatch = useDispatch();
+    const settings = {
+        responsive: [
+            {
+                breakpoint: 1000,
+                settings: {
+                    slidesToShow: 6,
+                    slidesToScroll: 3,
+                },
+            },
+            {
+                breakpoint: 800,
+                settings: {
+                    slidesToShow: 4,
+                    slidesToScroll: 3,
+                },
+            },
+            {
+                breakpoint: 480,
+                settings: {
+                    slidesToShow: 3,
+                    slidesToScroll: 1,
+                },
+            },
+        ],
+        dots: false,
+        autoplay: heading !== "Live Casino Games",
+        infinite: true,
+        speed: 200,
+        slidesToShow: isMobile ? 3 : 7,
+        slidesToScroll: isMobile ? 3 : 1,
+        arrows: true,
+        autoplaySpeed: 3000,
+        pauseOnHover: true,
+
+        // ❌ remove to="next"
+        nextArrow: <SampleNextArrow />,
+        prevArrow: <SamplePrevArrow />,
+    };
+
+    const history = useHistory();
+
+    const getGameUrl = async (
+        gameId: string,
+        qTechGameId: string,
+        gameName: string,
+        gameCode: string,
+        provider: string,
+        subProvider: string,
+        superProvider: string,
+    ) => {
+
+    //   console.log("Game clicked:", {
+    //       gameId,
+    //       qTechGameId,
+    //       gameName,
+    //       gameCode,
+    //       provider,
+    //       subProvider,
+    //       superProvider,
+    //   });
+
+      if (loggedIn) {
+        let requiredEventTypeId = '';
+        if (availableEventTypes?.["m1"] && !!gameId) {
+            requiredEventTypeId = 'm1';
+        } else if (availableEventTypes?.["c9"] && !!qTechGameId) {
+            requiredEventTypeId = 'c9';
+        }
+
+        if(!['m1', 'c9'].includes(requiredEventTypeId)) {
+            dispatch(
+            setAlertMsg({
+                type: "error",
+                message: "Game is locked. Please Contact Upper Level",
+            }),
+            );
+            return;
+        }
+
+        const serviceType = requiredEventTypeId=='m1'? 'gap' : 'qtech';
 
 
-  const settings = {
-  responsive: [
-    {
-      breakpoint: 1000,
-      settings: {
-        slidesToShow: 6,
-        slidesToScroll: 3,
-      },
-    },
-    {
-      breakpoint: 800,
-      settings: {
-        slidesToShow: 4,
-        slidesToScroll: 3,
-      },
-    },
-    {
-      breakpoint: 480,
-      settings: {
-        slidesToShow: 3,
-        slidesToScroll: 1,
-      },
-    },
-  ],
-  dots: false,
-  autoplay: heading !== 'Live Casino Games',
-  infinite: true,
-  speed: 200,
-  slidesToShow: isMobile ? 3 : 7,
-  slidesToScroll: isMobile ? 3 : 1,
-  arrows: true,
-  autoplaySpeed: 3000,
-  pauseOnHover: true,
 
-  // ❌ remove to="next"
-  nextArrow: <SampleNextArrow />,
-  prevArrow: <SamplePrevArrow />,
-};
+        // status check
+        // if (loggedInUserStatus === 0 || loggedInUserStatus === 3) {
+        //   history.push(`/home`);
+        // }
+        // if (provider === 'Indian Casino') {
+        //   setCasinoGame({ id: gameCode, name: gameName });
+        //   history.push(`/casino/indian/${gameCode}`);
+        // } else {
+        history.push({
+            pathname: `/dc/gamev1.1/${gameName?.toLowerCase().replace(/\s+/g, "-")}-${btoa(
+                gameId?.toString(),
+            )}-${btoa(gameCode)}-${btoa(provider)}-${btoa(subProvider)}-${btoa(superProvider)}`,
+            state: { gameName, activeService: serviceType },
+        });
+        // }
+      } else {
+        setDialogShow(true);
+      }
+    };
 
-  const history = useHistory();
-
-  const getGameUrl = async (
-    gameId: string,
-    gameName: string,
-    gameCode: string,
-    provider: string,
-    subProvider: string,
-    superProvider: string,
-    QtechGames: any
-  ) => {
-
-        if (
-    !availableEventTypes?.['m1'] &&
-    !availableEventTypes?.['c9']
-  ) {
-    dispatch(
-      setAlertMsg({
-        type: "error",
-        message: "Game is locked. Please Contact Upper Level",
-      })
-    );
-
-    return;
-  }
-
-    // ✅ c9 => qtech game id
-  // ✅ m1 => normal game id
- const finalGameId = availableEventTypes?.['m1']
-  ? gameId
-  : availableEventTypes?.['c9']
-  ? QtechGames?.gameId || gameId
-  : gameId;
-
-  
-
-    console.log('Game clicked:', { finalGameId, gameName, gameCode, provider, subProvider, superProvider });
-
-
-  if (loggedIn) {
-
-    if (loggedInUserStatus === 0 || loggedInUserStatus === 3) {
-      history.push(`/home`);
-    } 
-
-    // if (loggedIn) {
-    //   // status check
-    //   if (loggedInUserStatus === 0 || loggedInUserStatus === 3) {
-    //     history.push(`/home`);
-    //   }
-    //   if (provider === 'Indian Casino') {
-    //     setCasinoGame({ id: gameCode, name: gameName });
-    //     history.push(`/casino/indian/${gameCode}`);
-    //   } else {
-    //     history.push({
-    //       pathname: `/dc/gamev1.1/${gameName?.toLowerCase().replace(/\s+/g, '-')}-${btoa(
-    //         gameId?.toString()
-    //       )}-${btoa(gameCode)}-${btoa(provider)}-${btoa(subProvider)}-${btoa(superProvider)}`,
-    //       state: { gameName },
-    //     });
-    //   }
-    // } else {
-    //   setDialogShow(true);
-    // }
-
-     if (provider === 'Indian Casino') {
-
-      setCasinoGame({
-        id: gameCode,
-        name: gameName
-      });
-
-      history.push(`/casino/indian/${gameCode}`);
-
-    } else {
-
-      history.push({
-        pathname: `/dc/gamev1.1/${gameName
-          ?.toLowerCase()
-          .replace(/\s+/g, '-')}-${btoa(
-          finalGameId?.toString()
-        )}-${btoa(gameCode)}-${btoa(provider)}-${btoa(
-          subProvider
-        )}-${btoa(superProvider)}`,
-
-        state: { gameName },
-      });
-
-    }
-
-  } else {
-
-    setDialogShow(true);
-
-  }
-  };
-
-  return (
-    <div
-      className={`game-carousel-ctn ${heading === 'Recommended Games' ? 'mt-20' : ''}`}
-    >
-      {/* <div className="home-page-title">
+    return (
+        <div
+            className={`game-carousel-ctn ${heading === "Recommended Games" ? "mt-20" : ""}`}
+        >
+            {/* <div className="home-page-title">
         {heading}
       </div> */}
-      <div className="border-shadow-container">
-        <span className="text">{displayHeader}</span>
-      </div>
-
-      {heading === 'Popular Games' ? (
-        <Slider {...settings}>
-          {trendingGames?.map((game) => (
-            <div
-              key={game.gameId}
-              onClick={() => {
-                getGameUrl(
-                  game?.gameId,
-                  game?.gameName,
-                  game?.gameCode,
-                  game?.providerName,
-                  game?.subProviderName,
-                  game?.superProviderName,
-                  game?.QtechGames
-                );
-              }}
-            >
-              <img
-                className={'home-casino-img-slider'}
-                src={
-                  game?.trendingThumbnail
-                    ? game?.trendingThumbnail
-                    : game.urlThumb
-                }
-                loading="lazy"
-                alt={game.gameName}
-              />
+            <div className="border-shadow-container">
+                <span className="text">{displayHeader}</span>
             </div>
-          ))}
-        </Slider>
-      ) : (
-        <CarouselComponent
-          className="trending-games-slider"
-          enableAutoScroll={heading === 'Popular Games'}
-          scrollMode="smooth"
-          pixelsPerSecond={50}
-          isInfinite={true}
-          // duplicateCount={4}
-          // dependencies={[trendingGames]}
-        >
-          {trendingGames?.length > 0 &&
-            trendingGames.map((game, idx) => (
-              <img
-                className="home-casino-img"
-                src={
-                  game?.trendingThumbnail
-                    ? game?.trendingThumbnail
-                    : game.urlThumb
-                }
-                loading="lazy"
-                key={game.gameId + '-' + idx}
-                alt={game.gameName}
-                onClick={() => {
-                  getGameUrl(
-                    game?.gameId,
-                    game?.gameName,
-                    game?.gameCode,
-                    game?.providerName,
-                    game?.subProviderName,
-                    game?.superProviderName,
-                    game?.QtechGames
-                  );
-                }}
-              />
-            ))}
-        </CarouselComponent>
-      )}
-    </div>
-  );
+
+            {heading === "Popular Games" ? (
+                <Slider {...settings}>
+                    {trendingGames?.map((game) => (
+                        <div
+                            key={game.gameId}
+                            onClick={() => {
+                                console.log("My Game: ", game);
+                                getGameUrl(
+                                    game?.gameId,
+                                    game?.QtechGames?.gameId,
+                                    game?.gameName,
+                                    game?.gameCode,
+                                    game?.providerName,
+                                    game?.subProviderName,
+                                    game?.superProviderName,
+                                );
+                            }}
+                        >
+                            <img
+                                className={"home-casino-img-slider"}
+                                src={
+                                    game?.trendingThumbnail
+                                        ? game?.trendingThumbnail
+                                        : game.urlThumb
+                                }
+                                loading="lazy"
+                                alt={game.gameName}
+                            />
+                        </div>
+                    ))}
+                </Slider>
+            ) : (
+                <CarouselComponent
+                    className="trending-games-slider"
+                    enableAutoScroll={heading === "Popular Games"}
+                    scrollMode="smooth"
+                    pixelsPerSecond={50}
+                    isInfinite={true}
+                    // duplicateCount={4}
+                    // dependencies={[trendingGames]}
+                >
+                    {trendingGames?.length > 0 &&
+                        trendingGames.map((game, idx) => (
+                            <img
+                                className="home-casino-img"
+                                src={
+                                    game?.trendingThumbnail
+                                        ? game?.trendingThumbnail
+                                        : game.urlThumb
+                                }
+                                loading="lazy"
+                                key={game.gameId + "-" + idx}
+                                alt={game.gameName}
+                                onClick={() => {
+                                    getGameUrl(
+                                        game?.gameId,
+                                        game?.QtechGames?.gameId,
+                                        game?.gameName,
+                                        game?.gameCode,
+                                        game?.providerName,
+                                        game?.subProviderName,
+                                        game?.superProviderName,
+                                    );
+                                }}
+                            />
+                        ))}
+                </CarouselComponent>
+            )}
+        </div>
+    );
 };
 
 export default GamesCarousel;

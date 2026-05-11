@@ -16,6 +16,7 @@ type PropType = {
     | 'odds-no-cell'
     | 'premium-odd';
   valueType?:
+    | 'MATCH_ODDS'
     | 'matchOdds'
     | 'bookmakerOdds'
     | 'fancyMarketOdds'
@@ -44,11 +45,11 @@ const ExchMobOddButton: React.FC<PropType> = (props) => {
   const [timer, setTimer] = useState(null);
   const mainValprecision: number = 2;
   const [volume, setVolume] = useState<number>();
-  const subValprecision: number = valueType === 'matchOdds' ? 0 : 0;
+  const subValprecision: number = valueType === 'MATCH_ODDS' ? 0 : 0;
 
   useEffect(() => {
     if (subValue) {
-      if (valueType === 'matchOdds') setVolume(subValue * 1000);
+      if (valueType === 'MATCH_ODDS') setVolume(subValue * 1000);
       else setVolume(subValue);
     }
   }, [subValue, valueType]);

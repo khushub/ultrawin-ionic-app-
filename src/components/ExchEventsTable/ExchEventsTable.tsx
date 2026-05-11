@@ -243,26 +243,31 @@ const EventsTable: React.FC<StoreProps> = (props) => {
       name: event.eventName,
       slug: event.eventSlug,
     });
+    
     history.push(
-      event?.providerName?.toLowerCase() === 'sportradar' &&
-        event?.catId === 'SR VIRTUAL'
-        ? loggedIn
-          ? `/exchange_sports/virtuals/${
-              selectedEventType.slug
-            }/${getCompetitionSlug(
-              event.competitionName
-            )}/${event.eventSlug}/${btoa(
-              `${event.sportId}:${event.competitionId}:${event.eventId}`
-            )}`
-          : '/login'
-        : `/exchange_sports/${
-            selectedEventType.slug
-          }/${getCompetitionSlug(event.competitionName)}/${
-            event.eventSlug
-          }/${btoa(
-            `${event.providerName}:${event.sportId}:${event.competitionId}:${event.eventId}:${moment(event.openDate).unix()}`
-          )}`
+      `/exchange_sports/event-page/${event.sportId ?? event.eventTypeId}/${event.eventId}`,
     );
+    
+    // history.push(
+    //   event?.providerName?.toLowerCase() === 'sportradar' &&
+    //     event?.catId === 'SR VIRTUAL'
+    //     ? loggedIn
+    //       ? `/exchange_sports/virtuals/${
+    //           selectedEventType.slug
+    //         }/${getCompetitionSlug(
+    //           event.competitionName
+    //         )}/${event.eventSlug}/${btoa(
+    //           `${event.sportId}:${event.competitionId}:${event.eventId}`
+    //         )}`
+    //       : '/login'
+    //     : `/exchange_sports/${
+    //         selectedEventType.slug
+    //       }/${getCompetitionSlug(event.competitionName)}/${
+    //         event.eventSlug
+    //       }/${btoa(
+    //         `${event.providerName}:${event.sportId}:${event.competitionId}:${event.eventId}:${moment(event.openDate).unix()}`
+    //       )}`
+    // );
   };
 
   const getEvents = (status: Status) => {
@@ -725,7 +730,7 @@ const EventsTable: React.FC<StoreProps> = (props) => {
                                   mainValue={odd.price}
                                   subValue={odd.size}
                                   oddType={odd.type === 'back-odd'? 'back-odd' : 'lay-odd'}
-                                  valueType="matchOdds"
+                                  valueType="MATCH_ODDS"
                                   showSubValueinKformat={true}
                                   disable={
                                     sEvent?.marketBook?.status?.toLowerCase().includes('suspended') ||

@@ -161,8 +161,115 @@ export const fetchInplayEvents = createAsyncThunk(
 );
 
 
+// NO USE - YET
 export const fetchEventsInDateRange = createAsyncThunk(
     "homeMarkets/fetchEventsInDateRange",
+    async (startDate, endDate, { getState, rejectWithValue }) => {
+        const state = getState();
+        if (!state.auth?.loggedIn) {
+            return rejectWithValue("User is not logged in. Aborting request.");
+        }
+
+        try {
+            const response = await postAPIAuth('/getInplyEventsAPI', {});
+            console.log('fetchInplayEvents response: ', response);
+
+            // if (response?.data?.success) {
+            //     return response.data.response || [];
+            // } else {
+            //     const errorMessage = response?.data?.message || "Failed to fetch inplay events";
+            //     return rejectWithValue(errorMessage);
+            // }
+        } catch (error) {
+            const errorMessage = error?.response?.data?.message || error.message || "Failed to fetch inplay events";
+            return rejectWithValue(errorMessage);
+        }
+    },
+);
+// NO USE
+export const fetchEvent = createAsyncThunk(
+    "homeMarkets/fetchEvent",
+    /**
+     * @param {{ eventTypeId: string | number, competitionId: string | number, eventId: string | number, marketTime: string }} arg
+     */
+    async ({eventTypeId, competitionId, eventId, marketTime}, { getState, rejectWithValue }) => {
+        const state = getState();
+        if (!state.auth?.loggedIn) {
+            return rejectWithValue("User is not logged in. Aborting request.");
+        }
+
+        try {
+            const response = await postAPIAuth('/getInplyEventsAPI', {});
+            console.log('fetchInplayEvents response: ', response);
+
+            // if (response?.data?.success) {
+            //     return response.data.response || [];
+            // } else {
+            //     const errorMessage = response?.data?.message || "Failed to fetch inplay events";
+            //     return rejectWithValue(errorMessage);
+            // }
+        } catch (error) {
+            const errorMessage = error?.response?.data?.message || error.message || "Failed to fetch inplay events";
+            return rejectWithValue(errorMessage);
+        }
+    },
+);
+// NO USE
+export const fetchPremiummarketsByEventId = createAsyncThunk(
+    "homeMarkets/fetchPremiummarketsByEventId",
+    /**
+     * @param {{ providerId: string, competitionId: string | number, eventTypeId: string | number, eventId: string | number, marketTime: string }} arg
+     */
+    async ({providerId, competitionId, eventTypeId, eventId, marketTime}, { getState, rejectWithValue }) => {
+        const state = getState();
+        if (!state.auth?.loggedIn) {
+            return rejectWithValue("User is not logged in. Aborting request.");
+        }
+
+        try {
+            const response = await postAPIAuth('/getInplyEventsAPI', {});
+            console.log('fetchInplayEvents response: ', response);
+
+            // if (response?.data?.success) {
+            //     return response.data.response || [];
+            // } else {
+            //     const errorMessage = response?.data?.message || "Failed to fetch inplay events";
+            //     return rejectWithValue(errorMessage);
+            // }
+        } catch (error) {
+            const errorMessage = error?.response?.data?.message || error.message || "Failed to fetch inplay events";
+            return rejectWithValue(errorMessage);
+        }
+    },
+);
+// NO USE
+export const updateBookMakerMarkets = createAsyncThunk(
+    "homeMarkets/updateBookMakerMarkets",
+    async (startDate, endDate, { getState, rejectWithValue }) => {
+        const state = getState();
+        if (!state.auth?.loggedIn) {
+            return rejectWithValue("User is not logged in. Aborting request.");
+        }
+
+        try {
+            const response = await postAPIAuth('/getInplyEventsAPI', {});
+            console.log('fetchInplayEvents response: ', response);
+
+            // if (response?.data?.success) {
+            //     return response.data.response || [];
+            // } else {
+            //     const errorMessage = response?.data?.message || "Failed to fetch inplay events";
+            //     return rejectWithValue(errorMessage);
+            // }
+        } catch (error) {
+            const errorMessage = error?.response?.data?.message || error.message || "Failed to fetch inplay events";
+            return rejectWithValue(errorMessage);
+        }
+    },
+);
+// NO USE
+export const updateEventScorecard = createAsyncThunk(
+    "homeMarkets/updateEventScorecard",
     async (startDate, endDate, { getState, rejectWithValue }) => {
         const state = getState();
         if (!state.auth?.loggedIn) {
