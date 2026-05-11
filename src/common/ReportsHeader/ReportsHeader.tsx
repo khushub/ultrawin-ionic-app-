@@ -90,9 +90,10 @@ const ReportsHeader = (props: Props) => {
           ) : null}
 
           {tabsOrBtns?.map(
-            (e) =>
+            (e ,index) =>
               e.cond !== false && (
                 <button
+                  key={index}
                   className={`tab-btn ${e.className ? e.className : ''}`}
                   onClick={(evnt) => handleSelect(evnt, e)}
                 >

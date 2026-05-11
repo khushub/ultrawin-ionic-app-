@@ -51,9 +51,9 @@ type Filters = {
 };
 
 const MyWallet: React.FC<StoreProps> = (props) => {
-//   const { balance, langData } = props;
+  //   const { balance, langData } = props;
 
-const balance = 1000;
+  const balance = 1000;
   const langData = {
     back: 'Back',
     my_wallet: 'My Wallet',
@@ -92,34 +92,56 @@ const balance = 1000;
   ];
   const history = useHistory();
   const defaultFilters: Filters = {
-    fromDate: moment().subtract(7, 'd'),
+    fromDate: moment().subtract(7, 'days'),
     toDate: moment(),
     pageToken: [],
   };
 
   const [errorMsg, setErrorMsg] = useState(null);
   const [loading, setLoading] = useState<Boolean>(true);
-//   const [records, setRecords] = useState<any[]>([]);
-const [records, setRecords] = useState<any[]>([
-  {
-    transactionType: 'Deposit',
-    transactionTime: new Date(),
-    amount: 500,
-    balanceAfter: 1500,
-    description: 'Test Transaction',
-  },
-]);
+  //   const [records, setRecords] = useState<any[]>([]);
+  const [records, setRecords] = useState<any[]>([]);
   const [balanceInfo, setBalanceInfo] = useState<any>(null);
   const [pageNum, setPageNum] = useState<number>(1);
-  const cFactor = CURRENCY_TYPE_FACTOR['INR']; //getCurrencyTypeFromToken()
+  const cFactor = CURRENCY_TYPE_FACTOR['INR'] || 1; //getCurrencyTypeFromToken()
 
   const [filters, setFilters] = useState<Filters>(defaultFilters);
   const [nextPageToken, setNextPageToken] = useState<string>(null);
-  
+
 
   const fetchRecords = async () => {
     setLoading(true);
     setErrorMsg(null);
+
+    try {
+      const payload = {
+        from: filters.fromDate.format('YYYY-MM-DD'),
+        to: filters.toDate.clone().add(1, 'day').format('YYYY-MM-DD'),
+      };
+
+      console.log(payload);
+
+      const response: any = await postAPIAuth(
+        '/getPaymentAPI',
+        payload
+      );
+
+      console.log('Payment Response =>', response);
+
+      setRecords(response?.data?.data || []);
+
+
+
+    } catch (err: any) {
+      console.log(err);
+
+      setErrorMsg(
+        err?.response?.data?.message || 'Failed to fetch records'
+      );
+    } finally {
+      setLoading(false);
+    }
+    // 
     // try {
     //   const response: any = await REPORTING_API.post(
     //     '/reports/v2/account-statement-report',
@@ -162,19 +184,19 @@ const [records, setRecords] = useState<any[]>([
   }, [filters]);
 
   const fetchCliamBalance = async () => {
-    try {
-    setLoading(true);
-    setErrorMsg(null);
+    //   try {
+    //   setLoading(true);
+    //   setErrorMsg(null);
 
-    const response = await postAPIAuth('/getUserDetailsAPI', {});
-    setBalanceInfo(response.data);
-    console.log(response); 
-  } catch (err) {
-    console.log(err);
-    setErrorMsg('Failed to load wallet');
-  } finally {
-    setLoading(false);
-  }
+    //   const response = await postAPIAuth('/getUserDetailsAPI', {});
+    //   setBalanceInfo(response.data);
+    //   console.log(response); 
+    // } catch (err) {
+    //   console.log(err);
+    //   setErrorMsg('Failed to load wallet');
+    // } finally {
+    //   setLoading(false);
+    // }
 
     // try {
     //   const walletId = sessionStorage.getItem('aid');
@@ -257,10 +279,11 @@ const [records, setRecords] = useState<any[]>([
     return (
       <div className="upperrow-pad-5">
         <div className="tiny-info-text">
-          {TransactionTypeMap[row.transactionType]}
+          {/* {TransactionTypeMap[row.transactionType]} */}
+          {row.type} ({row.status})
         </div>
         <div className="col-data-desc tiny-info-text">
-          {moment(row.transactionTime).format('DD-MM-YY, h:mm A')}
+          {moment(row.createdAt).format('DD-MM-YY, h:mm:ss A')}
         </div>
       </div>
     );
@@ -269,13 +292,23 @@ const [records, setRecords] = useState<any[]>([
   function upperRowCellRender2(headerParam, row) {
     return (
       <div
-        className={`upperrow-pad-5 ${
-          row.account > 0 ? 'mw-ur-profit' : 'mw-ur-loss'
-        } `}
+        className={`upperrow-pad-5 ${row.type === 'Deposit'
+            ? 'mw-ur-profit'
+            : row.type === 'Withdrawal'
+              ? 'mw-ur-loss'
+              : ''
+          }`}
       >
-        {row.amount > 0
-          ? '+' + Number(row.amount / cFactor).toFixed(2)
-          : Number(row.amount / cFactor).toFixed(2)}
+        {Number(row.amount || 0) > 0
+          ? '+' +
+          (
+            Number(row.amount || 0) /
+            Number(cFactor || 1)
+          ).toFixed(2)
+          : (
+            Number(row.amount || 0) /
+            Number(cFactor || 1)
+          ).toFixed(2)}
       </div>
     );
   }
@@ -283,7 +316,7 @@ const [records, setRecords] = useState<any[]>([
   function upperRowCellRender3(headerParam, row) {
     return (
       <div className="upperrow-pad-5">
-        {Number(row.balanceAfter / cFactor).toFixed(2)}
+        {Number(row.balance / cFactor).toFixed(2)}
       </div>
     );
   }
@@ -294,41 +327,41 @@ const [records, setRecords] = useState<any[]>([
         <>
           <ReportBackBtn back={langData?.['back']} />
           <ReportsHeader
-  titleIcon={WalletIcon}
-  reportName={langData?.['my_wallet']}
-  tabsOrBtns={[
-    {
-     label: `${langData?.['available_balance_caps_txt']}: ${(
-  Number(balanceInfo?.doc?.balance || 0) / (cFactor || 1)
-).toFixed(2)}`,
-      onSelect: () => {},
-      className: 'avail-bal-label',
-    },
-  ]}
-  reportFilters={[
-    {
-      element: (
-        <DateTemplate
-          value={filters.fromDate}
-          label={langData?.['from']}
-          onChange={(e) => fromDateChangeHandler(e)}
-          minDate={moment().subtract(1, 'months').calendar()}
-          maxDate={filters.toDate}
-        />
-      ),
-    },
-    {
-      element: (
-        <DateTemplate
-          value={filters.toDate}
-          label={langData?.['to']}
-          onChange={(e) => toDateChangeHandler(e)}
-          minDate={filters.fromDate}
-        />
-      ),
-    },
-  ]}
-/>
+            titleIcon={WalletIcon}
+            reportName={langData?.['my_wallet']}
+            tabsOrBtns={[
+              {
+                label: `${langData?.['available_balance_caps_txt']}: ${(
+                  Number(balanceInfo?.doc?.balance || 0) / (cFactor || 1)
+                ).toFixed(2)}`,
+                onSelect: () => { },
+                className: 'avail-bal-label',
+              },
+            ]}
+            reportFilters={[
+              {
+                element: (
+                  <DateTemplate
+                    value={filters.fromDate}
+                    label={langData?.['from']}
+                    onChange={(e) => fromDateChangeHandler(e)}
+                    minDate={moment().subtract(6, 'months').calendar()}
+                    maxDate={filters.toDate}
+                  />
+                ),
+              },
+              {
+                element: (
+                  <DateTemplate
+                    value={filters.toDate}
+                    label={langData?.['to']}
+                    onChange={(e) => toDateChangeHandler(e)}
+                    maxDate={moment().clone().add(1, 'day')}
+                  />
+                ),
+              },
+            ]}
+          />
 
           <div className="content-ctn light-bg">
             <div className="balance-history-tbl-ctn">
@@ -378,32 +411,32 @@ const [records, setRecords] = useState<any[]>([
                         </TableHead>
                         {records.length > 0 ? (
                           <TableBody className="tbl-body">
-                            {records.map((row) => (
-                              <TableRow className="tb-row">
+                            {records.map((row ,index) => (
+                              <TableRow className="tb-row" key={index}>
                                 <TableCell
                                   component="th"
                                   scope="row"
                                   className="tb-col date-col"
                                   align="left"
                                 >
-                                  {moment(row.transactionTime).format(
-                                    'DD-MM-YY, h:mm:ss A'
-                                  )}
+                                  {moment(row.createdAt).format('DD-MM-YY, h:mm A')}
                                 </TableCell>
                                 <TableCell
                                   className="tb-col transaction-col"
                                   align="left"
                                 >
                                   <div className="web-view">
-                                    {TransactionTypeMap[row.transactionType]}
+                                    {/* {TransactionTypeMap[row.transactionType]} */}
+                                    {row.type} ({row.status})
                                   </div>
 
                                   <div className="mob-view">
                                     <div className="tiny-info-text">
-                                      {TransactionTypeMap[row.transactionType]}
+                                      {/* {TransactionTypeMap[row.transactionType]} */}
+                                      {row.type} ({row.status})
                                     </div>
                                     <div className="col-data-desc tiny-info-text">
-                                      {moment(row.transactionTime).format(
+                                      {moment(row.createdAt).format(
                                         'DD-MM-YY, h:mm A'
                                       )}
                                     </div>
@@ -412,25 +445,47 @@ const [records, setRecords] = useState<any[]>([
 
                                 <TableCell
                                   className={
-                                    row.amount > 0
+                                    row.type === 'Deposit'
                                       ? 'tb-col profit'
-                                      : row.amount < 0
+                                      : row.type === 'Withdrawal'
                                         ? 'tb-col loss'
                                         : 'tb-col'
                                   }
                                   align="right"
                                 >
                                   <span className="mob-fs-14">
-                                    {row.amount > 0
+                                    {/* {row.amount > 0
                                       ? '+' +
-                                        Number(row.amount / cFactor).toFixed(2)
-                                      : Number(row.amount / cFactor).toFixed(2)}
+                                      Number(row.amount / cFactor).toFixed(2)
+                                      : Number(row.amount / cFactor).toFixed(2)} */}
+
+                                    {row.type === 'Deposit'
+                                      ? '+' +
+                                      (
+                                        Number(row.amount || 0) /
+                                        Number(cFactor || 1)
+                                      ).toFixed(2)
+
+                                      : row.type === 'Withdrawal'
+                                        ? '-' +
+                                        (
+                                          Number(row.amount || 0) /
+                                          Number(cFactor || 1)
+                                        ).toFixed(2)
+                                        : (
+                                          Number(row.amount || 0) /
+                                          Number(cFactor || 1)
+                                        ).toFixed(2)}
                                   </span>
                                 </TableCell>
                                 <TableCell className="tb-col" align="right">
                                   <span className="mob-fs-13">
-                                    {Math.floor(
+                                    {/* {Math.floor(
                                       Number(row.balanceAfter / cFactor)
+                                    ).toFixed(2)} */}
+
+                                    {Number(
+                                      Number(row.balance) / cFactor
                                     ).toFixed(2)}
                                   </span>
                                 </TableCell>
@@ -439,7 +494,8 @@ const [records, setRecords] = useState<any[]>([
                                   className="tb-col desc-col"
                                   align="left"
                                 >
-                                  {row.description ? row.description : '-'}
+                                  {/* {row.description ? row.description : '-'} */}
+                                  {row.remarks ? row.remarks : '-'}
                                 </TableCell>
                               </TableRow>
                             ))}

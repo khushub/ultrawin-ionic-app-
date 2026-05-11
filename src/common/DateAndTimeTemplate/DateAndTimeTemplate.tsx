@@ -37,26 +37,35 @@ const DateTemplate = (props: Props) => {
           format="DD/MM/YYYY"
             enableAccessibleFieldDOMStructure={false}   // ✅ ADD THIS
           slots={{
-            textField: (params) => (
-              <TextField
-                {...params}
-                className="date-filter date-control"
-                variant="standard"
-                InputProps={{
-                  ...params.InputProps,
-                  disableUnderline: true,
-                  readOnly: true,
-                  endAdornment: (
-                    <img
-                      src={calendarIcon}
-                      alt="calendar"
-                      style={{ width: 20, cursor: 'pointer' }}
-                    />
-                  ),
-                }}
-              />
-            ),
-          }}
+  textField: (params) => (
+    <TextField
+      {...params}
+      className="date-filter date-control"
+      variant="standard"
+      InputProps={{
+        ...params.InputProps,
+        disableUnderline: true,
+        readOnly: true,
+
+        endAdornment: (
+          <>
+            {params.InputProps?.endAdornment}
+
+            {/* <img
+              src={calendarIcon}
+              alt="calendar"
+              style={{
+                width: 20,
+                cursor: 'pointer',
+                marginLeft: 4,
+              }}
+            /> */}
+          </>
+        ),
+      }}
+    />
+  ),
+}}
         />
       </LocalizationProvider>
     </div>

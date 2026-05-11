@@ -49,3 +49,23 @@
     }
   }
 }
+
+.MuiPickersPopper-root {
+  z-index: 99999 !important;
+}
+
+// .MuiPaper-root {
+//   background: #ffffff !important;
+// }
+
+.MuiPickersLayout-root {
+  background: #ffffff !important;
+}
+
+.MuiPickersCalendarHeader-root {
+  background: #ffffff !important;
+}
+
+.MuiDayCalendar-root {
+  background: #ffffff !important;
+}
