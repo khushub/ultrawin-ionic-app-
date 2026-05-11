@@ -6,6 +6,8 @@ import commonReducer from './slices/commonSlice';
 import userDetailsReducer from './slices/userDetailsSlice';
 import homeMarketsReducer from './slices/homeMarketsSlice';
 import exchBetSlipReducer from './slices/exchBetSlipSlice';
+import eventReducer from './slices/eventSlice';
+import betPlacingReducer from './slices/betPlacingSlice';
 // import eventReducer from './slices/eventSlice';
 // import betPlacingReducer from './slices/betPlacingSlice';
 // import modalsReducer from './slices/modalSlice';
@@ -30,6 +32,8 @@ export const rootReducer = combineReducers({
   userDetails: userDetailsReducer,
   homeMarkets: homeMarketsReducer,
   exchBetSlip: exchBetSlipReducer,
+  event: eventReducer,
+  betPlacing: betPlacingReducer,
   // event: eventReducer,
   // betPlacing: betPlacingReducer,
   // modals: modalsReducer,

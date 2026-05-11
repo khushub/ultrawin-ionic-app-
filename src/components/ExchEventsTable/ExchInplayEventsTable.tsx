@@ -197,16 +197,18 @@ const InplayEventsTable: React.FC<StoreProps> = (props) => {
                 }/${btoa(`${event.sportId}:${event.competitionId}:${event.eventId}`)}`,
             );
         } else {
-            history.push(
-                `/exchange_sports/${iEvent.sportSlug}/${competitionSlug}/${
-                    event.eventSlug
-                }/${btoa(`${event.providerName}:${event.sportId}:${event.competitionId}:${event.eventId}:${moment(event.openDate).unix()}`)}`,
-                {
-                    homeTeam: event?.homeTeam,
-                    awayTeam: event?.awayTeam,
-                    openDate: event?.openDate,
-                },
-            );
+            // history.push(
+            //     `/exchange_sports/${iEvent.sportSlug}/${competitionSlug}/${
+            //         event.eventSlug
+            //     }/${btoa(`${event.providerName}:${event.sportId}:${event.competitionId}:${event.eventId}:${moment(event.openDate).unix()}`)}`,
+            //     {
+            //         homeTeam: event?.homeTeam,
+            //         awayTeam: event?.awayTeam,
+            //         openDate: event?.openDate,
+            //     },
+            // );
+
+            history.push(`/exchange_sports/event-page/${event.sportId}/${event.eventId}`);
         }
     };
 
@@ -500,7 +502,7 @@ const InplayEventsTable: React.FC<StoreProps> = (props) => {
                                                                                                                                     !sEvent.enableMatchOdds &&
                                                                                                                                     sEvent.enablePremium
                                                                                                                                         ? "premiumOdds"
-                                                                                                                                        : "matchOdds"
+                                                                                                                                        : "MATCH_ODDS"
                                                                                                                                 }
                                                                                                                                 showSubValueinKformat={true}
                                                                                                                                 // onClick={() => null}
@@ -565,7 +567,7 @@ const InplayEventsTable: React.FC<StoreProps> = (props) => {
                                                                                                                     sEvent?.marketBook?.status?.toLowerCase().includes('suspended') ||
                                                                                                                     sEvent?.marketBook?.status?.toLowerCase().includes('closed')
                                                                                                                 }
-                                                                                                                valueType="matchOdds"
+                                                                                                                valueType="MATCH_ODDS"
                                                                                                                 showSubValueinKformat={true}
                                                                                                                 onClick={() =>null}
                                                                                                             />

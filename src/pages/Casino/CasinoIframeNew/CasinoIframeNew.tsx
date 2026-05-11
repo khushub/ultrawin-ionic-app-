@@ -1,17 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
-import { useHistory, useLocation } from 'react-router';
-import { useParams } from 'react-router-dom';
-// import { RootState } from '../../../models/RootState';
-import './CasinoIframeNew.scss';
-import { isMobile, isIOS } from 'react-device-detect';
-import LoadingPage from '../../LoadingPage/index';
-import { postAPIAuth } from '../../../services/apiInstance';
-// import SVLS_API from '../../../svls-api';
-import { useSelector } from "react-redux";
-import { toast } from "react-toastify";
-import { useDispatch } from "react-redux";
-import { setAlertMsg } from "../../../store/slices/commonSlice"; // path adjust kar lena
+import React, { useEffect, useState } from "react";
+import { connect } from "react-redux";
+import { useHistory, useLocation } from "react-router";
+import { useParams } from "react-router-dom";
+import "./CasinoIframeNew.scss";
+import { isMobile, isIOS } from "react-device-detect";
+import LoadingPage from "../../LoadingPage/index";
+import { postAPIAuth } from "../../../services/apiInstance";
+import { useSelector, useDispatch } from "react-redux";
+import { setAlertMsg } from "../../../store/slices/commonSlice";
 
 type StoreProps = {
     gameUrl: string;
@@ -24,220 +20,140 @@ type RouteParams = {
 };
 
 const CasinoIframeNew: React.FC<StoreProps> = (props) => {
-    const [gameSrc, setGameSrc] = useState<string>('');
+    const [gameSrc, setGameSrc] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
 
     const { loggedIn, token } = props;
-
     const { gamePath } = useParams<RouteParams>();
-
-    // console.log('Received gamePath:', gamePath);
     const history = useHistory();
     const dispatch = useDispatch();
-
     const locationState: any = useLocation().state;
-    const { availableEventTypes } = useSelector(
-        (state: any) => state.userDetails
-    );
 
+    const { availableEventTypes } = useSelector((state: any) => state.userDetails,);
 
-
+    // activeService comes from route state set in getGameUrl
+    const activeService: "gap" | "qtech" =
+        locationState?.activeService ?? "gap";
 
     useEffect(() => {
-        document.getElementsByClassName('router-ctn')[0].scrollIntoView();
+        document.getElementsByClassName("router-ctn")[0].scrollIntoView();
     }, []);
 
-    const getGameUrl = async (
-        // gameId: string,
-        // gameCode: string,
-        // provider: string,
-        // subProvider: string,
-        // superProvider: string
-        gameId: string,
-        gameName: string,
-        provider: string,
-        gameCode: string,
-        subProvider: string,
-        superProvider: string,
-        launchUrl: string
-    ) => {
-        if (loggedIn) {
-            setLoading(true);
-            // const claims = sessionStorage.getItem('jwt_token').split('.')[1];
-            // const userStatus = JSON.parse(window.atob(claims)).status;
-            if (!token) {
-                history.replace('/login');
-                return;
-            }
-
-            const claims = token.split('.')[1];
-            const userStatus = JSON.parse(window.atob(claims)).status;
-
-            if (userStatus === 0 || userStatus === 3) {
-                return history.push(`/home`);
-            }
-
-            // if (provider.toLocaleLowerCase() === 'ezugi') {
-            //   let response;
-            try {
-                // const reqBody = {
-                //   gameId: gameId,
-                //   gameCode: gameCode,
-                //   providerName: provider,
-                //   subProviderName: subProvider,
-                //   platformId: isMobile ? 'mobile' : 'desktop',
-                //   superProviderName: superProvider,
-                //   redirectUrl: window.location.origin,
-                // };
-                // response = await SVLS_API.post(
-                //   '/catalog/v2/live-casino/game-url',
-                //   reqBody,
-                //   {
-                //     headers: {
-                //       Authorization: sessionStorage.getItem('jwt_token'),
-                //     },
-                //   }
-                // );
-
-                // const launchUrl = locationState?.launchUrl;
-                if (isMobile && isIOS) {
-                    window.location.href = launchUrl;
-                } else {
-                    setGameSrc(launchUrl);
-                }
-            } catch (e) {
-                console.log(e);
-            } finally {
-                setLoading(false);
-            }
-
-        } else {
-            history.push(`/`);
-        }
+    const launchGame = (launchUrl: string) => {
+        // if (isMobile && isIOS) {
+        //     window.location.href = launchUrl;
+        // } else {
+        // }
+        setGameSrc(launchUrl);
     };
 
     useEffect(() => {
-
         const loadGame = async () => {
             if (!gamePath) return;
 
-            if (
-                !availableEventTypes?.['m1'] &&
-                !availableEventTypes?.['c9']
-            ) {
+            if (!loggedIn) {
+                history.replace("/login");
+                return;
+            }
+
+            // Safety net — check eventTypeId for the active service
+            const eventTypeId = activeService === "gap" ? "m1" : "c9";
+            if (!availableEventTypes?.[eventTypeId]) {
                 dispatch(
                     setAlertMsg({
                         type: "error",
                         message: "Game is locked. Please Contact Upper Level",
-                    })
+                    }),
                 );
-
+                history.replace("/home");
                 return;
             }
 
-            const pathParts = gamePath.split("-");
+            if (!token) {
+                history.replace("/login");
+                return;
+            }
 
+            // Status check from JWT
+            const claims = token.split(".")[1];
+            const userStatus = JSON.parse(window.atob(claims)).status;
+            if (userStatus === 0 || userStatus === 3) {
+                history.push("/home");
+                return;
+            }
+
+            // Decode path params — keep all of them as-is
+            const pathParts = gamePath.split("-");
             const superProvider = atob(pathParts.pop() || "");
             const subProvider = atob(pathParts.pop() || "");
             const provider = atob(pathParts.pop() || "");
             const gameCode = atob(pathParts.pop() || "");
             const gameId = atob(pathParts.pop() || "");
-            // const eventTypeId = atob(pathParts.pop() || "");     //m1 | c9
+            const gameName = locationState?.gameName || pathParts.join("-");
 
-            const gameName =
-                locationState?.gameName || pathParts.join("-");
+            try {
+                setLoading(true);
 
-            console.log("Decoded params:", {
-                gameId,
-                gameCode,
-                provider,
-                subProvider,
-                superProvider
-            });
+                let launchUrl = "";
 
-            let launchUrl = locationState?.launchUrl || "";
-
-            // agar refresh hua aur state missing hai to API se url lao
-            if (!launchUrl || gameName === "cockfight") {
-
-                // const response = await postAPIAuth(
-                //   "UserloginToGapApi",
-                //   {
-                //     gameId,
-                //     providerName: provider,
-                //   }
-                // );
-
-                // console.log("API response:", response); 
-
-
-
-                // launchUrl =
-                //   response?.data?.data?.url || "";
-
-                //   console.log("launchUrl", launchUrl)
-                let response;
-
-                if (availableEventTypes?.['m1']) {
-
-
-                    response = await postAPIAuth(
-                        "UserloginToGapApi",
-                        {
-                            gameId,
-                            gapProviderName: provider,
-                        }
-                    );
-
-                } else if (availableEventTypes?.['c9']) {
-
-                    response = await postAPIAuth(
-                        "singleGameAPI",
-                        {
-                            gameId,
-
-                        }
-                    );
-
+                if (activeService === "gap") {
+                    const response = await postAPIAuth("/UserloginToGapApi", {
+                        gameId,
+                        providerName: provider,
+                    });
+                    // console.log('resop: ', response)
+                    launchUrl = response?.data?.data?.url || "";
+                } else {
+                    // QTech
+                    const response = await postAPIAuth("/singleGameAPI", {
+                        gameId,
+                    });
+                    // console.log('resop: ', response)
+                    launchUrl = response?.data?.data?.url || "";
                 }
 
-                launchUrl = response?.data?.data?.url || "";
+                if (!launchUrl) {
+                    dispatch(
+                        setAlertMsg({
+                            type: "error",
+                            message: "Unable to launch game. Please try again.",
+                        }),
+                    );
+                    history.replace("/home");
+                    return;
+                }
 
-                console.log("API response for game URL:", response);
-                console.log("launchUrl from API", launchUrl);
+                saveLastPlayedGameDetails({
+                    gameId,
+                    gameName,
+                    provider,
+                    gameCode,
+                    subProvider,
+                    superProvider,
+                    launchUrl,
+                });
 
+                launchGame(launchUrl);
+            } catch (e) {
+                console.error("loadGame error:", e);
+                dispatch(
+                    setAlertMsg({
+                        type: "error",
+                        message: "Something went wrong. Please try again.",
+                    }),
+                );
+            } finally {
+                setLoading(false);
             }
-            else {
-                console.log("Using launchUrl from location state");
-            }
-
-            saveLastPlayedGameDetails({
-                gameId,
-                gameName,
-                provider,
-                gameCode,
-                subProvider,
-                superProvider,
-                launchUrl,
-            });
-
-            getGameUrl(
-                gameId,
-                gameName,
-                provider,
-                gameCode,
-                subProvider,
-                superProvider,
-                launchUrl
-            );
         };
 
         loadGame();
     }, []);
 
-    const saveLastPlayedGameDetails = (newGame) => {
-        const existingGames =
-            JSON.parse(localStorage.getItem('recent_games')) || [];
+    const saveLastPlayedGameDetails = (newGame: any) => {
+        const existingGames = JSON.parse(
+            localStorage.getItem("recent_games") || "[]",
+        );
         if (
             existingGames.length > 0 &&
             existingGames[0].gameId === newGame.gameId
@@ -245,11 +161,11 @@ const CasinoIframeNew: React.FC<StoreProps> = (props) => {
             return;
         }
         existingGames.unshift(newGame);
-        const updatedGames = existingGames.slice(0, 3);
-        localStorage.setItem('recent_games', JSON.stringify(updatedGames));
+        localStorage.setItem(
+            "recent_games",
+            JSON.stringify(existingGames.slice(0, 3)),
+        );
     };
-
-
 
     return (
         <div className="dc-iframe-ctn">
@@ -262,18 +178,16 @@ const CasinoIframeNew: React.FC<StoreProps> = (props) => {
                     title="DC game"
                     allowFullScreen
                     sandbox="allow-same-origin allow-forms allow-scripts allow-top-navigation allow-popups"
-                ></iframe>
+                />
             )}
         </div>
     );
 };
 
-const mapStateToProps = (state: any) => {
-    return {
-        gameUrl: state.common.dcGameUrl,
-        loggedIn: state.auth.loggedIn,
-        token: state.auth.token,
-    };
-};
+const mapStateToProps = (state: any) => ({
+    gameUrl: state.common.dcGameUrl,
+    loggedIn: state.auth.loggedIn,
+    token: state.auth.token,
+});
 
 export default connect(mapStateToProps)(CasinoIframeNew);

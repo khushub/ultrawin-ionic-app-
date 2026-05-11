@@ -599,6 +599,22 @@ export enum JwtToken {
     MODE = "mode",
 }
 
+export const isBmSpecialMarket = (marketName: string, oddType?: string) => {
+  return (
+    marketName === 'Genie Combo Special Bet' ||
+    marketName?.toLowerCase().includes('last digit') ||
+    oddType === 'GINNIE_ODDS' ||
+    oddType === 'BACK_ONLY_ODDS'
+  );
+};
+
+export const isBackOnlyMarket = (oddType: string, marketName: string) => {
+  return (
+    oddType === 'BACK_ONLY_ODDS' ||
+    marketName?.toLowerCase().includes('last digit')
+  );
+};
+
 export const oddValueFormatter = (marketType, oddValue, sessionRuns) => {
     if (oddValue === -1) {
         return "-";

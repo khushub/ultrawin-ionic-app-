@@ -7,8 +7,6 @@ import { connect } from 'react-redux';
 import { useIdleTimer } from 'react-idle-timer';
 import Home from './pages/Home';
 import HomePage from './pages/HomePage/Home';
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -298,7 +296,6 @@ const App: React.FC = (props:any) => {
                 <Route path="/forgot-password"><ForgotPwdForm /></Route>
                 <Route path="/"><MainPage /></Route>
               </Switch>
-              <ToastContainer position="top-right" autoClose={3000} />
             </BrowserRouter>
           </Suspense>
         </IonRouterOutlet>

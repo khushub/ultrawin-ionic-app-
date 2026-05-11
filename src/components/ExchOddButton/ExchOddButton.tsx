@@ -14,6 +14,7 @@ type PropType = {
     | 'odds-no-cell'
     | 'premium-odd';
   valueType?:
+    | 'MATCH_ODDS'
     | 'matchOdds'
     | 'bookmakerOdds'
     | 'fancyMarketOdds'
@@ -43,11 +44,11 @@ const OddButton: React.FC<PropType> = (props) => {
   const [timer, setTimer] = useState(null);
   const [currentOdds, setCurrentOdds] = useState<number[]>([]);
   const [volume, setVolume] = useState<number>();
-  const subValprecision: number = valueType === 'matchOdds' ? 0 : 0;
+  const subValprecision: number = valueType === 'MATCH_ODDS' ? 0 : 0;
 
   useEffect(() => {
     if (subValue) {
-      if (valueType === 'matchOdds') setVolume(subValue * 1000);
+      if (valueType === 'MATCH_ODDS') setVolume(subValue * 1000);
       else setVolume(subValue);
     }
   }, [subValue, valueType]);

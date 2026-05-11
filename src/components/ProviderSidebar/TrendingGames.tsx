@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { setTrendingGames } from '../../store/slices/commonSlice';
-import { connect } from 'react-redux';
+import { setAlertMsg, setTrendingGames } from '../../store/slices/commonSlice';
+import { connect, useDispatch } from 'react-redux';
 import { Dialog, DialogContent, DialogTitle, DialogActions, Button } from '@mui/material';
 import { useHistory } from 'react-router';
 import { NavLink } from 'react-router-dom';
@@ -13,6 +13,7 @@ type TrendingProps = {
   loggedIn: boolean;
   setTrendingGames: Function;
   langData: any;
+  availableEventTypes: any;
 };
 
 const TrendingGames: React.FC<TrendingProps> = (props) => {
@@ -21,8 +22,9 @@ const TrendingGames: React.FC<TrendingProps> = (props) => {
     loggedIn,
     setTrendingGames,
     langData,
+    availableEventTypes,
   } = props;
-
+  const dispatch = useDispatch<any>();
   const [showDialog, setShowDialog] = useState<boolean>(false);
   const history = useHistory();
 
@@ -32,6 +34,7 @@ const TrendingGames: React.FC<TrendingProps> = (props) => {
 
   const getGameUrl = async (
     gameId: string,
+    qTechGameId: string,
     gameName: string,
     gameCode: string,
     provider: string,
@@ -39,16 +42,37 @@ const TrendingGames: React.FC<TrendingProps> = (props) => {
     superProvider: string
   ) => {
     if (loggedIn) {
-      if (provider === 'Indian Casino') {
-        history.push(`/casino/indian/${gameCode}`);
-      } else {
+      let requiredEventTypeId = '';
+      if (availableEventTypes?.["m1"] && !!gameId) {
+        requiredEventTypeId = 'm1';
+      } else if (availableEventTypes?.["c9"] && !!qTechGameId) {
+        requiredEventTypeId = 'c9';
+      }
+
+      if(!['m1', 'c9'].includes(requiredEventTypeId)) {
+        dispatch(
+          setAlertMsg({
+            type: "error",
+            message: "Game is locked. Please Contact Upper Level",
+          }),
+        );
+        return;
+      }
+
+      const serviceType = requiredEventTypeId=='m1'? 'gap' : 'qtech';
+
+
+
+      // if (provider === 'Indian Casino') {
+      //   history.push(`/casino/indian/${gameCode}`);
+      // } else {
         history.push({
           pathname: `/dc/gamev1.1/${gameName?.toLowerCase().replace(/\s+/g, '-')}-${btoa(
             gameId?.toString()
           )}-${btoa(gameCode)}-${btoa(provider)}-${btoa(subProvider)}-${btoa(superProvider)}`,
-          state: { gameName },
+          state: { gameName, activeService: serviceType },
         });
-      }
+      // }
     } else {
       setDialogShow(true);
     }
@@ -67,6 +91,7 @@ const TrendingGames: React.FC<TrendingProps> = (props) => {
 
   const handleGameClick = async (
     gameId: string,
+    qTechGameId: string,
     gameName: string,
     gameCode: string,
     subProvider: string,
@@ -86,6 +111,7 @@ const TrendingGames: React.FC<TrendingProps> = (props) => {
     ) {
       getGameUrl(
         gameId,
+        qTechGameId,
         gameName,
         gameCode,
         provider,
@@ -95,6 +121,7 @@ const TrendingGames: React.FC<TrendingProps> = (props) => {
     } else {
       getGameUrl(
         gameId,
+        qTechGameId,
         gameName,
         gameCode,
         provider,
@@ -127,6 +154,7 @@ const TrendingGames: React.FC<TrendingProps> = (props) => {
                   onClick={() =>
                     handleGameClick(
                       game?.gameId,
+                      game?.QtechGames?.gameId,
                       game?.gameName,
                       game?.gameCode,
                       game?.subProviderName,
@@ -183,6 +211,7 @@ const mapStateToProps = (state: any) => {
   return {
     loggedIn: state.auth.loggedIn,
     trendingGames: state.common.trendingGames,
+    availableEventTypes: state.userDetails.availableEventTypes,
   };
 };
 

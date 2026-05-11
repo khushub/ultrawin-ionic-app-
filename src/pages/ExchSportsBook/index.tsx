@@ -8,7 +8,8 @@ import "./ExchangeSportsHomeView.scss";
 import '../SportsProvider/index.scss';
 import ExchSportsView from "./ExchangeSportsView";
 const ExchInplayEventsView = lazy(() => import('../ExchInplayEvents/ExchInplayEventsView'))
-// const ExchangeAllMarkets = lazy(() => import("./ExchangeAllMarkets"));
+const ExchangeAllMarkets = lazy(() => import("./ExchangeAllMarkets"));
+const EventPage = lazy(()=>import("../EventPage"));
 // const MultimarketView = lazy(() => import("./MultimarketView"));
 // const ExchangeVirtualMarkets = lazy(() => import("./ExchangeVirtualMarkets"));
 const InplayPage = lazy(() => import("../ExchInplayEvents/ExchInplayEventsView"),);
@@ -100,13 +101,17 @@ const ExchangeSportsBook: React.FC<StoreProps> = (props) => {
                                 render={() => <ExchSportsView />}
                             />
 
-                            {/* <Route
+                            <Route
                                 exact
                                 path={`${path}/:eventType/:competition/:eventId/:eventInfo`}
-                                render={() => (
-                                    <ExchangeAllMarkets loggedIn={loggedIn} />
-                                )}
-                            /> */}
+                                render={() => ( <ExchangeAllMarkets loggedIn={loggedIn} /> )}
+                            />
+
+                            <Route
+                                exact
+                                path={`${path}/event-page/:eventTypeId/:eventId`}
+                                render={() => ( <EventPage /> )}
+                            />
 
                             {/* <Route
                                 exact

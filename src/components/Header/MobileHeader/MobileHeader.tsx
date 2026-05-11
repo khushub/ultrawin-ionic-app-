@@ -75,14 +75,14 @@ const MobileHeader: React.FC<StoreProps> = (props) => {
 
   return (
     <>
-      <a
+      {/* <a
         className="exch-mob-nav-link mlobby-main mini-casino-btn"
         onClick={() => mlobbyBtnClick()}
       >
         <div className="exch-nav-item-ctn relative">
           <img className="absolute" src={UVGamesGif} />
         </div>
-      </a>
+      </a> */}
 
       {oneClickBettingEnabled &&
       isMobile &&
