@@ -37,11 +37,11 @@ const CasinoIframeNew: React.FC<StoreProps> = (props) => {
 
     const locationState: any = useLocation().state;
     const { availableEventTypes } = useSelector(
-  (state: any) => state.userDetails
-);
+        (state: any) => state.userDetails
+    );
 
-    
-    
+
+
 
     useEffect(() => {
         document.getElementsByClassName('router-ctn')[0].scrollIntoView();
@@ -116,88 +116,124 @@ const CasinoIframeNew: React.FC<StoreProps> = (props) => {
         }
     };
 
- useEffect(() => {
-    
-  const loadGame = async () => {
-    if (!gamePath) return;
+    useEffect(() => {
 
-    if (!availableEventTypes?.['m1']) {
-  dispatch(
-    setAlertMsg({
-      type: "error",
-      message: "Game is locked. Please Contact Upper Level",
-    })
-  );
-  return;
-}
+        const loadGame = async () => {
+            if (!gamePath) return;
 
-   const pathParts = gamePath.split("-");
+            if (
+                !availableEventTypes?.['m1'] &&
+                !availableEventTypes?.['c9']
+            ) {
+                dispatch(
+                    setAlertMsg({
+                        type: "error",
+                        message: "Game is locked. Please Contact Upper Level",
+                    })
+                );
 
-const superProvider = atob(pathParts.pop() || "");
-const subProvider = atob(pathParts.pop() || "");
-const provider = atob(pathParts.pop() || "");
-const gameCode = atob(pathParts.pop() || "");
-const gameId = atob(pathParts.pop() || "");
-// const eventTypeId = atob(pathParts.pop() || "");     //m1 | c9
+                return;
+            }
 
-const gameName =
-  locationState?.gameName || pathParts.join("-");
+            const pathParts = gamePath.split("-");
 
-    console.log("Decoded params:", {
-      gameId,
-      gameCode,
-      provider,
-      subProvider,
-      superProvider
-    });
+            const superProvider = atob(pathParts.pop() || "");
+            const subProvider = atob(pathParts.pop() || "");
+            const provider = atob(pathParts.pop() || "");
+            const gameCode = atob(pathParts.pop() || "");
+            const gameId = atob(pathParts.pop() || "");
+            // const eventTypeId = atob(pathParts.pop() || "");     //m1 | c9
 
-    let launchUrl = locationState?.launchUrl || "";
+            const gameName =
+                locationState?.gameName || pathParts.join("-");
 
-    // agar refresh hua aur state missing hai to API se url lao
-    if (!launchUrl || gameName === "cockfight") {
-     
-        const response = await postAPIAuth(
-          "UserloginToGapApi",
-          {
-            gameId,
-            providerName: provider,
-          }
-        );
+            console.log("Decoded params:", {
+                gameId,
+                gameCode,
+                provider,
+                subProvider,
+                superProvider
+            });
 
-        console.log("API response:", response); 
+            let launchUrl = locationState?.launchUrl || "";
+
+            // agar refresh hua aur state missing hai to API se url lao
+            if (!launchUrl || gameName === "cockfight") {
+
+                // const response = await postAPIAuth(
+                //   "UserloginToGapApi",
+                //   {
+                //     gameId,
+                //     providerName: provider,
+                //   }
+                // );
+
+                // console.log("API response:", response); 
 
 
 
-        launchUrl =
-          response?.data?.data?.url || "";
+                // launchUrl =
+                //   response?.data?.data?.url || "";
 
-          console.log("launchUrl", launchUrl)
-     
-    }
+                //   console.log("launchUrl", launchUrl)
+                let response;
 
-    saveLastPlayedGameDetails({
-      gameId,
-      gameName,
-      provider,
-      gameCode,
-      subProvider,
-      superProvider,
-      launchUrl,
-    });
+                if (availableEventTypes?.['m1']) {
 
-    getGameUrl(
-      gameId,
-      gameName,
-      provider,
-      gameCode,
-      subProvider,
-      superProvider,
-      launchUrl
-    );
-  };
 
-  loadGame();
-}, []);
+                    response = await postAPIAuth(
+                        "UserloginToGapApi",
+                        {
+                            gameId,
+                            gapProviderName: provider,
+                        }
+                    );
+
+                } else if (availableEventTypes?.['c9']) {
+
+                    response = await postAPIAuth(
+                        "singleGameAPI",
+                        {
+                            gameId,
+
+                        }
+                    );
+
+                }
+
+                launchUrl = response?.data?.data?.url || "";
+
+                console.log("API response for game URL:", response);
+                console.log("launchUrl from API", launchUrl);
+
+            }
+            else {
+                console.log("Using launchUrl from location state");
+            }
+
+            saveLastPlayedGameDetails({
+                gameId,
+                gameName,
+                provider,
+                gameCode,
+                subProvider,
+                superProvider,
+                launchUrl,
+            });
+
+            getGameUrl(
+                gameId,
+                gameName,
+                provider,
+                gameCode,
+                subProvider,
+                superProvider,
+                launchUrl
+            );
+        };
+
+        loadGame();
+    }, []);
 
     const saveLastPlayedGameDetails = (newGame) => {
         const existingGames =

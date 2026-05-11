@@ -71,6 +71,10 @@ const { availableEventTypes } = useSelector(
           preserveAspectRatio: 'xMidYMid slice',
         },
       },
+      QtechGames:{
+        gameId:"SPB-aviator",
+      }
+
     },
     {
       title: 'Bombay Live',
@@ -95,6 +99,10 @@ const { availableEventTypes } = useSelector(
           preserveAspectRatio: 'xMidYMid slice',
         },
       },
+
+      QtechGames:{
+        gameId:"CTI-bombaygems",
+      }
     },
     // {
     //   title: '100% Bonus',
@@ -218,44 +226,138 @@ const { availableEventTypes } = useSelector(
     },
   ];
 
-  const getGameUrl = async (
+  // const getGameUrl = async (
+  //   gameId: string,
+  //   gameName: string,
+  //   gameCode: string,
+  //   provider: string,
+  //   subProvider: string,
+  //   superProvider: string
+  // ) => {
+
+  //    if (!availableEventTypes?.['m1']) {
+  //   dispatch(
+  //     setAlertMsg({
+  //       type: "error",
+  //       message: "Game is locked. Please Contact Upper Level",
+  //     })
+  //   );
+  //   return; // 🚨 yahi rokega navigation
+  // }
+    
+  //   if (loggedIn) {
+  //     // status check
+  //     if (loggedInUserStatus === 0 || loggedInUserStatus === 3) {
+  //       history.push(`/home`);
+  //     }
+  //     if (provider === 'Indian Casino') {
+  //       setCasinoGame({ id: gameCode, name: gameName });
+  //       history.push(`/casino/indian/${gameCode}`);
+  //     } else {
+  //       history.push({
+  //         pathname: `/dc/gamev1.1/${gameName?.toLowerCase().replace(/\s+/g, '-')}-${btoa(
+  //           gameId?.toString()
+  //         )}-${btoa(gameCode)}-${btoa(provider)}-${btoa(subProvider)}-${btoa(superProvider)}`,
+  //         state: { gameName },
+  //       });
+  //     }
+  //   } else {
+  //     setDialogShow(true);
+  //   }
+  // };
+const getGameUrl = async (
     gameId: string,
     gameName: string,
     gameCode: string,
     provider: string,
     subProvider: string,
-    superProvider: string
+    superProvider: string,
+    QtechGames: any
   ) => {
 
-     if (!availableEventTypes?.['m1']) {
+        if (
+    !availableEventTypes?.['m1'] &&
+    !availableEventTypes?.['c9']
+  ) {
     dispatch(
       setAlertMsg({
         type: "error",
         message: "Game is locked. Please Contact Upper Level",
       })
     );
-    return; // 🚨 yahi rokega navigation
+
+    return;
   }
-    
-    if (loggedIn) {
-      // status check
-      if (loggedInUserStatus === 0 || loggedInUserStatus === 3) {
-        history.push(`/home`);
-      }
-      if (provider === 'Indian Casino') {
-        setCasinoGame({ id: gameCode, name: gameName });
-        history.push(`/casino/indian/${gameCode}`);
-      } else {
-        history.push({
-          pathname: `/dc/gamev1.1/${gameName?.toLowerCase().replace(/\s+/g, '-')}-${btoa(
-            gameId?.toString()
-          )}-${btoa(gameCode)}-${btoa(provider)}-${btoa(subProvider)}-${btoa(superProvider)}`,
-          state: { gameName },
-        });
-      }
+
+    // ✅ c9 => qtech game id
+  // ✅ m1 => normal game id
+ const finalGameId = availableEventTypes?.['m1']
+  ? gameId
+  : availableEventTypes?.['c9']
+  ? QtechGames?.gameId || gameId
+  : gameId;
+
+  
+
+    console.log('Game clicked:', { finalGameId, gameName, gameCode, provider, subProvider, superProvider });
+
+
+  if (loggedIn) {
+
+    if (loggedInUserStatus === 0 || loggedInUserStatus === 3) {
+      history.push(`/home`);
+    } 
+
+    // if (loggedIn) {
+    //   // status check
+    //   if (loggedInUserStatus === 0 || loggedInUserStatus === 3) {
+    //     history.push(`/home`);
+    //   }
+    //   if (provider === 'Indian Casino') {
+    //     setCasinoGame({ id: gameCode, name: gameName });
+    //     history.push(`/casino/indian/${gameCode}`);
+    //   } else {
+    //     history.push({
+    //       pathname: `/dc/gamev1.1/${gameName?.toLowerCase().replace(/\s+/g, '-')}-${btoa(
+    //         gameId?.toString()
+    //       )}-${btoa(gameCode)}-${btoa(provider)}-${btoa(subProvider)}-${btoa(superProvider)}`,
+    //       state: { gameName },
+    //     });
+    //   }
+    // } else {
+    //   setDialogShow(true);
+    // }
+
+     if (provider === 'Indian Casino') {
+
+      setCasinoGame({
+        id: gameCode,
+        name: gameName
+      });
+
+      history.push(`/casino/indian/${gameCode}`);
+
     } else {
-      setDialogShow(true);
+
+      history.push({
+        pathname: `/dc/gamev1.1/${gameName
+          ?.toLowerCase()
+          .replace(/\s+/g, '-')}-${btoa(
+          finalGameId?.toString()
+        )}-${btoa(gameCode)}-${btoa(provider)}-${btoa(
+          subProvider
+        )}-${btoa(superProvider)}`,
+
+        state: { gameName },
+      });
+
     }
+
+  } else {
+
+    setDialogShow(true);
+
+  }
   };
 
 const fetchJson = async () => {
@@ -292,7 +394,9 @@ const fetchJson = async () => {
                     section?.gameInfo?.gameCode,
                     section?.gameInfo?.providerName,
                     section?.gameInfo?.subProviderName,
-                    section?.gameInfo?.superProviderName
+                    section?.gameInfo?.superProviderName,
+                    section?.QtechGames
+                  
                   );
                 } else if (section.bannerInfo.category === 'live_prediction') {
                   history.push(
@@ -312,7 +416,9 @@ const fetchJson = async () => {
                     section?.gameInfo?.gameCode,
                     section?.gameInfo?.providerName,
                     section?.gameInfo?.subProviderName,
-                    section?.gameInfo?.superProviderName
+                    section?.gameInfo?.superProviderName,
+                    section?.QtechGames
+                    
                   );
                 }
               }}
@@ -388,7 +494,8 @@ const fetchJson = async () => {
                     section?.gameInfo?.gameCode,
                     section?.gameInfo?.providerName,
                     section?.gameInfo?.subProviderName,
-                    section?.gameInfo?.superProviderName
+                    section?.gameInfo?.superProviderName,
+                    section?.QtechGames
                   );
                 }
               }}

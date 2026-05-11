@@ -860,42 +860,42 @@ const Ledger: React.FC<LedgerProps> = (props) => {
     //   setNextPageToken(null);
     // }
 
-    const dummyData = [
-    {
-      srNo: 1,
-      transactionTime: new Date(),
-      amount: 500,
-      balanceAfter: 1500,
-      transactionId: "TXN001",
-      sportId: 1,
-      remarks: "Deposit successful",
-      transactionType: 0,
-    },
-    {
-      srNo: 2,
-      transactionTime: new Date(),
-      amount: -200,
-      balanceAfter: 1300,
-      transactionId: "TXN002",
-      sportId: 2,
-      remarks: "Bet placed",
-      transactionType: 27,
-    },
-    {
-      srNo: 3,
-      transactionTime: new Date(),
-      amount: 300,
-      balanceAfter: 1600,
-      transactionId: "TXN003",
-      sportId: 4,
-      remarks: "Bet win",
-      transactionType: 27,
-    },
-  ];
-  setTimeout(() => {
-    setRecords(dummyData);
-    setLoading(false);
-  }, 500);
+  //   const dummyData = [
+  //   {
+  //     srNo: 1,
+  //     transactionTime: new Date(),
+  //     amount: 500,
+  //     balanceAfter: 1500,
+  //     transactionId: "TXN001",
+  //     sportId: 1,
+  //     remarks: "Deposit successful",
+  //     transactionType: 0,
+  //   },
+  //   {
+  //     srNo: 2,
+  //     transactionTime: new Date(),
+  //     amount: -200,
+  //     balanceAfter: 1300,
+  //     transactionId: "TXN002",
+  //     sportId: 2,
+  //     remarks: "Bet placed",
+  //     transactionType: 27,
+  //   },
+  //   {
+  //     srNo: 3,
+  //     transactionTime: new Date(),
+  //     amount: 300,
+  //     balanceAfter: 1600,
+  //     transactionId: "TXN003",
+  //     sportId: 4,
+  //     remarks: "Bet win",
+  //     transactionType: 27,
+  //   },
+  // ];
+  // setTimeout(() => {
+  //   setRecords(dummyData);
+  //   setLoading(false);
+  // }, 500);
     
   };
 
@@ -908,6 +908,8 @@ const Ledger: React.FC<LedgerProps> = (props) => {
       dateFrom: filters.fromDate.format('YYYY-MM-DD'),
       dateTo: filters.toDate.clone().add(1, 'day').format('YYYY-MM-DD'),
     });
+
+    console.log('API response:', response); 
 
     const apiData = response?.data?.data || [];
 
