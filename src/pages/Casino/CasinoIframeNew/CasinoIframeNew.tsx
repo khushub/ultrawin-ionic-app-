@@ -105,10 +105,11 @@ const CasinoIframeNew: React.FC<StoreProps> = (props) => {
                     launchUrl = response?.data?.data?.url || "";
                 } else {
                     // QTech
+                    console.log("gameid: ", gameId);
                     const response = await postAPIAuth("/singleGameAPI", {
                         gameId,
                     });
-                    // console.log('resop: ', response)
+                    console.log('resop: ', response)
                     launchUrl = response?.data?.data?.url || "";
                 }
 

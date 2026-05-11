@@ -22,7 +22,7 @@ const TransactionDetailsCard: React.FC<TransactionDetailsCardProps> = ({
   subBodyData,
   langData,
 }) => {
-  const cFactor = CURRENCY_TYPE_FACTOR["INR"]
+  const cFactor = CURRENCY_TYPE_FACTOR[0]
 
   if (!transactionDetails) return null;
 

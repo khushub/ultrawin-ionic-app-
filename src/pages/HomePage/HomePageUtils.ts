@@ -76,6 +76,23 @@ export const HomeProvidersIcons = [
   { icon: King, subProviderName: 'AWC' },
 ];
 
+ export const C9ProvidersIcons = [
+  { icon: Evolution, subProviderName: 'Evolution Gaming' },
+  { icon: Ezugi, subProviderName: 'Ezugi' },
+  { icon: BetGames, subProviderName: 'Betgames' },
+  { icon: Jili, subProviderName: 'JILI' },
+  { icon: Turbo, subProviderName: 'Turbo Games' },
+  { icon: Gamzix, subProviderName: 'Gamzix' },
+  { icon: Smartsoft, subProviderName: 'CQ9 Casino' },
+  { icon: King, subProviderName: 'NetEnt' },
+  { icon: Popok, subProviderName: 'Habanero' },
+  { icon: Mac88, subProviderName: 'Live88' },
+  { icon: AeSexy, subProviderName: 'SA Gaming' },
+  { icon: Betsoft, subProviderName: 'GameArt' },
+  { icon: MacExcite, subProviderName: 'MAC88' },
+  { icon: Spribe, subProviderName: 'SPRIBE' },
+];
+
 /* ---------------- MOBILE ---------------- */
 
 // export const HomeMobProvidersIcons = [

@@ -39,6 +39,7 @@ import CustomTableMob, {
 // import { DomainConfig } from '../../models/DomainConfig';
 import TransactionDetailsCard from './TransactionDetailsCard';
 import { postAPIAuth } from '../../services/apiInstance';
+import { sportNamesMap } from '../HomePage/HomePageUtils';
 
 type LedgerProps = {
   // fetchBettingCurrency: Function;
@@ -528,88 +529,136 @@ const Ledger: React.FC<LedgerProps> = (props) => {
     );
   }
 
-  function remarkCellRender(param, row) {
-    if (row?.remarks) {
-      return (
-        <div onClick={() => onShowTransactionDetails(row)}>{row?.remarks}</div>
-      );
-    }
-    // For casino transactions, show the game code and transaction ID
-    if (row?.remarks) {
-      return (
-        <div onClick={() => onShowTransactionDetails(row)}>{row?.remarks}</div>
-      );
-    }
-    if (row.marketType === 4 || row.marketType === 6) {
-      return (
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '4px',
-            textAlign: 'center',
-            padding: '0px 4px',
-          }}
-          onClick={() => onShowTransactionDetails(row)}
-        >
-          <span>
-            {TransactionTypeMap[row?.transactionType]} - {row.eventName || '-'}{' '}
-            [{row.marketId || '-'}]
-          </span>
-        </div>
-      );
-    } else if (!(row?.eventId || row?.marketId || row?.betId)) {
-      return (
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '4px',
-            textAlign: 'center',
-            padding: '0px 4px',
-          }}
-          onClick={() => onShowTransactionDetails(row)}
-        >
-          {TransactionTypeMap[row?.transactionType]}
-        </div>
-      );
-    }
+  // function remarkCellRender(param, row) {
+  //   if (row?.remarks) {
+  //     return (
+  //       <div onClick={() => onShowTransactionDetails(row)}>{row?.remarks}</div>
+  //     );
+  //   }
+  //   // For casino transactions, show the game code and transaction ID
+  //   if (row?.remarks) {
+  //     return (
+  //       <div onClick={() => onShowTransactionDetails(row)}>{row?.remarks}</div>
+  //     );
+  //   }
+  //   if (row.marketType === 4 || row.marketType === 6) {
+  //     return (
+  //       <div
+  //         style={{
+  //           display: 'flex',
+  //           alignItems: 'center',
+  //           gap: '4px',
+  //           textAlign: 'center',
+  //           padding: '0px 4px',
+  //         }}
+  //         onClick={() => onShowTransactionDetails(row)}
+  //       >
+  //         <span>
+  //           {TransactionTypeMap[row?.transactionType]} - {row.eventName || '-'}{' '}
+  //           [{row.marketId || '-'}]
+  //         </span>
+  //       </div>
+  //     );
+  //   } else if (!(row?.eventId || row?.marketId || row?.betId)) {
+  //     return (
+  //       <div
+  //         style={{
+  //           display: 'flex',
+  //           alignItems: 'center',
+  //           gap: '4px',
+  //           textAlign: 'center',
+  //           padding: '0px 4px',
+  //         }}
+  //         onClick={() => onShowTransactionDetails(row)}
+  //       >
+  //         {TransactionTypeMap[row?.transactionType]}
+  //       </div>
+  //     );
+  //   }
 
-    // For sports transactions, show event > market > outcome format
+  //   // For sports transactions, show event > market > outcome format
+  //   return (
+  //     <div
+  //       style={{
+  //         display: 'flex',
+  //         alignItems: 'center',
+  //         gap: '4px',
+  //         textAlign: 'center',
+  //         padding: '0px 4px',
+  //       }}
+  //       onClick={() => onShowTransactionDetails(row)}
+  //     >
+  //       {row?.eventName ?? '-'}
+  //       {'  '}
+  //       {'>'}
+  //       {row?.marketType != null && MarketTypeMap[row.marketType]
+  //         ? MarketTypeMap[row.marketType]
+  //         : '-'}
+  //       {'>  '}
+  //       {row?.marketName}
+  //       {'  '}[{row?.result}]
+  //       {/* {row?.marketType === 1 || row?.marketType === 0
+  //         ? row?.result
+  //           ? ` @ ${row?.result}`
+  //           : ''
+  //         : row.marketType === 2
+  //           ? row.marketName +
+  //             ' @ ' +
+  //             Number(row.oddValue * 100 - 100).toFixed(0)
+  //           : row.marketType === 5
+  //             ? row?.outcomeName + ' @ ' + Number(row.oddValue).toFixed(0)
+  //             : row?.outcomeName} */}
+  //     </div>
+  //   );
+  // }
+
+  function remarkCellRender(param, row) {
+
+  const isBalanceTransaction =
+    row?.subAction === 'BALANCE_DEPOSIT' ||
+    row?.subAction === 'BALANCE_WITHDRAWL' ||
+    row?.subAction === 'BONUS_DEPOSIT' ||
+    row?.subAction === 'BONUS_WITHDRAWL';
+
+  // Deposit / Withdraw rows
+  if (isBalanceTransaction) {
     return (
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '4px',
-          textAlign: 'center',
-          padding: '0px 4px',
-        }}
-        onClick={() => onShowTransactionDetails(row)}
-      >
-        {row?.eventName ?? '-'}
-        {'  '}
-        {'>'}
-        {row?.marketType != null && MarketTypeMap[row.marketType]
-          ? MarketTypeMap[row.marketType]
-          : '-'}
-        {'>  '}
-        {row?.marketName}
-        {'  '}[{row?.result}]
-        {/* {row?.marketType === 1 || row?.marketType === 0
-          ? row?.result
-            ? ` @ ${row?.result}`
-            : ''
-          : row.marketType === 2
-            ? row.marketName +
-              ' @ ' +
-              Number(row.oddValue * 100 - 100).toFixed(0)
-            : row.marketType === 5
-              ? row?.outcomeName + ' @ ' + Number(row.oddValue).toFixed(0)
-              : row?.outcomeName} */}
+      <div>
+        {row?.subAction === 'BALANCE_DEPOSIT'
+          ? `${row?.from || '-'} / ${row?.to || '-'}`
+          : row?.subAction === 'BALANCE_WITHDRAWL'
+          ? `${row?.to || '-'} / ${row?.from || '-'}`
+          : row?.remark || '-'}
       </div>
     );
   }
+
+  // Sports / Bet rows
+  return (
+    <div
+     onClick={() => {
+  if (
+    row?.subAction === 'AMOUNT_WON' ||
+    row?.subAction === 'AMOUNT_LOST'
+  ) {
+    onShowTransactionDetails(row);
+  }
+}}
+      style={{
+        cursor: 'pointer',
+      }}
+    >
+      {row?.eventName || '-'}
+      /
+      {row?.marketName || '-'}
+      /
+      {row?.result || '-'}
+
+      {row?.subAction === 'COMMISSION_LOST' &&
+        ` / ${row?.subAction}`}
+    </div>
+  );
+}
 
   function marketTypeCellRender(param, row) {
     return (
@@ -751,8 +800,9 @@ const Ledger: React.FC<LedgerProps> = (props) => {
 
   function sportsCellRender(param, row) {
     // For sports transactions, show the sport name
+    // console.log('Rendering sports cell for sportId:', row);
     return (
-      <div className="capitalize">{SportNameByIdMap[row?.sportId] ?? '-'}</div>
+      <div className="capitalize">{sportNamesMap[row?.eventTypre] ?? '-'}</div>
     );
   }
 
@@ -769,21 +819,30 @@ const Ledger: React.FC<LedgerProps> = (props) => {
   }
 
   function moreCellRender(param, row) {
-    return (
-      <button
-        className="arrow-btn"
-        onClick={() => onShowTransactionDetails(row)}
-      >
-        <i
-          className={`arrow ${
-            transactionDetails?.transactionId === row?.transactionId
-              ? 'up'
-              : 'right'
-          }`}
-        ></i>
-      </button>
-    );
+
+  const canOpenModal =
+    row?.subAction === 'AMOUNT_WON' ||
+    row?.subAction === 'AMOUNT_LOST';
+
+  if (!canOpenModal) {
+    return null;
   }
+
+  return (
+    <button
+      className="arrow-btn"
+      onClick={() => onShowTransactionDetails(row)}
+    >
+      <i
+        className={`arrow ${
+          transactionDetails?.transactionId === row?.transactionId
+            ? 'up'
+            : 'right'
+        }`}
+      ></i>
+    </button>
+  );
+}
 
   // useEffect(() => {
   //   fetchBettingCurrency();
@@ -915,6 +974,7 @@ const Ledger: React.FC<LedgerProps> = (props) => {
 
     const statements = apiData.map((item, index) => ({
       srNo: index + 1,
+      _id: item._id,
       transactionTime: item.createdAt,
       amount: item.amount,
       balanceAfter: item.newLimit,
@@ -922,11 +982,29 @@ const Ledger: React.FC<LedgerProps> = (props) => {
       transactionId: item.transactionId,
       sportId: item.sportId,
       remarks: item.remark,
-      transactionType: item.subAction,
+      transactionType:
+    item.subAction === 'BALANCE_DEPOSIT'
+      ? 0
+      : item.subAction === 'BALANCE_WITHDRAWL'
+      ? 1
+      : item.subAction === 'AMOUNT_WON' ||
+        item.subAction === 'AMOUNT_LOST'
+      ? 27
+      : item.subAction === 'ROLLBACK'
+      ? 6
+      : 99,
+
+  betResult:
+  item.subAction === 'AMOUNT_WON'
+    ? 1
+    : item.subAction === 'AMOUNT_LOST'
+    ? 0
+    : undefined,
       eventName: item.eventName,
       marketName: item.marketName,
       result: item.result,
       subAction: item.subAction,
+      eventTypre: item.eventTypeId,
     }));
 
     setRecords(statements);
@@ -1127,6 +1205,7 @@ const Ledger: React.FC<LedgerProps> = (props) => {
   };
 
   const onShowTransactionDetails = (row: any) => {
+    // console.log('11');
     let recordsReplica = records;
     setSubHeaderParams([]);
     setSubBodyData([]);
@@ -1141,15 +1220,22 @@ const Ledger: React.FC<LedgerProps> = (props) => {
       }
     });
 
-    if (transactionDetails?.transactionId === row?.transactionId) {
+    if (transactionDetails?._id === row?._id) {
       // Collapse the sub-table
       setTransactionDetails(null);
       setShowTransactionDetailsModal(false);
       setSubHeaderParams([]);
       setSubBodyData([]);
     } else {
+      // console.log('1');
       // Expand the sub-table
       setTransactionDetails(row);
+      if (
+  row?.subAction !== 'AMOUNT_WON' &&
+  row?.subAction !== 'AMOUNT_LOST'
+) {
+  return;
+}
       setShowTransactionDetailsModal(true);
 
       // For casino transactions, create sub-table data from the main records
@@ -1316,7 +1402,7 @@ const Ledger: React.FC<LedgerProps> = (props) => {
   
       fetchData();
     
-  }, [transactionDetails]);
+  }, [filters]);
 
   const nextPage = () => {
     if (nextPageToken) {

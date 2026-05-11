@@ -13,7 +13,8 @@ import {
   ArrowBackIosNew,
   ArrowForwardIos,
 } from '@mui/icons-material';
-import { HomeMobProvidersIcons, HomeProvidersIcons } from './HomePageUtils';
+import { HomeMobProvidersIcons, HomeProvidersIcons , C9ProvidersIcons} from './HomePageUtils';
+import { useSelector } from 'react-redux';
 
 const providerSettings = {
   dots: true,
@@ -154,8 +155,21 @@ const settings = {
   ],
 };
 
+
 const Providers = ({ langData }) => {
+
+  const { availableEventTypes } = useSelector(
+  (state: any) => state.userDetails
+);
   const history = useHistory();
+
+  const finalProviders =
+  availableEventTypes?.['m1']
+    ? HomeProvidersIcons
+    : availableEventTypes?.['c9']
+    ? C9ProvidersIcons
+    : HomeProvidersIcons;
+
   return (
     <div className="game-carousel-ctn mb-30">
       <div className="border-shadow-container">
@@ -163,7 +177,7 @@ const Providers = ({ langData }) => {
       </div>
       {isMobile ? (
         <div className="mob-casino-lobby">
-          {(isMobile ? HomeMobProvidersIcons : HomeProvidersIcons)?.map(
+          {finalProviders?.map(
             (provider ,index) => (
               <div
                 key={index}
@@ -199,7 +213,7 @@ const Providers = ({ langData }) => {
         </div>
       ) : (
         <Slider {...settings}>
-          {(isMobile ? HomeMobProvidersIcons : HomeProvidersIcons)?.map(
+          {finalProviders?.map(
             (provider) => (
               <div
                 key={provider.subProviderName}

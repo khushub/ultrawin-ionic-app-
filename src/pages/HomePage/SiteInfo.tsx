@@ -42,9 +42,9 @@ function SitesInfo({
   const history = useHistory();
   const dispatch = useDispatch();
 
-const { availableEventTypes } = useSelector(
-  (state: any) => state.userDetails
-);
+  const { availableEventTypes } = useSelector(
+    (state: any) => state.userDetails
+  );
 
   const sections = [
     {
@@ -71,8 +71,8 @@ const { availableEventTypes } = useSelector(
           preserveAspectRatio: 'xMidYMid slice',
         },
       },
-      QtechGames:{
-        gameId:"SPB-aviator",
+      QtechGames: {
+        gameId: "SPB-aviator",
       }
 
     },
@@ -100,8 +100,8 @@ const { availableEventTypes } = useSelector(
         },
       },
 
-      QtechGames:{
-        gameId:"CTI-bombaygems",
+      QtechGames: {
+        gameId: "CTI-bombaygems",
       }
     },
     // {
@@ -244,7 +244,7 @@ const { availableEventTypes } = useSelector(
   //   );
   //   return; // 🚨 yahi rokega navigation
   // }
-    
+
   //   if (loggedIn) {
   //     // status check
   //     if (loggedInUserStatus === 0 || loggedInUserStatus === 3) {
@@ -265,7 +265,7 @@ const { availableEventTypes } = useSelector(
   //     setDialogShow(true);
   //   }
   // };
-const getGameUrl = async (
+  const getGameUrl = async (
     gameId: string,
     gameName: string,
     gameCode: string,
@@ -275,101 +275,107 @@ const getGameUrl = async (
     QtechGames: any
   ) => {
 
-        if (
-    !availableEventTypes?.['m1'] &&
-    !availableEventTypes?.['c9']
-  ) {
-    dispatch(
-      setAlertMsg({
-        type: "error",
-        message: "Game is locked. Please Contact Upper Level",
-      })
-    );
+    if (
+      !availableEventTypes?.['m1'] &&
+      !availableEventTypes?.['c9']
+    ) {
+      dispatch(
+        setAlertMsg({
+          type: "error",
+          message: "Game is locked. Please Contact Upper Level",
+        })
+      );
 
-    return;
-  }
+      return;
+    }
 
-    // ✅ c9 => qtech game id
-  // ✅ m1 => normal game id
- const finalGameId = availableEventTypes?.['m1']
-  ? gameId
-  : availableEventTypes?.['c9']
-  ? QtechGames?.gameId || gameId
-  : gameId;
+    const finalGameId = availableEventTypes?.['m1']
+      ? gameId
+      : availableEventTypes?.['c9']
+        ? QtechGames?.gameId || gameId
+        : gameId;
 
-  
+
 
     console.log('Game clicked:', { finalGameId, gameName, gameCode, provider, subProvider, superProvider });
+    const serviceType =
+      availableEventTypes?.['m1']
+        ? 'gap'
+        : availableEventTypes?.['c9']
+          ? 'qtech'
+          : 'gap';
 
+    if (loggedIn) {
 
-  if (loggedIn) {
+      if (loggedInUserStatus === 0 || loggedInUserStatus === 3) {
+        history.push(`/home`);
+      }
 
-    if (loggedInUserStatus === 0 || loggedInUserStatus === 3) {
-      history.push(`/home`);
-    } 
+      // if (loggedIn) {
+      //   // status check
+      //   if (loggedInUserStatus === 0 || loggedInUserStatus === 3) {
+      //     history.push(`/home`);
+      //   }
+      //   if (provider === 'Indian Casino') {
+      //     setCasinoGame({ id: gameCode, name: gameName });
+      //     history.push(`/casino/indian/${gameCode}`);
+      //   } else {
+      //     history.push({
+      //       pathname: `/dc/gamev1.1/${gameName?.toLowerCase().replace(/\s+/g, '-')}-${btoa(
+      //         gameId?.toString()
+      //       )}-${btoa(gameCode)}-${btoa(provider)}-${btoa(subProvider)}-${btoa(superProvider)}`,
+      //       state: { gameName },
+      //     });
+      //   }
+      // } else {
+      //   setDialogShow(true);
+      // }
 
-    // if (loggedIn) {
-    //   // status check
-    //   if (loggedInUserStatus === 0 || loggedInUserStatus === 3) {
-    //     history.push(`/home`);
-    //   }
-    //   if (provider === 'Indian Casino') {
-    //     setCasinoGame({ id: gameCode, name: gameName });
-    //     history.push(`/casino/indian/${gameCode}`);
-    //   } else {
-    //     history.push({
-    //       pathname: `/dc/gamev1.1/${gameName?.toLowerCase().replace(/\s+/g, '-')}-${btoa(
-    //         gameId?.toString()
-    //       )}-${btoa(gameCode)}-${btoa(provider)}-${btoa(subProvider)}-${btoa(superProvider)}`,
-    //       state: { gameName },
-    //     });
-    //   }
-    // } else {
-    //   setDialogShow(true);
-    // }
+      if (provider === 'Indian Casino') {
 
-     if (provider === 'Indian Casino') {
+        setCasinoGame({
+          id: gameCode,
+          name: gameName
+        });
 
-      setCasinoGame({
-        id: gameCode,
-        name: gameName
-      });
+        history.push(`/casino/indian/${gameCode}`);
 
-      history.push(`/casino/indian/${gameCode}`);
+      } else {
+
+        history.push({
+          pathname: `/dc/gamev1.1/${gameName
+            ?.toLowerCase()
+            .replace(/\s+/g, '-')}-${btoa(
+              finalGameId?.toString()
+            )}-${btoa(gameCode)}-${btoa(provider)}-${btoa(
+              subProvider
+            )}-${btoa(superProvider)}`,
+
+          state: {
+            gameName,
+            activeService: serviceType,
+          },
+        });
+
+      }
 
     } else {
 
-      history.push({
-        pathname: `/dc/gamev1.1/${gameName
-          ?.toLowerCase()
-          .replace(/\s+/g, '-')}-${btoa(
-          finalGameId?.toString()
-        )}-${btoa(gameCode)}-${btoa(provider)}-${btoa(
-          subProvider
-        )}-${btoa(superProvider)}`,
-
-        state: { gameName },
-      });
+      setDialogShow(true);
 
     }
-
-  } else {
-
-    setDialogShow(true);
-
-  }
   };
 
-const fetchJson = async () => {
-  setGifs({
-    marble_run: marbleRun,
-    mines: mines,
-    chicken_games: chickenGames,
-    aviator: aviator,
-    color_prediction: colorPrediction,
-    live_prediction: livePrediction,
-  });
-};
+  const fetchJson = async () => {
+    setGifs({
+      marble_run: marbleRun,
+      mines: mines,
+      chicken_games: chickenGames,
+      aviator: aviator,
+      color_prediction: colorPrediction,
+      live_prediction: livePrediction,
+    });
+  };
 
   useEffect(() => {
     fetchJson();
@@ -396,17 +402,28 @@ const fetchJson = async () => {
                     section?.gameInfo?.subProviderName,
                     section?.gameInfo?.superProviderName,
                     section?.QtechGames
-                  
+
                   );
                 } else if (section.bannerInfo.category === 'live_prediction') {
                   history.push(
                     '/casino?provider=MAC88%20&category=Casual%20Games'
                   );
                 } else if (section.gameInfo.gameName === 'color game') {
-                 history.push({
-  pathname: '/casino',
-  search: `?provider=TURBO&category=${encodeURIComponent('Casual Games')}`,
-});
+                  if (availableEventTypes?.['m1']) {
+
+                    history.push({
+                      pathname: '/casino',
+                      search: `?provider=TURBO&category=${encodeURIComponent('Casual Games')}`,
+                    });
+
+                  } else if (availableEventTypes?.['c9']) {
+
+                    history.push({
+                      pathname: '/casino',
+                      search: `?provider=${encodeURIComponent('Turbo Games')}&category=${encodeURIComponent('RUSH')}`,
+                    });
+
+                  }
                 } else if (section.bannerInfo.category === 'mac_excite') {
                   history.push('/casino?provider=MAC%20EXCITE&category=ALL');
                 } else {
@@ -418,18 +435,18 @@ const fetchJson = async () => {
                     section?.gameInfo?.subProviderName,
                     section?.gameInfo?.superProviderName,
                     section?.QtechGames
-                    
+
                   );
                 }
               }}
             >
               <div className="site-card-img">
                 {section.bannerInfo?.animationData ? (
-               <Lottie
-  animationData={section.bannerInfo.animationData}
-  loop={true}
- 
-/>
+                  <Lottie
+                    animationData={section.bannerInfo.animationData}
+                    loop={true}
+
+                  />
                 ) : (
                   <div>
                     <Skeleton
@@ -471,20 +488,51 @@ const fetchJson = async () => {
                 if (
                   ['Aviator X', 'mines'].includes(section.gameInfo.gameName)
                 ) {
-                  history.push({
-                    pathname: section.bannerInfo.path,
-                    search: `?provider=${section.gameInfo.providerName}&category=${encodeURIComponent(section.bannerInfo.category)?.toLowerCase()}`,
-                  });
+                  if (availableEventTypes?.['m1']) {
+
+                    history.push({
+                      pathname: section.bannerInfo.path,
+                      search: `?provider=${section.gameInfo.providerName}&category=${encodeURIComponent(section.bannerInfo.category)?.toLowerCase()}`,
+                    });
+
+                  }
+
+                  // ✅ c9
+                  else if (availableEventTypes?.['c9']) {
+
+                    history.push(
+                      '/casino?provider=Turbo%20Games&category=MINES'
+                    );
+
+                  }
                 } else if (section.bannerInfo.category === 'live_prediction') {
-                 history.push({
-  pathname: '/casino',
-  search: `?provider=${encodeURIComponent('MAC88')}&category=${encodeURIComponent('Casual Games')}`,
-});
+                  if (availableEventTypes?.['m1']) {
+
+                    history.push(
+                      '/casino?provider=MAC88&category=Casual%20Games'
+                    );
+
+                  } else if (availableEventTypes?.['c9']) {
+
+                    history.push(
+                      '/casino?provider=Turbo%20Games&category=HIGHER_LOWER'
+                    );
+
+                  }
                 } else if (section.gameInfo.gameName === 'color game') {
-                 history.push({
-  pathname: '/casino',
-  search: `?provider=MAC88&category=${encodeURIComponent('Color Game')}`,
-});
+                  if (availableEventTypes?.['m1']) {
+
+                    history.push(
+                      '/casino?provider=MAC88&category=Color%20Game'
+                    );
+
+                  } else if (availableEventTypes?.['c9']) {
+
+                    history.push(
+                      '/casino?provider=JILI&category=COLOR_GAMES'
+                    );
+
+                  }
                 } else if (section.bannerInfo.category === 'mac_excite') {
                   history.push('/casino?provider=MAC%20EXCITE&category=ALL');
                 } else {
@@ -502,10 +550,10 @@ const fetchJson = async () => {
             >
               <div className="site-card-img">
                 {section.bannerInfo?.animationData ? (
-                <Lottie
-  animationData={section.bannerInfo.animationData}
-  loop={true}
-/>
+                  <Lottie
+                    animationData={section.bannerInfo.animationData}
+                    loop={true}
+                  />
                 ) : null}
               </div>
               {/* <CardContent className={classes.cardContent}>

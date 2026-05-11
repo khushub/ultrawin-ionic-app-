@@ -61,6 +61,15 @@ const TrendingGames: React.FC<TrendingProps> = (props) => {
 
       const serviceType = requiredEventTypeId=='m1'? 'gap' : 'qtech';
 
+      const finalGameId =
+  requiredEventTypeId === 'm1'
+    ? gameId
+    : requiredEventTypeId === 'c9'
+    ? qTechGameId
+    : gameId;
+
+
+
 
 
       // if (provider === 'Indian Casino') {
@@ -68,7 +77,7 @@ const TrendingGames: React.FC<TrendingProps> = (props) => {
       // } else {
         history.push({
           pathname: `/dc/gamev1.1/${gameName?.toLowerCase().replace(/\s+/g, '-')}-${btoa(
-            gameId?.toString()
+            finalGameId?.toString()
           )}-${btoa(gameCode)}-${btoa(provider)}-${btoa(subProvider)}-${btoa(superProvider)}`,
           state: { gameName, activeService: serviceType },
         });

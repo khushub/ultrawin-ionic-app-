@@ -124,6 +124,7 @@ const GamesCarousel: React.FC<StoreProps> = ({
     //   (state: any) => state.userDetails
     // );
     // console.log('trendingGames: ', trendingGames);
+    console.log("Available Event Types: ", availableEventTypes);
     const dispatch = useDispatch();
 
     const settings = {
@@ -177,56 +178,65 @@ const GamesCarousel: React.FC<StoreProps> = ({
         superProvider: string,
     ) => {
 
-    //   console.log("Game clicked:", {
-    //       gameId,
-    //       qTechGameId,
-    //       gameName,
-    //       gameCode,
-    //       provider,
-    //       subProvider,
-    //       superProvider,
-    //   });
+        //   console.log("Game clicked:", {
+        //       gameId,
+        //       qTechGameId,
+        //       gameName,
+        //       gameCode,
+        //       provider,
+        //       subProvider,
+        //       superProvider,
+        //   });
 
-      if (loggedIn) {
-        let requiredEventTypeId = '';
-        if (availableEventTypes?.["m1"] && !!gameId) {
-            requiredEventTypeId = 'm1';
-        } else if (availableEventTypes?.["c9"] && !!qTechGameId) {
-            requiredEventTypeId = 'c9';
+        const finalGameId =
+            availableEventTypes?.["m1"] && gameId
+                ? gameId
+                : availableEventTypes?.["c9"] && qTechGameId
+                    ? qTechGameId
+                    : gameId;
+
+        console.log("Final Game ID:", finalGameId);
+
+        if (loggedIn) {
+            let requiredEventTypeId = '';
+            if (availableEventTypes?.["m1"] && !!gameId) {
+                requiredEventTypeId = 'm1';
+            } else if (availableEventTypes?.["c9"] && !!qTechGameId) {
+                requiredEventTypeId = 'c9';
+            }
+
+            if (!['m1', 'c9'].includes(requiredEventTypeId)) {
+                dispatch(
+                    setAlertMsg({
+                        type: "error",
+                        message: "Game is locked. Please Contact Upper Level",
+                    }),
+                );
+                return;
+            }
+
+            const serviceType = requiredEventTypeId == 'm1' ? 'gap' : 'qtech';
+
+
+
+            // status check
+            // if (loggedInUserStatus === 0 || loggedInUserStatus === 3) {
+            //   history.push(`/home`);
+            // }
+            // if (provider === 'Indian Casino') {
+            //   setCasinoGame({ id: gameCode, name: gameName });
+            //   history.push(`/casino/indian/${gameCode}`);
+            // } else {
+            history.push({
+                pathname: `/dc/gamev1.1/${gameName?.toLowerCase().replace(/\s+/g, "-")}-${btoa(
+                    finalGameId?.toString(),
+                )}-${btoa(gameCode)}-${btoa(provider)}-${btoa(subProvider)}-${btoa(superProvider)}`,
+                state: { gameName, activeService: serviceType },
+            });
+            // }
+        } else {
+            setDialogShow(true);
         }
-
-        if(!['m1', 'c9'].includes(requiredEventTypeId)) {
-            dispatch(
-            setAlertMsg({
-                type: "error",
-                message: "Game is locked. Please Contact Upper Level",
-            }),
-            );
-            return;
-        }
-
-        const serviceType = requiredEventTypeId=='m1'? 'gap' : 'qtech';
-
-
-
-        // status check
-        // if (loggedInUserStatus === 0 || loggedInUserStatus === 3) {
-        //   history.push(`/home`);
-        // }
-        // if (provider === 'Indian Casino') {
-        //   setCasinoGame({ id: gameCode, name: gameName });
-        //   history.push(`/casino/indian/${gameCode}`);
-        // } else {
-        history.push({
-            pathname: `/dc/gamev1.1/${gameName?.toLowerCase().replace(/\s+/g, "-")}-${btoa(
-                gameId?.toString(),
-            )}-${btoa(gameCode)}-${btoa(provider)}-${btoa(subProvider)}-${btoa(superProvider)}`,
-            state: { gameName, activeService: serviceType },
-        });
-        // }
-      } else {
-        setDialogShow(true);
-      }
     };
 
     return (
@@ -278,8 +288,8 @@ const GamesCarousel: React.FC<StoreProps> = ({
                     scrollMode="smooth"
                     pixelsPerSecond={50}
                     isInfinite={true}
-                    // duplicateCount={4}
-                    // dependencies={[trendingGames]}
+                // duplicateCount={4}
+                // dependencies={[trendingGames]}
                 >
                     {trendingGames?.length > 0 &&
                         trendingGames.map((game, idx) => (
