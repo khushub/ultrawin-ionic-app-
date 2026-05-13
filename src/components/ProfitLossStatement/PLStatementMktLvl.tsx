@@ -42,9 +42,9 @@ const PLStatementMktLvl: React.FC<PLProps> = (props) => {
   const [layTotal, setLayTotal] = useState<number>(0);
   const [marketTotal, setMarketTotal] = useState<number>(0);
   const [netMarket, setNetMarket] = useState<number>(0);
-  const [pageToken, setPageToken] = useState<string[]>(['']);
-  const [nextPageToken, setNextPageToken] = useState<string>('');
-  const [loading, setLoading] = useState<Boolean>(false);
+  // const [pageToken, setPageToken] = useState<string[]>(['']);
+  // const [nextPageToken, setNextPageToken] = useState<string>('');
+  // const [loading, setLoading] = useState<Boolean>(false);
 //   const cFactor = CURRENCY_TYPE_FACTOR[getCurrencyTypeFromToken()];
   const cFactor = CURRENCY_TYPE_FACTOR["INR"];
   const pageSize = 25;
@@ -71,7 +71,7 @@ const PLStatementMktLvl: React.FC<PLProps> = (props) => {
       align: 'left',
     },
     {
-      key: 'betType',
+      key: 'type',
       Label: 'Type',
       langKey: 'type',
       className: 'type-cell-head text-uppercase',
@@ -141,23 +141,23 @@ const PLStatementMktLvl: React.FC<PLProps> = (props) => {
     },
   ];
 
-  const nextPage = () => {
-    setLoading(true);
-    if (nextPageToken) {
-      setPageToken([...pageToken, nextPageToken]);
-    }
-    setLoading(false);
-  };
+  // const nextPage = () => {
+  //   setLoading(true);
+  //   if (nextPageToken) {
+  //     setPageToken([...pageToken, nextPageToken]);
+  //   }
+  //   setLoading(false);
+  // };
 
-  const prevPage = () => {
-    setLoading(true);
-    if (pageToken.length > 1) {
-      let pagetokens = pageToken;
-      pagetokens.pop();
-      setPageToken([...pagetokens]);
-    }
-    setLoading(false);
-  };
+  // const prevPage = () => {
+  //   setLoading(true);
+  //   if (pageToken.length > 1) {
+  //     let pagetokens = pageToken;
+  //     pagetokens.pop();
+  //     setPageToken([...pagetokens]);
+  //   }
+  //   setLoading(false);
+  // };
 
   const fetchPLByMarket = async () => {
     // try {
@@ -227,9 +227,42 @@ const PLStatementMktLvl: React.FC<PLProps> = (props) => {
     // }
   };
 
-  React.useEffect(() => {
-    fetchPLByMarket();
-  }, [pageToken]);
+ React.useEffect(() => {
+
+  if (selectedMarket) {
+
+    console.log('Selected Market:', selectedMarket);
+
+    setItems([selectedMarket]);
+
+    const payout =
+      Number(selectedMarket?.profit || 0);
+
+    if (
+      (selectedMarket?.type || '')
+        .toUpperCase() === 'BACK'
+    ) {
+
+      setBackTotal(payout);
+      setLayTotal(0);
+
+    } else {
+
+      setLayTotal(payout);
+      setBackTotal(0);
+
+    }
+
+    setMarketTotal(payout);
+
+    setNetMarket(
+      payout +
+      Number(selectedMarket?.commission || 0)
+    );
+
+  }
+
+}, [selectedMarket]);
 
   return (
     <div className="modal-pl">
@@ -242,7 +275,8 @@ const PLStatementMktLvl: React.FC<PLProps> = (props) => {
                   <TableRow>
                     {tableFields.map((tF, index) => (
                       <TableCell
-                        key={'key_' + Math.random().toString(36).substr(2, 9)}
+                        // key={'key_' + Math.random().toString(36).substr(2, 9)}
+                        key={tF.key}
                         align={tF.align === 'left' ? 'left' : 'center'}
                         className={tF.className}
                       >
@@ -258,9 +292,9 @@ const PLStatementMktLvl: React.FC<PLProps> = (props) => {
                         <>
                           <TableRow
                             className={
-                              row.payOutAmount > 0
+                              row.profit > 0
                                 ? 'profit-bg'
-                                : row.payOutAmount <= 0
+                                : row.profit <= 0
                                   ? 'loss-bg'
                                   : 'row-bg'
                             }
@@ -270,7 +304,7 @@ const PLStatementMktLvl: React.FC<PLProps> = (props) => {
                           >
                             <TableCell align="left">
                               <span className="txt-bldin-mob">
-                                {moment(row.betPlacedTime).format(
+                                {moment(row.matchedTime).format(
                                   'D/M/YYYY HH:mm:ss'
                                 )}
                               </span>
@@ -280,7 +314,7 @@ const PLStatementMktLvl: React.FC<PLProps> = (props) => {
                               align="left"
                             >
                               <span className="txt-bldin-mob">
-                                {row.marketType === 'FANCY'
+                                {/* {row.marketType === 'FANCY'
                                   ? row.oddType === 'ODD_EVEN' ||
                                     row.marketName?.includes(
                                       'Odd Even Run Bhav'
@@ -297,21 +331,28 @@ const PLStatementMktLvl: React.FC<PLProps> = (props) => {
                                     ? row.outcomeDesc +
                                       ' @ ' +
                                       Number(row.sessionRuns).toFixed(0)
-                                    : row.outcomeDesc}
+                                    : row.selectionName} */}
+
+                                    {row.marketType === 'SESSION'
+  ? `${row.marketName} / ${row.selectionName}`
+  : row.selectionName}
                               </span>
                             </TableCell>
                             <TableCell
                               className="myb-table-cell blost-col"
                               align="left"
                             >
-                              <span className="txt-bldin-mob">{row.id}</span>
+                              <span className="txt-bldin-mob">{row._id}</span>
                             </TableCell>
                             <TableCell
                               className="myb-table-cell blost-col"
                               align="left"
                             >
                               <span className="txt-bldin-mob">
-                                {row.betType == 'BACK' ? 'Back' : 'Lay'}
+                                {/* {row.betType == 'BACK' ? 'Back' : 'Lay'} */}
+                                {(row.type || '').toUpperCase() === 'BACK'
+  ? 'Back'
+  : 'Lay'}
                               </span>
                             </TableCell>
                             <TableCell
@@ -321,7 +362,7 @@ const PLStatementMktLvl: React.FC<PLProps> = (props) => {
                               <span className="txt-bldin-mob">
                                 {oddValueFormatter(
                                   row.marketType,
-                                  row.oddValue,
+                                  row.rate,
                                   row.sessionRuns,
                                   row.marketName,
                                   row.oddType
@@ -333,21 +374,19 @@ const PLStatementMktLvl: React.FC<PLProps> = (props) => {
                               align="left"
                             >
                               <span className="txt-bldin-mob">
-                                {(row.stakeAmount / cFactor).toFixed(2)}
+                                {Number(row.stake || 0).toFixed(2)}
                               </span>
                             </TableCell>
                             <TableCell align="left" className="pandl-col">
                               <span className="txt-bldin-mob">
                                 <div
                                   className={
-                                    row.outcomeResult == 'Won'
-                                      ? 'profit'
-                                      : 'loss'
+                                    row.profit > 0
+    ? 'profit'
+    : 'loss'
                                   }
                                 >
-                                  {Number(row.payOutAmount / cFactor).toFixed(
-                                    2
-                                  )}
+                                  {Number(row.profit || 0).toFixed(2)}
                                 </div>
                               </span>
                             </TableCell>
@@ -355,10 +394,10 @@ const PLStatementMktLvl: React.FC<PLProps> = (props) => {
                             <TableCell align="left" className="pandl-col">
                               <span className="txt-bldin-mob">
                                 <div>
-                                  {row.outcomeResult == 'Won' ||
-                                  row.payOutAmount > 0
-                                    ? 'Win'
-                                    : 'Loss'}
+                                  {row.result === 'WON' ||
+                                  row.profit > 0
+                                    ? 'Won'
+                                    : 'Lost'}
                                 </div>
                               </span>
                             </TableCell>
@@ -391,7 +430,8 @@ const PLStatementMktLvl: React.FC<PLProps> = (props) => {
                   <TableRow>
                     {tableFieldsMob.map((tF, index) => (
                       <TableCell
-                        key={'key_' + Math.random().toString(36).substr(2, 9)}
+                        // key={'key_' + Math.random().toString(36).substr(2, 9)}
+                        key={'key_' + index}
                         align={tF.align === 'left' ? 'left' : 'center'}
                         className={tF.className}
                       >
@@ -407,9 +447,9 @@ const PLStatementMktLvl: React.FC<PLProps> = (props) => {
                         <>
                           <TableRow
                             className={
-                              row.payOutAmount > 0
+                              row.profit > 0
                                 ? 'profit-bg'
-                                : row.payOutAmount <= 0
+                                : row.profit <= 0
                                   ? 'loss-bg'
                                   : 'row-bg'
                             }
@@ -423,7 +463,7 @@ const PLStatementMktLvl: React.FC<PLProps> = (props) => {
                             >
                               <span className="tableCell-pl-mob">
                                 <span className="txt-bldin-mob  text-ctn">
-                                  {row.marketType === 'FANCY'
+                                  {/* {row.marketType === 'FANCY'
                                     ? row.oddType === 'ODD_EVEN' ||
                                       row.marketName?.includes(
                                         'Odd Even Run Bhav'
@@ -440,11 +480,15 @@ const PLStatementMktLvl: React.FC<PLProps> = (props) => {
                                       ? row.outcomeDesc +
                                         ' @ ' +
                                         Number(row.sessionRuns).toFixed(0)
-                                      : row.outcomeDesc}
+                                      : row.selectionName} */}
+
+                                      {row.marketType === 'SESSION'
+  ? `${row.marketName} / ${row.selectionName}`
+  : row.selectionName}
                                 </span>
 
                                 <span className="txt-bldin-mob">
-                                  {moment(row.betPlacedTime).format(
+                                  {moment(row.matchedTime).format(
                                     'D/M/YYYY HH:mm:ss'
                                   )}
                                 </span>
@@ -455,12 +499,12 @@ const PLStatementMktLvl: React.FC<PLProps> = (props) => {
                               <span className="txt-bldin-mob">
                                 <div
                                   className={
-                                    row.outcomeResult == 'Won'
-                                      ? 'profit'
-                                      : 'loss'
+                                     row.profit > 0
+    ? 'profit'
+    : 'loss'
                                   }
                                 >
-                                  {Number(row.payOutAmount / cFactor).toFixed(
+                                  {Number(row.profit / cFactor).toFixed(
                                     2
                                   )}
                                 </div>
@@ -471,7 +515,7 @@ const PLStatementMktLvl: React.FC<PLProps> = (props) => {
                               align="left"
                             >
                               <span className="txt-bldin-mob">
-                                {(row.stakeAmount / cFactor).toFixed(2)}
+                                {Number(row.stake || 0).toFixed(2)}
                               </span>
                             </TableCell>
 
@@ -482,7 +526,7 @@ const PLStatementMktLvl: React.FC<PLProps> = (props) => {
                               <span className="txt-bldin-mob">
                                 {oddValueFormatter(
                                   row.marketType,
-                                  row.oddValue,
+                                  row.rate,
                                   row.sessionRuns,
                                   row.marketName,
                                   row.oddType
@@ -499,7 +543,7 @@ const PLStatementMktLvl: React.FC<PLProps> = (props) => {
                                     marginLeft: '2px',
                                   }}
                                 >
-                                  {row.id}
+                                  {row._id}
                                 </span>
                               </span>
                             </TableCell>
@@ -514,17 +558,20 @@ const PLStatementMktLvl: React.FC<PLProps> = (props) => {
                                     {langData?.['results']}:{' '}
                                   </span>
                                   <span>
-                                    {row.outcomeResult == 'Won' ||
-                                    row.payOutAmount > 0
+                                    {row.result === 'WON' ||
+                                    row.profit > 0
                                       ? 'Won'
-                                      : 'Loss'}
+                                      : 'Lost'}
                                   </span>
                                 </div>
                               </span>
 
                               <span>{langData?.['bet_type']}: </span>
                               <span className="txt-bldin-mob">
-                                {row.betType == 'BACK' ? 'Back' : 'Lay'}
+                                {/* {row.betType == 'BACK' ? 'Back' : 'Lay'} */}
+                               {(row.type || '').toUpperCase() === 'BACK'
+  ? 'Back'
+  : 'Lay'}
                               </span>
                             </TableCell>
                             {/* <TableCell></TableCell>
@@ -592,7 +639,7 @@ const PLStatementMktLvl: React.FC<PLProps> = (props) => {
               </div>
             </div>
           </div>
-          <div className="mob-view-pgnation">
+          {/* <div className="mob-view-pgnation">
             {pageToken.length === 1 || loading ? null : (
               <Button
                 onClick={(e) => prevPage()}
@@ -611,7 +658,7 @@ const PLStatementMktLvl: React.FC<PLProps> = (props) => {
                 ({langData?.['next']})({pageToken.length + 1})
               </Button>
             ) : null}
-          </div>
+          </div> */}
         </>
       ) : null}
     </div>

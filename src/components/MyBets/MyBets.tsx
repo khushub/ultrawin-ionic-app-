@@ -14,7 +14,7 @@ import {
 import moment from 'moment';
 import React, { useCallback, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import  paperSvg  from '../../assets/images/icons/walletIcon.svg?react';
+import paperSvg from '../../assets/images/icons/walletIcon.svg?react';
 import CustomTableMob, {
   HeaderParamsType,
   RowType,
@@ -34,7 +34,7 @@ import {
   capitalize,
   getOutcomeDescByEnumName,
   getSportNameByIdMap,
-//   isBmSpecialMarket,
+  //   isBmSpecialMarket,
 } from '../../util/stringUtil';
 import Spinner from '../Spinner/Spinner';
 import './MyBets.scss';
@@ -67,18 +67,18 @@ const MyBets: React.FC<StoreProps> = (props) => {
     {
       value: 'SPORTS',
       name: langData?.['sports'],
-    //   allow: (allowedConfig & CONFIG_PERMISSIONS.sports) !== 0,
+      //   allow: (allowedConfig & CONFIG_PERMISSIONS.sports) !== 0,
     },
     {
       value: 'SPORTS_BOOK',
       name: langData?.['sports_book'],
-    //   allow: (allowedConfig & CONFIG_PERMISSIONS.sports) !== 0,
+      //   allow: (allowedConfig & CONFIG_PERMISSIONS.sports) !== 0,
     },
     { value: 'PREMIUM', name: langData?.['premium'], allow: true },
     {
       value: 'CASINO',
       name: langData?.['casino'],
-    //   allow: (allowedConfig & CONFIG_PERMISSIONS.live_casino) !== 0,
+      //   allow: (allowedConfig & CONFIG_PERMISSIONS.live_casino) !== 0,
     },
     // {value: 'INDIAN_CASINO', name: 'Indian Casino', allow: (allowedConfig & CONFIG_PERMISSIONS.indian_casino) !== 0},
   ];
@@ -96,43 +96,43 @@ const MyBets: React.FC<StoreProps> = (props) => {
       value: 'All',
       name: 'All',
       langKey: 'all',
-    //   allow: (allowedConfig & CONFIG_PERMISSIONS.sports) !== 0,
+      //   allow: (allowedConfig & CONFIG_PERMISSIONS.sports) !== 0,
     },
     {
       value: '4',
       name: 'Cricket',
       langKey: 'cricket',
-    //   allow: (allowedConfig & CONFIG_PERMISSIONS.cricket) !== 0,
+      //   allow: (allowedConfig & CONFIG_PERMISSIONS.cricket) !== 0,
     },
     {
       value: '1',
       name: 'Football',
       langKey: 'football',
-    //   allow: (allowedConfig & CONFIG_PERMISSIONS.football) !== 0,
+      //   allow: (allowedConfig & CONFIG_PERMISSIONS.football) !== 0,
     },
     {
       value: '2',
       name: 'Tennis',
       langKey: 'tennis',
-    //   allow: (allowedConfig & CONFIG_PERMISSIONS.tennis) !== 0,
+      //   allow: (allowedConfig & CONFIG_PERMISSIONS.tennis) !== 0,
     },
     {
       value: '99990',
       name: 'Binary',
       langKey: 'binary',
-    //   allow: (allowedConfig & CONFIG_PERMISSIONS.cricket) !== 0,
+      //   allow: (allowedConfig & CONFIG_PERMISSIONS.cricket) !== 0,
     },
     {
       value: '2378961',
       name: 'Politics',
       langKey: 'politics',
-    //   allow: (allowedConfig & CONFIG_PERMISSIONS.cricket) !== 0,
+      //   allow: (allowedConfig & CONFIG_PERMISSIONS.cricket) !== 0,
     },
     {
       value: '99994',
       name: 'Kabaddi',
       langKey: 'kabaddi',
-    //   allow: (allowedConfig & CONFIG_PERMISSIONS.cricket) !== 0,
+      //   allow: (allowedConfig & CONFIG_PERMISSIONS.cricket) !== 0,
     },
   ];
   const headerParams: HeaderParamsType[] = [
@@ -188,7 +188,7 @@ const MyBets: React.FC<StoreProps> = (props) => {
 
   const pageSize = 25;
   const cFactor = CURRENCY_TYPE_FACTOR["INR"];
-//   const cFactor = CURRENCY_TYPE_FACTOR[getCurrencyTypeFromToken()];
+  //   const cFactor = CURRENCY_TYPE_FACTOR[getCurrencyTypeFromToken()];
 
   const [nextPageToken, setNextPageToken] = useState<string>(null);
 
@@ -197,7 +197,7 @@ const MyBets: React.FC<StoreProps> = (props) => {
       <div className="mb-event-name-date">
         <div className="b-700">{row.eventName}</div>
         <div className="mb-bet-date">
-          {moment(row.betPlacedTime).format('DD-MM-YY, h:mm:ss A')}
+          {moment(row.placedTime || row.matchedTime).format('DD-MM-YY, h:mm:ss A')}
         </div>
       </div>
     );
@@ -226,14 +226,14 @@ const MyBets: React.FC<StoreProps> = (props) => {
   function oddsCellRender(headerParam, row) {
     return (
       <div className="mb-amount-odd">
-  {row.oddValue && row.oddValue !== -1.0
-    ? row.marketType === 'FANCY' || row.marketType === 'BINARY'
-      ? Number(row.sessionRuns).toFixed(0)
-      : row.marketType === 'BOOKMAKER'
-        ? Number(row.oddValue * 100 - 100).toFixed(2)
-        : row.oddValue.toFixed(2)
-    : '-'}
-</div>
+        {row.oddValue && row.oddValue !== -1.0
+          ? row.marketType === 'FANCY' || row.marketType === 'BINARY'
+            ? Number(row.sessionRuns).toFixed(0)
+            : row.marketType === 'BOOKMAKER'
+              ? Number(row.oddValue * 100 - 100).toFixed(2)
+              : row.oddValue.toFixed(2)
+          : '-'}
+      </div>
     );
   }
 
@@ -252,8 +252,8 @@ const MyBets: React.FC<StoreProps> = (props) => {
                 row.marketName?.includes('Odd Even Run Bhav')
                 ? row.marketName + ' - ' + (row.outcomeDesc || '')
                 : row.marketName +
-                  ' @ ' +
-                  Number(row.oddValue * 100 - 100).toFixed(0)
+                ' @ ' +
+                Number(row.oddValue * 100 - 100).toFixed(0)
               : row.marketType === 'BINARY'
                 ? row.outcomeDesc + ' @ ' + Number(row.sessionRuns).toFixed(0)
                 : row.outcomeDesc}{' '}
@@ -310,87 +310,157 @@ const MyBets: React.FC<StoreProps> = (props) => {
   const fetchData = useCallback(async () => {
     setLoading(true);
 
-    
 
-  try {
-  let payload: any = {
-    deleted: false,
-    dateFrom: filters.startDate.format('YYYY-MM-DD'),
-    dateTo: filters.endDate.clone().add(1, 'day').format('YYYY-MM-DD'),
-  };
 
-  // BET STATUS FILTER
-  switch (filters.status) {
-    case 'Open':
-      payload.result = 'ACTIVE';
-      break;
+    try {
+      let payload: any = {
+        deleted: false,
+        dateFrom: filters.startDate.format('YYYY-MM-DD'),
+        dateTo: filters.endDate.clone().add(1, 'day').format('YYYY-MM-DD'),
+      };
 
-    case 'Settled':
-      payload.result = { $in: ['WON', 'LOST'] };
-      break;
+      // BET STATUS FILTER
+      if (filters.status === 'Open') {
+        payload.result = 'ACTIVE';
+      }
 
-    case 'All':
-      payload.result = { $in: ['WON', 'LOST', 'ACTIVE', 'VOID'] };
-      break;
+      else if (filters.status === 'All') {
+        payload.result = { $in: ['WON', 'LOST', 'ACTIVE', 'VOID'] };
+      }
 
-    case 'Voided':
-      payload.result = 'VOID';
-      break;
+      else if (filters.status === 'Settled') {
+        payload.result = { $in: ['WON', 'LOST'] };
+      }
 
-    default:
-      payload.result = filters.status.toUpperCase();
-  }
+      else if (filters.status === 'Voided') {
+        payload.result = 'VOID';
+      }
 
-  // GAME FILTER
-  switch (filters.selectedGame) {
-    case 'SPORTS':
-      payload.eventTypeId =
-        filters.sport === 'All'
-          ? { $nin: ['c9', 'm1', 'a1', 'd1'] }
-          : filters.sport;
-      break;
+      else {
+        payload.result = filters.status.toUpperCase();
+      }
 
-    case 'CASINO':
-      payload.eventTypeId = { $in: ['c9', 'm1', 'a1', 'd1'] };
-      break;
 
-    case 'SPORTS_BOOK':
-      payload.categoryType = 'SPORTS_BOOK';
-      break;
+      // GAME FILTER
+      // SPORTS
+      if (filters.selectedGame === 'SPORTS') {
 
-    case 'PREMIUM':
-      payload.categoryType = 'PREMIUM';
-      break;
+        // if specific sport selected
+        if (filters.sport !== 'All') {
+          payload.eventTypeId = filters.sport;
+        }
 
-    default:
-      break;
-  }
+      }
 
-  const responce = await postAPIAuth('/getBetsAPI', payload);
-  console.log(responce.data);
+      // SPORTS BOOK
+      else if (filters.selectedGame === 'SPORTS_BOOK') {
+        payload.categoryType = 'SPORTS_BOOK';
+      }
 
-  const betList = responce?.data?.data || [];
+      // PREMIUM
+      else if (filters.selectedGame === 'PREMIUM') {
+        payload.categoryType = 'PREMIUM';
+      }
 
-  const finalData = betList.map((bet) => ({
-    ...bet,
-    stakeAmount: bet.stakeAmount / cFactor,
-    payOutAmount: bet.payOutAmount / cFactor,
-    rowClassName:
-      bet.betType === 'BACK'
-        ? 'mb-profit-amount'
-        : 'mb-loss-amount',
-  }));
+      console.log('payload', payload);
+      const responce = await postAPIAuth('/getBetsAPI', payload);
+      console.log(responce.data);
 
-  setBets(finalData);
-  setNextPageToken(responce?.data?.pageToken || null);
+      let betList = responce?.data?.data || [];
 
-} catch (err) {
-  console.log(err);
-  setBets([]);
-  setNextPageToken(null);
-} finally {
-  setLoading(false);
+      // ALL
+// if (filters.selectedGame === 'All') {
+
+//   betList = [];
+
+// }
+
+// SPORTS
+if (filters.selectedGame === 'SPORTS') {
+
+  betList = [];
+
 }
+
+// SPORTS BOOK
+else if (filters.selectedGame === 'SPORTS_BOOK') {
+
+  betList = [];
+
+}
+
+// PREMIUM
+else if (filters.selectedGame === 'PREMIUM') {
+
+  betList = [];
+
+}
+
+// CASINO
+else if (filters.selectedGame === 'CASINO') {
+
+  betList = [];
+
+}
+
+      // CASINO FILTER
+      if (filters.selectedGame === 'CASINO') {
+
+        betList = betList.filter((bet: any) =>
+          ['m1', 'a1', 'c9', 'd1'].includes(bet.eventTypeId)
+        );
+
+      }
+
+
+
+      const finalData = betList.map((bet) => ({
+        ...bet,
+
+        // field mapping
+        betType: (bet.betType || bet.type || '').toUpperCase(),
+        stakeAmount: Number(bet.stakeAmount ?? bet.stake ?? 0) / Number(cFactor || 1),
+        oddValue: bet.oddValue || bet.rate || 0,
+        outcomeResult:
+          bet.result === 'ACTIVE'
+            ? 'Open'
+            : bet.result || 'Unsettled',
+        payOutAmount:
+
+          bet.result === 'WON'
+
+            ? Math.abs(
+              (bet.type || '').toUpperCase() === 'LAY'
+                ? Number(bet.stake || 0)
+                : Number(bet.ratestake || 0) - Number(bet.stake || 0)
+            )
+
+            : bet.result === 'LOST'
+
+              ? -Math.abs(
+                (bet.type || '').toUpperCase() === 'LAY'
+                  ? Number(bet.ratestake || 0)
+                  : Number(bet.stake || 0)
+              )
+
+              : 0,
+        rowClassName:
+          (bet.betType || bet.type) === 'BACK' ||
+            (bet.betType || bet.type) === 'Back'
+            ? 'mb-profit-amount'
+            : 'mb-loss-amount',
+      }));
+
+      setBets(finalData);
+      setNextPageToken(responce?.data?.pageToken || null);
+
+    } catch (err) {
+      console.log(err);
+      setBets([]);
+      setNextPageToken(null);
+    } finally {
+      setLoading(false);
+    }
 
     // try {
     //   const response = await REPORTING_API.get('reports/v2/orders/:search', {
@@ -697,7 +767,9 @@ function Row(props: { row: any }) {
       }
     >
       <TableCell className="td-date" component="th" scope="row">
-        {moment(row.betPlacedTime).format('DD-MM-YY, h:mm:ss A')}
+        {moment(row.placedTime || row.matchedTime).format(
+  'DD-MM-YY, h:mm:ss A'
+)}
       </TableCell>
 
       <TableCell className="myb-table-cell td-match second-cell" align="left">
@@ -716,14 +788,16 @@ function Row(props: { row: any }) {
                 row.marketName?.includes('Odd Even Run Bhav')
                 ? row.marketName + ' - ' + (row.outcomeDesc || '')
                 : row.marketName +
-                  ' @ ' +
-                  Number(row.oddValue * 100 - 100).toFixed(0)
+                ' @ ' +
+                Number(row.oddValue * 100 - 100).toFixed(0)
               : row.marketType === 'BINARY'
                 ? row.outcomeDesc + ' @ ' + Number(row.sessionRuns).toFixed(0)
                 : row.outcomeDesc}
           </div>
           <div className="col-data-desc">
-            {moment(row.betPlacedTime).format('DD-MM-YY, h:mm:ss A')}
+            {moment(row.placedTime || row.matchedTime).format(
+  'DD-MM-YY, h:mm:ss A'
+)}
           </div>
           <span className="event-name">
             ({getSportNameByIdMap(row?.sportId)})
@@ -750,17 +824,27 @@ function Row(props: { row: any }) {
           - {getSportNameByIdMap(row?.sportId)}
         </span>
       </TableCell>
-      <TableCell className="myb-table-cell td-bet-on" align="left">
+      {/* <TableCell className="myb-table-cell td-bet-on" align="left">
         {row.marketType === 'FANCY'
           ? row.oddType === 'ODD_EVEN' ||
             row.marketName?.includes('Odd Even Run Bhav')
             ? row.marketName + ' - ' + (row.outcomeDesc || '')
             : row.marketName +
-              ' @ ' +
-              Number(row.oddValue * 100 - 100).toFixed(0)
+            ' @ ' +
+            Number(row.oddValue * 100 - 100).toFixed(0)
           : row.marketType === 'BINARY'
             ? row.outcomeDesc + ' @ ' + Number(row.sessionRuns).toFixed(0)
             : row.outcomeDesc}
+      </TableCell> */}
+
+      <TableCell className="myb-table-cell td-bet-on" align="left">
+
+        {row.marketType === 'SESSION'
+
+          ? `${row.marketName} / ${row.selectionName}`
+
+          : row.selectionName}
+
       </TableCell>
       <TableCell className="myb-table-cell td-bet-on" align="left">
         {capitalize(row.betType)}
@@ -768,22 +852,36 @@ function Row(props: { row: any }) {
 
       <TableCell className="myb-table-cell td-odd" align="right">
         <span className="mob-fs-13">
-  {row.oddValue && row.oddValue !== -1.0
-    ? row.marketType === 'FANCY' || row.marketType === 'BINARY'
-      ? Number(row.sessionRuns).toFixed(0)
-      : row.marketType === 'BOOKMAKER'
-        ? (row.oddValue * 100 - 100).toFixed(2)
-        : row.oddValue.toFixed(2)
-    : '-'}
-</span>
+          {row.oddValue && row.oddValue !== -1.0
+            ? row.marketType === 'FANCY' || row.marketType === 'BINARY'
+              ? Number(row.sessionRuns).toFixed(0)
+              : row.marketType === 'BOOKMAKER'
+                ? (row.oddValue * 100 - 100).toFixed(2)
+                : row.oddValue.toFixed(2)
+            : '-'}
+        </span>
       </TableCell>
       <TableCell className="myb-table-cell td-stake" align="right">
         <span className="mob-fs-14">{row.stakeAmount}</span>
       </TableCell>
-      <TableCell className="myb-table-cell td-outcome" align="left">
+      {/* <TableCell className="myb-table-cell td-outcome" align="left">
         {getOutcomeDescByEnumName(row.outcomeResult.toString())
           ? getOutcomeDescByEnumName(row.outcomeResult.toString())
           : 'Unsettled'}
+      </TableCell> */}
+
+      <TableCell className="myb-table-cell td-outcome" align="left">
+
+        {row.outcomeResult === 'WON'
+          ? 'Won'
+          : row.outcomeResult === 'LOST'
+            ? 'Lost'
+            : row.outcomeResult === 'VOID'
+              ? 'Void'
+              : row.outcomeResult === 'Open'
+                ? 'Open'
+                : 'Unsettled'}
+
       </TableCell>
       <TableCell
         className={

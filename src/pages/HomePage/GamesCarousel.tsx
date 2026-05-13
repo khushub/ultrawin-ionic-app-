@@ -178,15 +178,15 @@ const GamesCarousel: React.FC<StoreProps> = ({
         superProvider: string,
     ) => {
 
-        //   console.log("Game clicked:", {
-        //       gameId,
-        //       qTechGameId,
-        //       gameName,
-        //       gameCode,
-        //       provider,
-        //       subProvider,
-        //       superProvider,
-        //   });
+          console.log("Game clicked:", {
+              gameId,
+              qTechGameId,
+              gameName,
+              gameCode,
+              provider,
+              subProvider,
+              superProvider,
+          });
 
         const finalGameId =
             availableEventTypes?.["m1"] && gameId

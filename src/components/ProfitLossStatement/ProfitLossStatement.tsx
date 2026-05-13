@@ -32,7 +32,9 @@ const ProfitLossStatement: React.FC<PLProps> = (props) => {
   const { items, startDate, endDate, searchName, langData, selectedGame } =
     props;
   const [selectedRecord, setSelectedRecord] = useState<any>();
-  const [open, setOpen] = React.useState<any>(false);
+  // const [open, setOpen] = React.useState<any>(false);
+  console.log('items in pl statement', items);
+  const [modalOpen, setModalOpen] = useState(false);
   return (
     <>
       <div className="tbl-ctn my-bets-tbl no-hov-style">
@@ -76,31 +78,35 @@ const ProfitLossStatement: React.FC<PLProps> = (props) => {
                       <TableCell>
                         <span
                           className="txt-bldin-mob"
-                          onClick={() =>
-                            setOpen((prevState) => {
-                              return {
-                                ...prevState,
-                                [moment(row.betPlacedTime, 'DD-MM-YYYY').format(
-                                  'DD/MM/YYYY'
-                                ) +
-                                '-' +
-                                row?.eventId +
-                                '-' +
-                                row?.marketId]: prevState[
-                                  moment(
-                                    row.betPlacedTime,
-                                    'DD-MM-YYYY'
-                                  ).format('DD/MM/YYYY') +
-                                    '-' +
-                                    row?.eventId +
-                                    '-' +
-                                    row?.marketId
-                                ]
-                                  ? false
-                                  : true,
-                              };
-                            })
-                          }
+                          // onClick={() =>
+                          //   setOpen((prevState) => {
+                          //     return {
+                          //       ...prevState,
+                          //       [moment(row.placedTime, 'DD-MM-YYYY').format(
+                          //         'DD/MM/YYYY'
+                          //       ) +
+                          //       '-' +
+                          //       row?.eventId +
+                          //       '-' +
+                          //       row?.marketId]: prevState[
+                          //         moment(
+                          //           row.placedTime,
+                          //           'DD-MM-YYYY'
+                          //         ).format('DD/MM/YYYY') +
+                          //           '-' +
+                          //           row?.eventId +
+                          //           '-' +
+                          //           row?.marketId
+                          //       ]
+                          //         ? false
+                          //         : true,
+                          //     };
+                          //   })
+                          // }
+                          onClick={() => {
+   setSelectedRecord(row);
+   setModalOpen(true);
+}}
                         >
                           {row.eventName ? row.eventName : row.gameType} -{' '}
                           {row.marketName}
@@ -108,14 +114,14 @@ const ProfitLossStatement: React.FC<PLProps> = (props) => {
                       </TableCell>
                       <TableCell>
                         <span className="txt-bldin-mob">
-                          {moment(row?.betPlacedTime).format(
-                            'D/M/YYYY HH:mm:ss'
-                          )}
+                          {moment(row?.placedTime).format(
+  'D/M/YYYY HH:mm:ss'
+)}
                         </span>
                       </TableCell>
                       <TableCell>
                         <span className="txt-bldin-mob">
-                          {moment(row?.payOutDate).format('D/M/YYYY HH:mm:ss')}
+                          {moment(row?.matchedTime).format('D/M/YYYY HH:mm:ss')}
                         </span>
                       </TableCell>
                       <TableCell
@@ -162,15 +168,15 @@ const ProfitLossStatement: React.FC<PLProps> = (props) => {
                                 )}
                               </>
                             )
-                          ) : row?.outcomeResult === 'Open' ? (
+                          ) : row?.result === 'Open' ? (
                             '-'
-                          ) : row?.payOutAmount > 0 ? (
+                          ) : row?.profit > 0 ? (
                             <div className="profit">
-                              {row?.payOutAmount?.toFixed(2)}
+                              {row?.profit?.toFixed(2)}
                             </div>
                           ) : (
                             <div className="loss">
-                              {row?.payOutAmount?.toFixed(2)}
+                              {row?.profit?.toFixed(2)}
                             </div>
                           )}
                         </span>
@@ -181,35 +187,39 @@ const ProfitLossStatement: React.FC<PLProps> = (props) => {
                           <IconButton
                             aria-label="expand row"
                             size="small"
-                            onClick={() =>
-                              setOpen((prevState) => {
-                                return {
-                                  ...prevState,
-                                  [moment(
-                                    row.betPlacedTime,
-                                    'DD-MM-YYYY'
-                                  ).format('DD/MM/YYYY') +
-                                  '-' +
-                                  row?.eventId +
-                                  '-' +
-                                  row?.marketId]: prevState[
-                                    moment(
-                                      row.betPlacedTime,
-                                      'DD-MM-YYYY'
-                                    ).format('DD/MM/YYYY') +
-                                      '-' +
-                                      row?.eventId +
-                                      '-' +
-                                      row?.marketId
-                                  ]
-                                    ? false
-                                    : true,
-                                };
-                              })
-                            }
+                            // onClick={() =>
+                            //   setOpen((prevState) => {
+                            //     return {
+                            //       ...prevState,
+                            //       [moment(
+                            //         row.placedTime,
+                            //         'DD-MM-YYYY'
+                            //       ).format('DD/MM/YYYY') +
+                            //       '-' +
+                            //       row?.eventId +
+                            //       '-' +
+                            //       row?.marketId]: prevState[
+                            //         moment(
+                            //           row.placedTime,
+                            //           'DD-MM-YYYY'
+                            //         ).format('DD/MM/YYYY') +
+                            //           '-' +
+                            //           row?.eventId +
+                            //           '-' +
+                            //           row?.marketId
+                            //       ]
+                            //         ? false
+                            //         : true,
+                            //     };
+                            //   })
+                            // }
+                            onClick={() => {
+   setSelectedRecord(row);
+   setModalOpen(true);
+}}
                           >
-                            {open[
-                              moment(row.betPlacedTime, 'DD-MM-YYYY').format(
+                            {/* {open[
+                              moment(row.placedTime, 'DD-MM-YYYY').format(
                                 'DD/MM/YYYY'
                               ) +
                                 '-' +
@@ -220,7 +230,8 @@ const ProfitLossStatement: React.FC<PLProps> = (props) => {
                               <KeyboardArrowUpIcon htmlColor={'#000'} />
                             ) : (
                               <KeyboardArrowDownIcon htmlColor={'#000'} />
-                            )}
+                            )} */}
+                            <KeyboardArrowDownIcon htmlColor={'#000'} />
                           </IconButton>
                         )}
                       </TableCell>
@@ -239,10 +250,14 @@ const ProfitLossStatement: React.FC<PLProps> = (props) => {
         )}
 
         <Modal
-          open={open}
+          // open={open}
+          open={modalOpen}
           title={langData?.['pl_details_txt'] + ':'}
           customClass="light-bg-title pl-details"
-          closeHandler={() => setOpen(false)}
+         closeHandler={() => {
+  setModalOpen(false);
+  setSelectedRecord(null);
+}}
           size="md"
         >
           <PLStatementMktLvl
@@ -273,30 +288,34 @@ const ProfitLossStatement: React.FC<PLProps> = (props) => {
                   <TableCell className="pl-table-body-mob  mob-frst-cell">
                     <span
                       className="txt-bldin-mob"
-                      onClick={() =>
-                        setOpen((prevState) => {
-                          return {
-                            ...prevState,
-                            [moment(row.betPlacedTime, 'DD-MM-YYYY').format(
-                              'DD/MM/YYYY'
-                            ) +
-                            '-' +
-                            row?.eventId +
-                            '-' +
-                            row?.marketId]: prevState[
-                              moment(row.betPlacedTime, 'DD-MM-YYYY').format(
-                                'DD/MM/YYYY'
-                              ) +
-                                '-' +
-                                row?.eventId +
-                                '-' +
-                                row?.marketId
-                            ]
-                              ? false
-                              : true,
-                          };
-                        })
-                      }
+                      // onClick={() =>
+                      //   setOpen((prevState) => {
+                      //     return {
+                      //       ...prevState,
+                      //       [moment(row.placedTime, 'DD-MM-YYYY').format(
+                      //         'DD/MM/YYYY'
+                      //       ) +
+                      //       '-' +
+                      //       row?.eventId +
+                      //       '-' +
+                      //       row?.marketId]: prevState[
+                      //         moment(row.placedTime, 'DD-MM-YYYY').format(
+                      //           'DD/MM/YYYY'
+                      //         ) +
+                      //           '-' +
+                      //           row?.eventId +
+                      //           '-' +
+                      //           row?.marketId
+                      //       ]
+                      //         ? false
+                      //         : true,
+                      //     };
+                      //   })
+                      // }
+                      onClick={() => {
+   setSelectedRecord(row);
+   setModalOpen(true);
+}}
                     >
                       <div className="mob-market-name-ctn">
                         <div className="mob-market-name">
@@ -305,7 +324,7 @@ const ProfitLossStatement: React.FC<PLProps> = (props) => {
                         </div>
 
                         <div className="mob-market-time">
-                          {moment(row?.betPlacedTime).format(
+                          {moment(row?.placedTime).format(
                             'D/M/YYYY HH:mm:ss'
                           )}
                         </div>
@@ -347,15 +366,15 @@ const ProfitLossStatement: React.FC<PLProps> = (props) => {
                             {Number(row?.profit + row?.commission)?.toFixed(2)}
                           </>
                         )
-                      ) : row?.outcomeResult === 'Open' ? (
+                      ) : row?.result === 'Open' ? (
                         '-'
-                      ) : row?.payOutAmount > 0 ? (
+                      ) : row?.profit > 0 ? (
                         <div className="profit">
-                          {row?.payOutAmount?.toFixed(2)}
+                          {row?.profit?.toFixed(2)}
                         </div>
                       ) : (
                         <div className="loss">
-                          {row?.payOutAmount?.toFixed(2)}
+                          {row?.profit?.toFixed(2)}
                         </div>
                       )}
                     </span>
@@ -368,7 +387,7 @@ const ProfitLossStatement: React.FC<PLProps> = (props) => {
                       {langData?.['settled_time']}:
                     </span>{' '}
                     <span className="txt-bldin-mob">
-                      {moment(row?.payOutDate).format('D/M/YYYY HH:mm:ss')}
+                      {moment(row?.matchedTime).format('D/M/YYYY HH:mm:ss')}
                     </span>
                   </TableCell>{' '}
                   <TableCell className="second-tablecell mob-secondtable-secondcell">
@@ -384,33 +403,37 @@ const ProfitLossStatement: React.FC<PLProps> = (props) => {
                       <IconButton
                         aria-label="expand row"
                         size="small"
-                        onClick={() =>
-                          setOpen((prevState) => {
-                            return {
-                              ...prevState,
-                              [moment(row.betPlacedTime, 'DD-MM-YYYY').format(
-                                'DD/MM/YYYY'
-                              ) +
-                              '-' +
-                              row?.eventId +
-                              '-' +
-                              row?.marketId]: prevState[
-                                moment(row.betPlacedTime, 'DD-MM-YYYY').format(
-                                  'DD/MM/YYYY'
-                                ) +
-                                  '-' +
-                                  row?.eventId +
-                                  '-' +
-                                  row?.marketId
-                              ]
-                                ? false
-                                : true,
-                            };
-                          })
-                        }
+                        // onClick={() =>
+                        //   setOpen((prevState) => {
+                        //     return {
+                        //       ...prevState,
+                        //       [moment(row.placedTime, 'DD-MM-YYYY').format(
+                        //         'DD/MM/YYYY'
+                        //       ) +
+                        //       '-' +
+                        //       row?.eventId +
+                        //       '-' +
+                        //       row?.marketId]: prevState[
+                        //         moment(row.placedTime, 'DD-MM-YYYY').format(
+                        //           'DD/MM/YYYY'
+                        //         ) +
+                        //           '-' +
+                        //           row?.eventId +
+                        //           '-' +
+                        //           row?.marketId
+                        //       ]
+                        //         ? false
+                        //         : true,
+                        //     };
+                        //   })
+                        // }
+                        onClick={() => {
+   setSelectedRecord(row);
+   setModalOpen(true);
+}}
                       >
-                        {open[
-                          moment(row.betPlacedTime, 'DD-MM-YYYY').format(
+                        {/* {open[
+                          moment(row.placedTime, 'DD-MM-YYYY').format(
                             'DD/MM/YYYY'
                           ) +
                             '-' +
@@ -421,7 +444,8 @@ const ProfitLossStatement: React.FC<PLProps> = (props) => {
                           <KeyboardArrowRightIcon />
                         ) : (
                           <KeyboardArrowRightIcon />
-                        )}
+                        )} */}
+                        <KeyboardArrowDownIcon htmlColor={'#000'} />
                       </IconButton>{' '}
                     </div>
                   </TableCell>

@@ -27,7 +27,7 @@ type Filters = {
   pageToken: string[];
   selectedGame: string;
   sport: string;
-  statementType: string;
+  // statementType: string;
 };
 
 type Props = {
@@ -43,7 +43,7 @@ const UserPLStatement: React.FC<Props> = (props: Props) => {
     pageToken: [],
     selectedGame: 'SPORTS',
     sport: 'SPORTS',
-    statementType: 'MAIN_PL',
+    // statementType: 'MAIN_PL',
   };
   const [errorMsg, setErrorMsg] = useState(null);
   const [progress, setProgress] = useState<Boolean>(false);
@@ -52,84 +52,210 @@ const UserPLStatement: React.FC<Props> = (props: Props) => {
   const [totalPL, setTotalPL] = useState<Map<string, number>>(new Map());
   const [filters, setFilters] = useState<Filters>(defaultFilters);
   const [myTotalProfit, setMyTotalProfit] = useState<number>(0);
-//   const cFactor = CURRENCY_TYPE_FACTOR[getCurrencyTypeFromToken()];
+  //   const cFactor = CURRENCY_TYPE_FACTOR[getCurrencyTypeFromToken()];
   const cFactor = CURRENCY_TYPE_FACTOR["INR"];
   const { allowedConfig } = useSelector((state: any) => state.common);
 
-  const statementTypeOptions = [
-    {
-      value: 'MAIN_PL',
-      name: 'Main Profit and Loss',
-      allow: true,
-    },
-    {
-      value: 'TURBO_PL',
-      name: 'Speed Cash Profit and Loss',
-      allow: true,
-    },
-  ];
+  // const statementTypeOptions = [
+  //   {
+  //     value: 'MAIN_PL',
+  //     name: 'Main Profit and Loss',
+  //     allow: true,
+  //   },
+  //   {
+  //     value: 'TURBO_PL',
+  //     name: 'Speed Cash Profit and Loss',
+  //     allow: true,
+  //   },
+  // ];
 
   const [nextPageToken, setNextPageToken] = useState<string>(null);
   const pageSize = 25;
 
- const fetchPLStatement = useCallback(async () => {
-  setProgress(true);
-  setErrorMsg(null);
-  setNextPageToken(null);
+  const fetchPLStatement = useCallback(async () => {
+    setProgress(true);
+    setErrorMsg(null);
+    setNextPageToken(null);
 
-  try {
-    const payload = {
-      deleted: false,
-      dateFrom: filters.fromDate.startOf("day").format("YYYY-MM-DD"),
-      dateTo: filters.toDate.endOf("day").format("YYYY-MM-DD"),
-    };
+    try {
+      const payload: any = {
+        deleted: false,
 
-    const response: any = await postAPIAuth("/getBetsAPI", payload);
-    console.log("PL Statement Response:", response);
+        result: {
+          $in: ['WON', 'LOST'],
+        },
 
-    const pl_records = response?.data?.data || [];
+        dateFrom: filters.fromDate.format('YYYY-MM-DD'),
 
-    if (filters.statementType === "TURBO_PL") {
-      const cashoutData = pl_records.map((item: any) => ({
-        marketName: item?.marketName || "-",
-        eventName: item?.eventName || "-",
-        cashoutAmount: item?.stake || 0,
-        cashoutCommission: item?.commission || 0,
-        netCashoutAmount:
-          (item?.stake || 0) - (item?.commission || 0),
-        settledDate: item?.placedTime,
-      }));
+        dateTo: filters.toDate
+          .clone()
+          .add(1, 'day')
+          .format('YYYY-MM-DD'),
+      };
 
-      setCashoutHistory(cashoutData);
-      setplStatement([]);
-    } else {
-      const profitLossData = pl_records.map((item: any) => ({
-        eventName: item?.eventName || "-",
-        marketName: item?.marketName || "-",
-        profit:
-          item?.result === "LOST"
-            ? -(item?.stake || 0)
-            : item?.profit || 0,
-        commission: item?.commission || 0,
-        settledDate: item?.placedTime,
-      }));
+     
+      console.log("PL Statement Payload:", payload);  
 
+      const response: any = await postAPIAuth("/getBetsAPI", payload);
+      console.log("PL Statement Response:", response);
+
+      const pl_records = response?.data?.data || [];
+
+      let filteredRecords = pl_records;
+
+// SPORTS
+// if (filters.selectedGame === 'SPORTS') {
+// // 
+//   filteredRecords = [];
+
+// }
+
+// SPORTS BOOK
+if (filters.selectedGame === 'SPORTS_BOOK') {
+
+  filteredRecords = [];
+
+}
+
+// PREMIUM
+if (filters.selectedGame === 'PREMIUM') {
+
+  filteredRecords = [];
+
+}
+
+// CASINO
+if (filters.selectedGame === 'CASINO') {
+
+  filteredRecords = [];
+
+}
+
+      
+
+      // const profitLossData = pl_records.map((item: any) => ({
+
+      //   eventName: item?.eventName || '-',
+
+      //   marketName: item?.marketName || '-',
+
+      //   profit:
+
+      //     item?.result === 'WON'
+
+      //       ? Math.abs(Number(item?.ratestake || 0))
+
+      //       : -Math.abs(Number(item?.ratestake || 0)),
+
+      //   commission: item?.commission || 0,
+
+      //   startTime:
+      //     item?.placedTime,
+
+      //   settledTime: item?.matchedTime,
+        
+
+      // }));
+   const profitLossData = filteredRecords.map((item: any) => {
+
+  const payout =
+    item?.result === 'WON'
+      ? (item?.type || '').toUpperCase() === 'LAY'
+        ? Number(item?.stake || 0)
+        : Number(item?.ratestake || 0) - Number(item?.stake || 0)
+
+      : item?.result === 'LOST'
+        ? (item?.type || '').toUpperCase() === 'LAY'
+          ? -(
+              Number(item?.ratestake || 0) -
+              Number(item?.stake || 0)
+            )
+          : -Number(item?.stake || 0)
+        : 0;
+
+  return {
+
+    ...item,
+
+    // eventName: item?.eventName || '-',
+
+    // marketName: item?.marketName || '-',
+
+    // startTime:
+    //   item?.placedTime,
+
+    // settledTime:
+    //   item?.matchedTime,
+
+    // modal fields
+    // stakeAmount:
+    //   Number(item?.stake || 0),
+
+    // oddValue:
+    //   Number(item?.rate || 0),
+
+    // payOutAmount:
+    //   payout,
+
+    // outcomeResult:
+    //   item?.result,
+
+    // betType:
+    //   item?.type,
+
+    profit:
+      payout,
+
+    commission:
+      Number(0),
+
+  };
+});
       setplStatement(profitLossData);
+
+      setCashoutHistory([]);
+
+      // if (filters.statementType === "TURBO_PL") {
+      //   const cashoutData = pl_records.map((item: any) => ({
+      //     marketName: item?.marketName || "-",
+      //     eventName: item?.eventName || "-",
+      //     cashoutAmount: item?.stake || 0,
+      //     cashoutCommission: item?.commission || 0,
+      //     netCashoutAmount:
+      //       (item?.stake || 0) - (item?.commission || 0),
+      //     settledDate: item?.placedTime,
+      //   }));
+
+      //   setCashoutHistory(cashoutData);
+      //   setplStatement([]);
+      // } else {
+      //   const profitLossData = pl_records.map((item: any) => ({
+      //     eventName: item?.eventName || "-",
+      //     marketName: item?.marketName || "-",
+      //     profit:
+      //       item?.result === "LOST"
+      //         ? -(item?.stake || 0)
+      //         : item?.profit || 0,
+      //     commission: item?.commission || 0,
+      //     settledDate: item?.placedTime,
+      //   }));
+
+      //   setplStatement(profitLossData);
+      //   setCashoutHistory([]);
+      // }
+    } catch (err: any) {
+      console.log(err);
+
+      if (err?.response?.data?.error) {
+        setErrorMsg(err.response.data.error);
+      }
+
+      setplStatement([]);
       setCashoutHistory([]);
     }
-  } catch (err: any) {
-    console.log(err);
 
-    if (err?.response?.data?.error) {
-      setErrorMsg(err.response.data.error);
-    }
-
-    setplStatement([]);
-    setCashoutHistory([]);
-  }
-
-  setProgress(false);
-}, [filters]);
+    setProgress(false);
+  }, [filters]);
 
   useEffect(() => {
     fetchPLStatement();
@@ -194,14 +320,14 @@ const UserPLStatement: React.FC<Props> = (props: Props) => {
     setNextPageToken(null);
   };
 
-  const handleStatementTypeChange = (e) => {
-    setFilters({
-      ...filters,
-      statementType: e.target.value,
-      pageToken: [],
-    });
-    setNextPageToken(null);
-  };
+  // const handleStatementTypeChange = (e) => {
+  //   setFilters({
+  //     ...filters,
+  //     statementType: e.target.value,
+  //     pageToken: [],
+  //   });
+  //   setNextPageToken(null);
+  // };
 
   return (
     <>
@@ -212,17 +338,17 @@ const UserPLStatement: React.FC<Props> = (props: Props) => {
             titleIcon={PLStatementIcon}
             reportName={langData?.['betting_profit_and_loss']}
             reportFilters={[
-              {
-                element: (
-                  <SelectTemplate
-                    label={'Statement Type'}
-                    list={statementTypeOptions}
-                    value={filters.statementType}
-                    onChange={handleStatementTypeChange}
-                    size="large"
-                  />
-                ),
-              },
+              // {
+              //   element: (
+              //     <SelectTemplate
+              //       label={'Statement Type'}
+              //       list={statementTypeOptions}
+              //       value={filters.statementType}
+              //       onChange={handleStatementTypeChange}
+              //       size="large"
+              //     />
+              //   ),
+              // },
               {
                 element: (
                   <SelectTemplate
@@ -265,7 +391,7 @@ const UserPLStatement: React.FC<Props> = (props: Props) => {
                     <Spinner />
                   ) : (
                     <>
-                      {filters.statementType === 'TURBO_PL' ? (
+                      {/* {filters.statementType === 'TURBO_PL' ? (
                         <CashoutHistoryStatement
                           items={cashoutHistory}
                           startDate={filters.fromDate}
@@ -283,7 +409,16 @@ const UserPLStatement: React.FC<Props> = (props: Props) => {
                           langData={langData}
                           selectedGame={filters.selectedGame}
                         />
-                      )}
+                      )} */}
+
+                      <ProfitLossStatement
+                        items={plStatement}
+                        startDate={filters.fromDate}
+                        endDate={filters.toDate}
+                        searchName={''}
+                        langData={langData}
+                        selectedGame={filters.selectedGame}
+                      />
                     </>
                   )}
 
