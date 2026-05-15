@@ -32,6 +32,18 @@ console.log(user);
   const [address, setAddress] = useState<string>(null);
   const [city, setCity] = useState<string>(null);
   const [pinCode, setPinCode] = useState<string>(null);
+
+//   const [address, setAddress] = useState<string>(
+//   window.ipInfo?.regionName || ''
+// );
+
+// const [city, setCity] = useState<string>(
+//   window.ipInfo?.city || ''
+// );
+
+// const [pinCode, setPinCode] = useState<string>(
+//   window.ipInfo?.zip || ''
+// );
   const [err, setErr] = useState<string>(null);
   const [progress, setProgress] = useState<boolean>(false);
   const dispatch = useDispatch();
@@ -60,6 +72,19 @@ console.log(user);
   }, []);
 
   useEffect(() => {
+   
+    if (window.ipInfo) {
+
+      console.log(window.ipInfo);
+
+    setCity(window.ipInfo?.city || '');
+    setPinCode(window.ipInfo?.zip || '');
+
+    setAddress(
+      `${window.ipInfo?.regionName || ''}, ${window.ipInfo?.country || ''}`
+    );
+  }
+
     getDetails();
   }, []);
 
