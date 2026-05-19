@@ -69,6 +69,52 @@ const EventPage = () => {
     const oneClickBettingLoading  = useSelector((state: any) => state.exchBetSlip.oneClickBettingLoading);
     const bets = useSelector((state: any)=> state.exchBetSlip.bets);
     const availableEventTypes = useSelector((state: any) => state.userDetails.availableEventTypes);
+    const [marketType, setMarketType] = useState<"fancy" | "premium">("fancy");
+
+
+    const premiumMarkets = [
+  {
+    title: "Winner (incl. super over)",
+    runners: [
+      {
+        name: "Lucknow Super Giants",
+        odds: "2.14",
+      },
+      {
+        name: "Chennai Super Kings",
+        odds: "1.68",
+      },
+    ],
+  },
+
+  {
+    title: "Will there be a tie",
+    runners: [
+      {
+        name: "yes",
+        odds: "13.50",
+      },
+      {
+        name: "no",
+        odds: "LOCK",
+      },
+    ],
+  },
+
+  {
+    title: "1st innings - Lucknow Super Giants total fours",
+    runners: [
+      {
+        name: "over 15.5",
+        odds: "2.02",
+      },
+      {
+        name: "under 15.5",
+        odds: "1.70",
+      },
+    ],
+  },
+];
 
     
     useEffect(() => {

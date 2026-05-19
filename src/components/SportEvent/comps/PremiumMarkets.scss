@@ -1,0 +1,124 @@
+.premium-wrapper {
+  width: 100%;
+  background: #e5e5e5;
+  padding-bottom: 10px;
+}
+
+/* TOP TABS */
+
+.premium-top-tabs {
+  display: flex;
+  align-items: center;
+  background: #f3c533;
+  overflow-x: auto;
+  height: 48px;
+}
+
+.premium-top-tabs button {
+  border: none;
+  background: #f3c533;
+  padding: 0 22px;
+  height: 48px;
+  font-size: 15px;
+  font-weight: 700;
+  color: white;
+  border-right: 1px solid rgba(255,255,255,0.5);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.premium-top-tabs button.active {
+  border-bottom: 3px solid #2f7df6;
+}
+
+.info-icon {
+  min-width: 45px;
+  height: 48px;
+  background: #f3c533;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 22px;
+  color: black;
+  border-left: 1px solid rgba(255,255,255,0.5);
+}
+
+/* LIMIT */
+
+.premium-limit {
+  text-align: right;
+  padding: 8px 14px;
+  font-size: 14px;
+  background: #f7f7f7;
+  color: #000;
+}
+
+/* MARKET */
+
+.premium-market {
+  margin-top: 2px;
+}
+
+.premium-header {
+  background: #f3c533;
+  padding: 10px 14px;
+  font-size: 16px;
+  font-weight: 700;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #000;
+}
+
+.minus-icon {
+  font-size: 16px;
+}
+
+/* ROW */
+
+.premium-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #e2dfd5;
+  border-bottom: 1px solid #cfcfcf;
+  min-height: 50px;
+}
+
+.team-name {
+  padding-left: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #000;
+}
+
+/* ODDS */
+
+.odd-box {
+  width: 38%;
+  height: 48px;
+  background: #7eb5ea;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 15px;
+  font-weight: 500;
+  color: #000;
+}
+
+.locked {
+  background: #a9c0d7;
+  color: #6d6d6d;
+}
+
+.odd-box.blue {
+  background: #7eb5ea;
+}
+
+.odd-box.yellow {
+  background: #f3c533;
+}
+
+.odd-box.lock {
+  background: #a9c0d7;
+}

@@ -8,6 +8,7 @@ import RegularMarketTable from './comps/RegularMarketTable';
 import { Tab, Tabs } from '@mui/material';
 import TabPanel from '../TabPanel/TabPanel';
 import FancyMarketsTable from './comps/FancyMarketsTable';
+import PremiumMarkets from './comps/PremiumMarkets';
 
 
 type SportEventProps = {
@@ -69,13 +70,22 @@ const SportEvent: React.FC<SportEventProps> = ({ openBets, langData, onBtnClick 
                                 value={0}
                             />
                         ) : null}
-                        {premiumMarketsCount>0? (
+                        {/* {premiumMarketsCount>0? (
                             <Tab
                                 label={langData?.["premium"]}
                                 className="fancy-tab premium-markets"
                                 value={1}
                             />
-                        ) : null}
+                        ) : null} */}
+
+                       
+                            <Tab
+                                label={langData?.["premium"]}
+                                className="fancy-tab premium-markets"
+                                value={1}
+                            />
+                      
+                        
                     </Tabs>
                     <div className="fancy-tab-border"></div>
                     <IonRow>
@@ -105,6 +115,8 @@ const SportEvent: React.FC<SportEventProps> = ({ openBets, langData, onBtnClick 
                                 index={1}
                                 className="fancy-tab-ctn premium-iframe-container"
                             >
+
+                                  <PremiumMarkets />
                                 {/* {!["99990", "2378961"].includes(
                                     eventData?.sportId,
                                 ) ? (
